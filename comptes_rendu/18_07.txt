@@ -1,0 +1,38 @@
+Compte-Rendu de Réunion
+
+Participants et avancement individuel :
+
+Nao :
+- A terminé son issue sans rencontrer de difficultés, les documents étaient accessibles.
+- Envisage l'insertion d'un script Python pour traiter les données.
+- A exprimé un besoin urgent en UX/UI.
+- Remarque : lorsque l'application propose peu d'actions, l'expérience utilisateur doit être
+irréprochable.
+- Si les autres membres sont trop occupés, elle peut se charger de l'UX.
+
+Mael :
+- Travaille sur l'implémentation de l'IA avec IAo.
+- Entraîne actuellement l'IA afin de l'"éduquer".
+- Idée à explorer : permettre à l'IA de rechercher des informations sur Internet (ex : H&M).
+- Pas encore d'avancement significatif en raison d'un autre projet - pas d'inquiétude, c'est compris.
+- Vise à finaliser le setup de l'IA.
+
+Hery :
+- En réflexion sur la suite du projet.
+- Souhaite relier le site à l'extension avec une dimension interactive.
+- Prend des notes sur Git.
+- À voir avec Zak pour la maquette et les moyens d'accès au site via l'extension.
+
+Manu :
+- S'occupe d'établir les schémas Merise et UML.
+- Avancement conséquent sur les schémas.
+- Projette de faire un schéma MLD.
+
+Françoise :
+- Prévoit de travailler ce week-end en raison d'un autre projet.
+
+Discussion générale :
+- Trouver un nom original et marquant pour le projet.
+- Penser à concevoir un logo - se renseigner sur les technologies adaptées à sa création.
+- Choix technologique à trancher : Python ou JavaScript ?
+-> Décision prise : Python, car plus simple et mieux adapté pour la communication avec l'IA.
