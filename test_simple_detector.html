@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Détecteur Simple de Marques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .brand-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .brand-tag {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        .brand-tag.discovered {
+            background: #28a745;
+        }
+        .brand-tag.new {
+            background: #ffc107;
+            color: black;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .console-output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test du Détecteur Simple de Marques</h1>
+        <p><em>Version sans notation - juste détection et apprentissage</em></p>
+        
+        <div class="test-section">
+            <h2>📊 Statistiques de la Base de Données</h2>
+            <div class="stats" id="stats">
+                Chargement...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Tests de Détection</h2>
+            <p>Cliquez sur un bouton pour tester la détection :</p>
+            
+            <button onclick="testBasicDetection()">Test Basique</button>
+            <button onclick="testDiscovery()">Test Découverte</button>
+            <button onclick="testMixedContent()">Test Contenu Mixte</button>
+            <button onclick="clearDiscoveredBrands()">Effacer Marques Découvertes</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Résultats</h2>
+            <div id="results">
+                Aucun test effectué
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Console de Sortie</h2>
+            <div class="console-output" id="console-output">
+                Console prête...
+            </div>
+        </div>
+    </div>
+
+    <script src="simple_brand_detector.js"></script>
+    <script>
+        let detector;
+        let consoleOutput = '';
+
+        // Rediriger console.log vers notre affichage
+        const originalLog = console.log;
+        console.log = function(...args) {
+            consoleOutput += args.join(' ') + '\n';
+            document.getElementById('console-output').textContent = consoleOutput;
+            originalLog.apply(console, args);
+        };
+
+        // Initialiser le détecteur
+        function initDetector() {
+            detector = new SimpleBrandDetector();
+            updateStats();
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats() {
+            const stats = detector.getStats();
+            
+            document.getElementById('stats').innerHTML = `
+                <strong>Base de données :</strong><br>
+                • Marques connues : ${stats.known}<br>
+                • Marques découvertes : ${stats.discovered}<br>
+                • Total : ${stats.total}
+            `;
+        }
+
+        // Test basique
+        function testBasicDetection() {
+            console.log('\n🧪 TEST BASIQUE');
+            console.log('='.repeat(30));
+            
+            // Simuler une page avec des marques connues
+            document.body.innerHTML = `
+                <div>
+                    <h1>Test de Marques Connues</h1>
+                    <p>Cette page contient des références à Nike et Apple.</p>
+                    <p>Marque: Nike</p>
+                    <p>Fabricant: Apple</p>
+                    <p>Produits Samsung et Sony disponibles.</p>
+                </div>
+            `;
+            
+            const results = detector.analyzePage();
+            detector.generateReport(results);
+            displayResults(results);
+        }
+
+        // Test de découverte
+        function testDiscovery() {
+            console.log('\n🧪 TEST DÉCOUVERTE');
+            console.log('='.repeat(30));
+            
+            // Simuler une page avec de nouvelles marques
+            document.body.innerHTML = `
+                <div>
+                    <h1>Nouvelles Marques</h1>
+                    <p>Marque: TechCorp</p>
+                    <p>Fabricant: InnovateLab</p>
+                    <p>Propriétaire: FutureTech</p>
+                    <p>Distributeur: SmartSolutions</p>
+                    <p>© 2024 TechCorp, InnovateLab, FutureTech, SmartSolutions</p>
+                    <p>Produits par DesignStudio et CreativeWorks.</p>
+                </div>
+            `;
+            
+            const results = detector.analyzePage();
+            detector.generateReport(results);
+            displayResults(results);
+        }
+
+        // Test contenu mixte
+        function testMixedContent() {
+            console.log('\n🧪 TEST CONTENU MIXTE');
+            console.log('='.repeat(30));
+            
+            // Simuler une page avec marques connues et nouvelles
+            document.body.innerHTML = `
+                <div>
+                    <h1>Boutique Mixte</h1>
+                    <p>Découvrez nos produits :</p>
+                    <ul>
+                        <li>Chaussures Nike Air Max</li>
+                        <li>Smartphone Samsung Galaxy</li>
+                        <li>Ordinateur Apple MacBook</li>
+                        <li>Marque: TechCorp</li>
+                        <li>Fabricant: InnovateLab</li>
+                    </ul>
+                    <p>© 2024 TechCorp, InnovateLab</p>
+                </div>
+            `;
+            
+            const results = detector.analyzePage();
+            detector.generateReport(results);
+            displayResults(results);
+        }
+
+        // Effacer les marques découvertes
+        function clearDiscoveredBrands() {
+            detector.clearDiscoveredBrands();
+            updateStats();
+        }
+
+        // Afficher les résultats
+        function displayResults(results) {
+            let html = '<h3>Résultats de l\'analyse :</h3>';
+            
+            if (results.knownBrands.length > 0) {
+                html += '<h4>🏷️ Marques trouvées :</h4>';
+                html += '<div class="brand-list">';
+                results.knownBrands.forEach(({ brand, source }) => {
+                    const className = source === 'discovered' ? 'discovered' : '';
+                    html += `<span class="brand-tag ${className}">${brand} (${source})</span>`;
+                });
+                html += '</div>';
+            }
+            
+            if (results.newlyDiscovered.length > 0) {
+                html += '<h4>🎯 Nouvelles marques découvertes :</h4>';
+                html += '<div class="brand-list">';
+                results.newlyDiscovered.forEach(brand => {
+                    html += `<span class="brand-tag new">${brand}</span>`;
+                });
+                html += '</div>';
+            }
+            
+            if (results.knownBrands.length === 0 && results.newlyDiscovered.length === 0) {
+                html += '<p>Aucune marque détectée</p>';
+            }
+            
+            // Afficher le contenu testé
+            html += '<h4>📄 Contenu analysé :</h4>';
+            html += '<div class="test-content">';
+            html += document.body.innerText.substring(0, 200) + '...';
+            html += '</div>';
+            
+            document.getElementById('results').innerHTML = html;
+            updateStats();
+        }
+
+        // Initialiser au chargement
+        window.onload = function() {
+            initDetector();
+            console.log('🚀 Détecteur simple de marques initialisé');
+            console.log('💡 Cliquez sur les boutons pour tester la détection');
+        };
+    </script>
+</body>
+</html> 
