@@ -1,18 +1,18 @@
-# 🧠 IA Auto-Apprenante pour Détection de Marques
+# IA Auto-Apprenante pour Détection de Marques
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble
 
 Ce projet développe une **IA auto-apprenante** qui construit sa propre base de données de marques en analysant les pages web. L'IA découvre automatiquement de nouvelles marques et améliore sa précision au fil du temps.
 
-## 🎯 Objectif principal
+## Objectif principal
 
 Créer le **"cœur IA"** d'une extension Chrome qui :
-- ✅ Détecte les marques présentes sur une page web
-- ✅ **Apprend** et découvre de nouvelles marques automatiquement
-- ✅ Construit sa propre base de données évolutive
-- ✅ S'améliore avec l'usage
+- Détecte les marques présentes sur une page web
+- **Apprend** et découvre de nouvelles marques automatiquement
+- Construit sa propre base de données évolutive
+- S'améliore avec l'usage
 
-## 🛠️ Fichiers créés
+## Fichiers créés
 
 ### Moteur IA principal
 - **`learning_brand_detector.js`** - Moteur auto-apprenant en JavaScript
@@ -24,7 +24,7 @@ Créer le **"cœur IA"** d'une extension Chrome qui :
 - **`advanced_brand_scraper.py`** - Version avancée avec CSV
 - **`test_brands.py`** - Tests du système
 
-## 🧠 Fonctionnement de l'IA Auto-Apprenante
+## Fonctionnement de l'IA Auto-Apprenante
 
 ### 1. **Détection Initiale**
 ```javascript
@@ -75,22 +75,22 @@ if (confidence > 0.5) {
 localStorage.setItem('discoveredBrands', JSON.stringify(brands));
 ```
 
-## 📊 Exemple d'Apprentissage
+## Exemple d'Apprentissage
 
 ### Page 1 : "Marque: TechCorp"
-- ✅ Détecte "TechCorp" comme nouvelle marque
-- ✅ Score de confiance élevé (pattern structuré)
-- ✅ Ajoute à la base de données
+- Détecte "TechCorp" comme nouvelle marque
+- Score de confiance élevé (pattern structuré)
+- Ajoute à la base de données
 
 ### Page 2 : "Produits TechCorp disponibles"
-- ✅ Reconnaît "TechCorp" comme marque connue
-- ✅ Confiance élevée (marque découverte)
+- Reconnaît "TechCorp" comme marque connue
+- Confiance élevée (marque découverte)
 
 ### Page 3 : "InnovateLab présente ses nouveautés"
-- ✅ Découvre "InnovateLab" comme nouvelle marque
-- ✅ Analyse le contexte pour validation
+- Découvre "InnovateLab" comme nouvelle marque
+- Analyse le contexte pour validation
 
-## 🔧 Caractéristiques Techniques
+## Caractéristiques Techniques
 
 ### Détection Multi-Sources
 - **Texte visible** : Contenu de la page
@@ -110,7 +110,7 @@ localStorage.setItem('discoveredBrands', JSON.stringify(brands));
 - **Persistance** : Sauvegarde locale des découvertes
 - **Amélioration** : Plus l'IA analyse, plus elle devient précise
 
-## 🎯 Utilisation dans une Extension Chrome
+## Utilisation dans une Extension Chrome
 
 ### 1. **Intégration**
 ```javascript
@@ -135,32 +135,32 @@ results.knownBrands.forEach(brand => {
 // et disponibles pour les prochaines analyses
 ```
 
-## 📈 Avantages de l'Approche Auto-Apprenante
+## Avantages de l'Approche Auto-Apprenante
 
-### ✅ **Adaptabilité**
+### **Adaptabilité**
 - S'adapte aux nouveaux sites et marques
 - Pas besoin de maintenir une liste statique
 
-### ✅ **Précision Croissante**
+### **Précision Croissante**
 - Plus l'IA analyse, plus elle devient précise
 - Apprend des patterns spécifiques aux sites
 
-### ✅ **Découverte Continue**
+### **Découverte Continue**
 - Trouve automatiquement de nouvelles marques
 - Base de données toujours à jour
 
-### ✅ **Contexte Local**
+### **Contexte Local**
 - Chaque utilisateur a sa propre base adaptée
 - Respect de la vie privée (stockage local)
 
-## 🧪 Tests et Démonstration
+## Tests et Démonstration
 
 ### Interface de Test
 Ouvre `test_learning_detector.html` dans un navigateur pour :
-- ✅ Tester la détection basique
-- ✅ Tester la découverte de nouvelles marques
-- ✅ Voir les statistiques de la base de données
-- ✅ Effacer les marques découvertes
+- Tester la détection basique
+- Tester la découverte de nouvelles marques
+- Voir les statistiques de la base de données
+- Effacer les marques découvertes
 
 ### Exemples de Tests
 ```javascript
@@ -177,7 +177,7 @@ Ouvre `test_learning_detector.html` dans un navigateur pour :
 → Valide DesignStudio comme nouvelle marque
 ```
 
-## 🚀 Prochaines Étapes
+## Prochaines Étapes
 
 ### 1. **Extension Chrome Complète**
 - Interface utilisateur
@@ -194,7 +194,7 @@ Ouvre `test_learning_detector.html` dans un navigateur pour :
 - Analyse de sentiment
 - Statistiques d'utilisation
 
-## 💡 Points Clés
+## Points Clés
 
 1. **Auto-apprentissage** : L'IA construit sa propre base de données
 2. **Validation intelligente** : Score de confiance pour chaque découverte
@@ -204,4 +204,4 @@ Ouvre `test_learning_detector.html` dans un navigateur pour :
 
 ---
 
-**🎯 Résultat** : Une IA qui devient de plus en plus intelligente pour détecter les marques, sans intervention manuelle ! 
+**Résultat** : Une IA qui devient de plus en plus intelligente pour détecter les marques, sans intervention manuelle ! 
