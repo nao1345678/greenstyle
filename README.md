@@ -1,125 +1,132 @@
-# Brand Scraper - IA pour identifier les marques sur les sites marchands
+# Brand Detection System
 
-Un script Python CLI intelligent pour scraper les sites marchands et identifier automatiquement les marques présentes sur une page web.
+A comprehensive brand detection system that analyzes web pages to identify commercial brands using multiple detection methods including text analysis, link extraction, and image attribute scanning.
 
-## 🚀 Fonctionnalités
+## Overview
 
-- **Scraping intelligent** : Analyse le contenu textuel, les liens et les images
-- **Base de données de marques** : Plus de 100 marques populaires prédéfinies
-- **Respect des sites** : Délais configurables pour éviter la surcharge
-- **Export JSON** : Sauvegarde des résultats pour analyse ultérieure
-- **Mode verbeux** : Détails sur les sources de détection
+This project provides a complete solution for detecting brands on e-commerce websites and other commercial pages. It includes both Python-based scraping tools and JavaScript implementations for browser extensions and client-side detection.
 
-## 📦 Installation
+## Core Components
 
-1. **Cloner ou télécharger le projet**
+### Python Modules
+
+- **brand_scraper.py**: Core brand detection scraper with configurable delays and error handling
+- **advanced_brand_scraper.py**: Enhanced scraper with sophisticated detection algorithms
+- **test_brands.py**: Comprehensive test suite for validation and debugging
+- **example_usage.py**: Practical usage examples and integration patterns
+
+### JavaScript Modules
+
+- **brand_detection_engine.js**: Client-side brand detection engine
+- **brand_detector_extension.ts**: TypeScript implementation for browser extensions
+- **simple_brand_detector.js**: Lightweight detection module
+- **learning_brand_detector.js**: Machine learning enhanced detector
+
+### Data Files
+
+- **brands_database.csv**: Primary brand database
+- **brands_database_fixed.csv**: Corrected and enhanced brand database
+- **requirements.txt**: Python dependencies
+
+## Installation
+
+1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd brand-scraper
+cd ETH.IA
 ```
 
-2. **Installer les dépendances**
+2. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🎯 Utilisation
+## Usage
 
-### Utilisation basique
+### Basic Brand Detection
+
+Analyze a single URL for brand presence:
+
 ```bash
 python brand_scraper.py https://example.com
 ```
 
-### Options disponibles
+### Advanced Configuration
+
+Use the advanced scraper with custom settings:
+
 ```bash
-python brand_scraper.py https://example.com --delay 2.0 --output results.json --verbose
+python advanced_brand_scraper.py https://example.com --delay 2.0 --verbose
 ```
 
-### Paramètres
-- `url` : URL du site à analyser (obligatoire)
-- `--delay` : Délai entre les requêtes en secondes (défaut: 1.0)
-- `--output` : Fichier de sortie pour les résultats JSON
-- `--user-agent` : User-Agent personnalisé
-- `--verbose` : Mode détaillé avec statistiques par source
+### Testing
 
-## 📊 Exemples d'utilisation
+Run the comprehensive test suite:
 
-### Analyser un site e-commerce
 ```bash
-python brand_scraper.py https://www.fnac.com/telephonie/telephones-portables
+python test_brands.py
 ```
 
-### Analyser avec délai plus long
-```bash
-python brand_scraper.py https://www.amazon.fr --delay 3.0
+### JavaScript Integration
+
+Include the brand detection engine in web applications:
+
+```html
+<script src="brand_detection_engine.js"></script>
+<script>
+    const detector = new BrandDetector();
+    detector.analyzePage();
+</script>
 ```
 
-### Sauvegarder les résultats
-```bash
-python brand_scraper.py https://www.darty.com --output darty_brands.json
-```
+## How It Works
 
-### Mode détaillé
-```bash
-python brand_scraper.py https://www.cdiscount.com --verbose
-```
+### Detection Methods
 
-## 🔍 Comment ça fonctionne
+1. **Text Analysis**: Scans page content for brand mentions using pattern matching
+2. **Link Analysis**: Extracts brands from URLs and link text
+3. **Image Analysis**: Identifies brands in image alt attributes and titles
+4. **Attribute Scanning**: Searches data attributes for brand information
 
-Le script analyse la page web de plusieurs façons :
+### Brand Database
 
-1. **Analyse textuelle** : Recherche les marques dans le contenu visible
-2. **Analyse des liens** : Détecte les marques dans les URLs et textes des liens
-3. **Analyse des images** : Identifie les marques dans les attributs alt/title des images
-4. **Attributs data** : Recherche dans les attributs data-brand et similaires
+The system maintains a comprehensive database of commercial brands across multiple categories:
 
-## 📋 Marques supportées
+- Fashion and Apparel
+- Electronics and Technology
+- Automotive
+- Cosmetics and Beauty
+- Luxury Goods
+- Consumer Electronics
 
-Le script inclut une base de données de plus de 100 marques populaires :
+### Processing Pipeline
 
-- **Mode** : Nike, Adidas, Zara, H&M, Levi's, etc.
-- **Électronique** : Apple, Samsung, Sony, Microsoft, etc.
-- **Automobile** : BMW, Mercedes, Toyota, Ford, etc.
-- **Cosmétiques** : L'Oréal, Chanel, Dior, etc.
-- **Luxe** : Louis Vuitton, Gucci, Rolex, etc.
+1. **URL Validation**: Ensures the target URL is accessible
+2. **Content Extraction**: Retrieves HTML content with proper encoding
+3. **Parsing**: Uses BeautifulSoup for structured HTML parsing
+4. **Brand Matching**: Applies multiple detection algorithms
+5. **Result Compilation**: Aggregates findings from all sources
+6. **Output Generation**: Formats results for analysis
 
-## ⚠️ Avertissements
+## Configuration
 
-- **Respectez les robots.txt** des sites que vous analysez
-- **Utilisez des délais appropriés** pour éviter de surcharger les serveurs
-- **Vérifiez les conditions d'utilisation** des sites avant scraping
-- **Ce script est à des fins éducatives** et d'analyse
+### Scraper Settings
 
-## 🔧 Personnalisation
+- **Delay**: Configurable delays between requests (default: 1.0s)
+- **Timeout**: HTTP request timeout settings
+- **User-Agent**: Customizable browser identification
+- **Retry Logic**: Automatic retry for failed requests
 
-### Ajouter de nouvelles marques
+### Brand Detection Parameters
 
-Modifiez la méthode `_load_brands()` dans `brand_scraper.py` :
+- **Case Sensitivity**: Configurable case matching
+- **Fuzzy Matching**: Approximate string matching support
+- **Minimum Length**: Filter for brand name length
+- **Custom Databases**: Support for external brand lists
 
-```python
-def _load_brands(self) -> Set[str]:
-    brands = {
-        # Vos marques existantes...
-        'nouvelle_marque_1', 'nouvelle_marque_2',
-    }
-    return brands
-```
+## Output Format
 
-### Charger depuis un fichier
-
-Vous pouvez modifier le script pour charger les marques depuis un fichier CSV :
-
-```python
-import pandas as pd
-
-def _load_brands_from_file(self, filename: str) -> Set[str]:
-    df = pd.read_csv(filename)
-    return set(df['brand'].str.lower().tolist())
-```
-
-## 📈 Format de sortie
-
-Les résultats sont affichés dans la console et peuvent être exportés en JSON :
+Results are provided in structured JSON format:
 
 ```json
 {
@@ -129,25 +136,148 @@ Les résultats sont affichés dans la console et peuvent être exportés en JSON
   "brands_in_text": ["nike", "adidas"],
   "brands_in_links": ["apple", "samsung"],
   "brands_in_images": ["sony"],
-  "text_length": 15420
+  "text_length": 15420,
+  "processing_time": 2.34
 }
 ```
 
-## 🐛 Dépannage
+## Browser Extension
 
-### Erreur de connexion
-- Vérifiez votre connexion internet
-- Essayez avec un délai plus long
-- Vérifiez que l'URL est accessible
+The TypeScript extension provides real-time brand detection:
 
-### Aucune marque trouvée
-- Vérifiez que l'URL est correcte
-- Essayez une page produit ou catégorie
-- La liste des marques peut être étendue
+- **Content Script**: Analyzes page content as it loads
+- **Background Service**: Manages brand database updates
+- **Popup Interface**: User-friendly results display
+- **Settings Panel**: Customizable detection parameters
 
-### Erreur de module
-- Vérifiez que toutes les dépendances sont installées : `pip install -r requirements.txt`
+## Testing and Validation
 
-## 📝 Licence
+### Test Coverage
 
-Ce projet est fourni à des fins éducatives. Utilisez-le de manière responsable et respectez les conditions d'utilisation des sites web. 
+- **Basic Functionality**: Core detection algorithms
+- **Error Handling**: Network failures and invalid URLs
+- **Custom Brands**: User-defined brand lists
+- **Performance**: Processing time and memory usage
+- **Edge Cases**: Special characters and encoding issues
+
+### Validation Methods
+
+- **Unit Tests**: Individual component testing
+- **Integration Tests**: End-to-end workflow validation
+- **Performance Tests**: Load and stress testing
+- **Browser Tests**: Extension functionality verification
+
+## Performance Considerations
+
+### Optimization Strategies
+
+- **Caching**: Result caching for repeated requests
+- **Parallel Processing**: Multi-threaded analysis where appropriate
+- **Memory Management**: Efficient data structures and cleanup
+- **Network Optimization**: Connection pooling and reuse
+
+### Resource Usage
+
+- **CPU**: Minimal processing overhead
+- **Memory**: Efficient string handling and data structures
+- **Network**: Respectful request patterns with delays
+- **Storage**: Compact result formats
+
+## Security and Ethics
+
+### Responsible Usage
+
+- **Rate Limiting**: Built-in delays to prevent server overload
+- **User-Agent**: Proper browser identification
+- **Error Handling**: Graceful failure without server impact
+- **Data Privacy**: No personal information collection
+
+### Legal Compliance
+
+- **robots.txt**: Respect for site crawling policies
+- **Terms of Service**: Compliance with website usage terms
+- **Data Protection**: No sensitive data collection or storage
+- **Educational Purpose**: Intended for research and learning
+
+## Troubleshooting
+
+### Common Issues
+
+**Connection Errors**
+- Verify internet connectivity
+- Check URL accessibility
+- Increase delay settings
+- Verify firewall settings
+
+**No Brands Detected**
+- Confirm URL is correct
+- Try product or category pages
+- Extend brand database
+- Check for JavaScript-rendered content
+
+**Module Import Errors**
+- Install all dependencies: `pip install -r requirements.txt`
+- Verify Python version compatibility
+- Check file permissions
+- Validate import paths
+
+### Debug Mode
+
+Enable verbose output for detailed analysis:
+
+```bash
+python brand_scraper.py https://example.com --verbose
+```
+
+## Development
+
+### Project Structure
+
+```
+ETH.IA/
+├── brand_scraper.py              # Core detection module
+├── advanced_brand_scraper.py     # Enhanced detection
+├── test_brands.py               # Test suite
+├── example_usage.py             # Usage examples
+├── brand_detection_engine.js    # JavaScript engine
+├── brand_detector_extension.ts  # Browser extension
+├── brands_database.csv          # Brand database
+├── requirements.txt             # Python dependencies
+└── README.md                   # This file
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement changes with tests
+4. Submit a pull request
+5. Ensure all tests pass
+
+### Code Standards
+
+- **Python**: PEP 8 compliance
+- **JavaScript**: ESLint configuration
+- **TypeScript**: Strict type checking
+- **Documentation**: Comprehensive docstrings
+- **Testing**: Minimum 80% coverage
+
+## License
+
+This project is provided for educational and research purposes. Users are responsible for complying with website terms of service and applicable laws when using this software.
+
+## Support
+
+For issues, questions, or contributions:
+
+1. Check existing documentation
+2. Review test cases for examples
+3. Examine error logs for debugging
+4. Submit detailed issue reports
+
+## Version History
+
+- **v1.0.0**: Initial release with core functionality
+- **v1.1.0**: Added advanced scraper and browser extension
+- **v1.2.0**: Enhanced brand database and performance optimizations
+- **v1.3.0**: Comprehensive test suite and documentation updates 
