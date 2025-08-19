@@ -1,0 +1,24 @@
+Compte rendu de réunion 
+Participants et avancement individuel :
+
+Manu : 
+- a fini le MLD et le MCD 
+- doit y ajouter des tables pour le compte utilisateur et les tableaux de favoris (se reporter aux options disponibles sur la maquette)
+- doit commencer le setup de la base de données avec l'aide de Zakarya 
+
+Hery : 
+- a fini d'écrire la propale duu futur du projet 
+
+Nao :
+- maquettes de l'extension et du site prêtes 
+
+Françoise : 
+- a fini de faire un jeu de données pour les marques 
+- suggestions d'ajout de l'impact environnemental et du pays d'origine 
+
+
+Création de nouvelles issues : 
+- recherche sur la techno à utiliser pour le site internet 
+- setup du site 
+- création de la base de données 
+- recherches de ressources sur toutes les marques 
