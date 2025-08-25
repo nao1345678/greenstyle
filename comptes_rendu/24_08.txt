@@ -1,0 +1,26 @@
+Compte rendu de réunion 
+Participants et avancement individuel :
+
+Stark  et Mael : 
+- doit push de la documentatio pour le fonctionnement de l'IA 
+- doit push les API trouvées sur lesquelles l'IA se basera pour le scrapping de site 
+- le but de l'IA étant l'automatisation de la recherche de marques de vêtements et chaussures dans une page web 
+- dans le cas d'un site revendeur avec plusieurs marques (ex: zalando), recherche approfondie avec documentation et affichage de la marque après clic sur article en particulier 
+
+Listes des API trouvées : 
+- BeingAPI : infos globales sur les marques en tant que marques (noms, catégories, etc)
+- SerpAPI :  infos globables cependant plus nombreuses et JSON disponibles 
+
+Hery : 
+- Recherches d'API également 
+- va commencer le setup et le css du front basé sur les maquettes figma 
+
+Listes des API trouvées : 
+- data europe : pour vérifier si un produit à été certifié respectueuse de l'environnement par l'europe
+- wikirate : permet de récupérer les différents score qu'une marque a eu d'après plusieurs ONG
+
+Nao : 
+- réflexion sur les choix de techno 
+- débat entre Next.JS et Vue.js 
+- choix final axé sur Vue.js avec un moteur vite pour optimisation maximale de la vitesse du front basé sur un UXUI
+- doit ajouter une page détails sur la maquette figma 
