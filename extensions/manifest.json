@@ -1,10 +1,13 @@
 {
     "name": "PLI - GreenStyle ",
     "description": "Base Level Extension",
+    "content_security_policy": {
+        "extension_pages": "font-src 'self' 'unsafe-eval'; script-src 'self';"
+    },
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "popup/popup.html",
         "default_icon": "icon_extension.png"
     }
 }
