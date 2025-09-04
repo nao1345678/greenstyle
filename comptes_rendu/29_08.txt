@@ -1,0 +1,34 @@
+Manu :
+- Refonte du MLD & MCD (nom utilisateur etc dans l'ajout)
+- ORM à push fait sur prisma pour automatiser le remplissage de la DB
+- DB en mongoDB
+- Relance Manu sur la base
+
+Maël :
+- Scraping : sites e-commerce avec plusieurs marques problématique
+- Beautiful soup pour liée la syntaxe de la page de e-commerce
+- L'IA lit déjà des marques sur une page web mais qlq bug
+- Intégration des délais des mariages aux pages (exemple donné).
+- Entraînement
+- Approfondissement de la lecture
+
+Françoise :
+- page d'acceuil fini
+- a push le jeu de données
+- faut avancer sur le front
+
+Hery :
+- Connexion du site et de l’extension
+- Pages pas commencée
+- Pour la semaine prochaine : travailler sur la page d’accueil
+
+Nao :
+- Réalisation de la maquette de la page d’accueil.
+- Trouver une idée adaptée pour les sites multi-marchés.
+- Développement du front de l’extension.
+- Envoi un message à Nico pour suivi.
+- Vérification des éléments envoyés et des tâches accomplies de :
+    - Manu
+    - Hery
+    - Stark
+    - Françoise
