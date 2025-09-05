@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 IA Analyseur Éthique de Marques - Démonstration Interactive</title>
+    <title>Fashion Brand Detection Engine - Windows 98 Style</title>
     <style>
         * {
             margin: 0;
@@ -12,257 +12,186 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'MS Sans Serif', sans-serif;
+            background: #c0c0c0;
+            color: #000;
+            padding: 10px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 30px;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: #000;
         }
 
         .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
+            font-size: 0.9em;
+            color: #000;
         }
 
         .main-content {
-            padding: 40px;
+            padding: 10px;
         }
 
         .input-section {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 2px solid #e9ecef;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .input-group {
             display: flex;
-            gap: 15px;
+            gap: 5px;
             align-items: center;
             flex-wrap: wrap;
         }
 
         .input-field {
             flex: 1;
-            min-width: 300px;
-            padding: 15px 20px;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
+            min-width: 200px;
+            padding: 2px 4px;
+            border: 2px inset #c0c0c0;
+            background: #fff;
+            font-family: 'MS Sans Serif', sans-serif;
+            font-size: 0.9em;
         }
 
         .input-field:focus {
             outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
         .analyze-btn {
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
+            padding: 4px 8px;
+            background: #c0c0c0;
+            color: #000;
+            border: 2px outset #c0c0c0;
+            font-family: 'MS Sans Serif', sans-serif;
+            font-size: 0.9em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 150px;
+            min-width: 80px;
         }
 
         .analyze-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            background: #d4d0c8;
+        }
+
+        .analyze-btn:active {
+            border: 2px inset #c0c0c0;
         }
 
         .analyze-btn:disabled {
-            opacity: 0.6;
+            background: #c0c0c0;
             cursor: not-allowed;
-            transform: none;
+            color: #808080;
         }
 
         .results-section {
             display: none;
-            margin-top: 30px;
+            margin-top: 10px;
         }
 
         .results-section.show {
             display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .result-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #4facfe;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .result-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .result-icon {
-            font-size: 2em;
-            margin-right: 15px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #808080;
+            padding-bottom: 5px;
         }
 
         .result-title {
-            font-size: 1.5em;
+            font-size: 1.1em;
             font-weight: bold;
-            color: #333;
+            color: #000;
         }
 
         .confidence-bar {
-            background: #e9ecef;
-            height: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 15px 0;
+            background: #fff;
+            height: 15px;
+            border: 2px inset #c0c0c0;
+            margin: 10px 0;
         }
 
         .confidence-fill {
             height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #0abde3);
-            border-radius: 10px;
-            transition: width 1s ease;
-            position: relative;
-        }
-
-        .confidence-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            background: #000;
+            transition: width 0.5s ease;
         }
 
         .confidence-text {
             text-align: center;
             font-weight: bold;
-            color: #333;
+            color: #000;
             margin-top: 5px;
         }
 
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 5px;
+            margin-top: 10px;
         }
 
         .detail-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #4facfe;
+            background: #c0c0c0;
+            padding: 5px;
+            border: 2px inset #c0c0c0;
         }
 
         .detail-label {
             font-weight: bold;
-            color: #666;
+            color: #000;
             margin-bottom: 5px;
+            font-size: 0.9em;
         }
 
         .detail-value {
-            color: #333;
-            font-size: 1.1em;
+            color: #000;
+            font-size: 1em;
         }
 
         .ai-learning {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: #333;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-top: 10px;
         }
 
         .ai-learning h3 {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .ai-learning h3::before {
-            content: '🧠';
-            margin-right: 10px;
-        }
-
-        .learning-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .stat-item {
-            background: rgba(255,255,255,0.7);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #000;
         }
 
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 10px;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
         }
 
         .loading.show {
@@ -270,13 +199,13 @@
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4facfe;
+            border: 2px solid #c0c0c0;
+            border-top: 2px solid #000;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 20px;
+            height: 20px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
         }
 
         @keyframes spin {
@@ -285,36 +214,60 @@
         }
 
         .examples {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 30px;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-top: 10px;
         }
 
         .examples h3 {
-            color: #1976d2;
-            margin-bottom: 15px;
+            color: #000;
+            margin-bottom: 10px;
+            font-size: 1em;
         }
 
         .example-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 5px;
         }
 
         .example-tag {
-            background: #1976d2;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
+            background: #c0c0c0;
+            color: #000;
+            padding: 2px 6px;
+            border: 2px outset #c0c0c0;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
+            font-size: 0.8em;
+            font-family: 'MS Sans Serif', sans-serif;
         }
 
         .example-tag:hover {
-            background: #1565c0;
-            transform: translateY(-2px);
+            background: #d4d0c8;
+        }
+
+        .example-tag:active {
+            border: 2px inset #c0c0c0;
+        }
+
+        .brand-tag {
+            background: #c0c0c0;
+            color: #000;
+            padding: 2px 6px;
+            border: 2px outset #c0c0c0;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-family: 'MS Sans Serif', sans-serif;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .brand-tag:hover {
+            background: #d4d0c8;
+        }
+
+        .brand-tag:active {
+            border: 2px inset #c0c0c0;
         }
 
         @media (max-width: 768px) {
@@ -327,11 +280,11 @@
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 1.2em;
             }
             
             .main-content {
-                padding: 20px;
+                padding: 5px;
             }
         }
     </style>
@@ -339,69 +292,68 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 Moteur de Détection de Marques</h1>
-            <p>Visualisez l'analyse multi-sources en temps réel - Détection intelligente sur la page</p>
+            <h1>Fashion Brand Detection Engine</h1>
+            <p>Mode & Fashion Analysis with Ethical Scoring</p>
         </div>
 
         <div class="main-content">
             <div class="input-section">
-                <h2 style="margin-bottom: 20px; color: #333;">🔍 Analyse de Marques par URL</h2>
+                <h2 style="margin-bottom: 10px; color: #000; font-size: 1em;">Fashion Brand Analysis</h2>
                 <div class="input-group">
                     <input 
                         type="url" 
                         id="urlInput" 
                         class="input-field" 
-                        placeholder="Entrez une URL à analyser (ex: https://nike.com, https://amazon.fr...)"
+                        placeholder="https://nike.com, https://zara.com, https://h&m.com..."
                         autocomplete="off"
                     >
                     <button id="analyzeBtn" class="analyze-btn">
-                        🚀 Analyser l'URL
+                        ANALYZE
                     </button>
-                    <button id="clearBtn" class="analyze-btn" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
-                        🗑️ Effacer
+                    <button id="clearBtn" class="analyze-btn" style="background: #808080;">
+                        CLEAR
                     </button>
                 </div>
                 
                 <div class="examples">
-                    <h3>💡 Exemples d'URLs à tester :</h3>
+                    <h3>Fashion Brand URLs:</h3>
                     <div class="example-tags">
-                        <span class="example-tag" onclick="testUrl('https://nike.com')">Nike.com</span>
-                        <span class="example-tag" onclick="testUrl('https://apple.com')">Apple.com</span>
-                        <span class="example-tag" onclick="testUrl('https://amazon.fr')">Amazon.fr</span>
-                        <span class="example-tag" onclick="testUrl('https://fnac.com')">Fnac.com</span>
-                        <span class="example-tag" onclick="testUrl('https://zara.com')">Zara.com</span>
-                        <span class="example-tag" onclick="testUrl('https://samsung.com')">Samsung.com</span>
+                        <span class="example-tag" onclick="testUrl('https://nike.com')">Nike</span>
+                        <span class="example-tag" onclick="testUrl('https://zara.com')">Zara</span>
+                        <span class="example-tag" onclick="testUrl('https://hm.com')">H&M</span>
+                        <span class="example-tag" onclick="testUrl('https://adidas.com')">Adidas</span>
+                        <span class="example-tag" onclick="testUrl('https://uniqlo.com')">Uniqlo</span>
+                        <span class="example-tag" onclick="testUrl('https://gap.com')">Gap</span>
                     </div>
                 </div>
             </div>
 
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p id="loadingText">🌐 Scraping de l'URL...</p>
+                <p id="loadingText">Analyzing Fashion Brands...</p>
             </div>
 
             <div class="results-section" id="resultsSection">
                 <div class="result-card">
                     <div class="result-header">
-                        <div class="result-icon">🎯</div>
-                        <div class="result-title">Résultats de Détection</div>
+                        <div class="result-title">Fashion Brand Detection Results</div>
                     </div>
                     
                     <div class="details-grid">
                         <div class="detail-item">
-                            <div class="detail-label">Marques trouvées</div>
+                            <div class="detail-label">Fashion Brands Found</div>
                             <div class="detail-value" id="totalBrands">0</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Catégories détectées</div>
+                            <div class="detail-label">Fashion Categories</div>
                             <div class="detail-value" id="totalCategories">0</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Sources analysées</div>
+                            <div class="detail-label">Sources</div>
                             <div class="detail-value" id="sourcesAnalyzed">6</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">URL de la page</div>
+                            <div class="detail-label">URL</div>
                             <div class="detail-value" id="pageUrl">-</div>
                         </div>
                     </div>
@@ -409,99 +361,97 @@
 
                 <div class="result-card">
                     <div class="result-header">
-                        <div class="result-icon">📊</div>
-                        <div class="result-title">Analyse par Source</div>
+                        <div class="result-title">Analysis by Source</div>
                     </div>
                     
                     <div class="details-grid">
-                        <div class="detail-item" style="border-left-color: #4facfe;">
-                            <div class="detail-label">📝 Texte de la page</div>
-                            <div class="detail-value" id="textResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Text</div>
+                            <div class="detail-value" id="textResults">0 fashion brands</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #43e97b;">
-                            <div class="detail-label">🔗 Liens et URLs</div>
-                            <div class="detail-value" id="linksResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Links</div>
+                            <div class="detail-value" id="linksResults">0 fashion brands</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #fa709a;">
-                            <div class="detail-label">🖼️ Images et alt-text</div>
-                            <div class="detail-value" id="imagesResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Images</div>
+                            <div class="detail-value" id="imagesResults">0 fashion brands</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #ffecd2;">
-                            <div class="detail-label">🏷️ Attributs data-*</div>
-                            <div class="detail-value" id="attributesResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Attributes</div>
+                            <div class="detail-value" id="attributesResults">0 fashion brands</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #a8edea;">
-                            <div class="detail-label">📋 Métadonnées</div>
-                            <div class="detail-value" id="metadataResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Metadata</div>
+                            <div class="detail-value" id="metadataResults">0 fashion brands</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #d299c2;">
-                            <div class="detail-label">🎨 Classes CSS</div>
-                            <div class="detail-value" id="classesResults">0 marques</div>
+                        <div class="detail-item">
+                            <div class="detail-label">CSS Classes</div>
+                            <div class="detail-value" id="classesResults">0 fashion brands</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="ai-learning" id="aiLearning">
-                    <h3>🏷️ Marques par Catégorie</h3>
-                    <p id="categoryAnalysis">Cliquez sur une marque pour voir son score éthique détaillé.</p>
+                    <h3>Fashion Brands by Category</h3>
+                    <p id="categoryAnalysis">Click on a fashion brand to see its ethical score.</p>
                     
                     <div id="categoriesContainer">
-                        <!-- Les catégories seront générées dynamiquement -->
+                        <!-- Categories will be generated dynamically -->
                     </div>
                 </div>
 
                 <div class="result-card" id="ethicsCard" style="display: none;">
                     <div class="result-header">
-                        <div class="result-icon">🌱</div>
-                        <div class="result-title">Score Éthique de la Marque</div>
+                        <div class="result-title">Ethical Score</div>
                     </div>
                     
                     <div class="confidence-bar">
                         <div class="confidence-fill" id="ethicsScoreFill"></div>
                     </div>
-                    <div class="confidence-text" id="ethicsScoreText">Score éthique: 0/100</div>
+                    <div class="confidence-text" id="ethicsScoreText">Score: 0/100</div>
                     
                     <div class="details-grid">
                         <div class="detail-item">
-                            <div class="detail-label">Marque analysée</div>
+                            <div class="detail-label">Brand</div>
                             <div class="detail-value" id="selectedBrand">-</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Niveau éthique</div>
+                            <div class="detail-label">Level</div>
                             <div class="detail-value" id="ethicsLevel">-</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Site web analysé</div>
+                            <div class="detail-label">Website</div>
                             <div class="detail-value" id="brandWebsite">-</div>
                         </div>
                         <div class="detail-item">
-                            <div class="detail-label">Dernière mise à jour</div>
+                            <div class="detail-label">Updated</div>
                             <div class="detail-value" id="lastUpdate">-</div>
                         </div>
                     </div>
 
-                    <div class="details-grid" style="margin-top: 20px;">
-                        <div class="detail-item" style="border-left-color: #4caf50;">
-                            <div class="detail-label">🌿 Durabilité</div>
+                    <div class="details-grid" style="margin-top: 10px;">
+                        <div class="detail-item">
+                            <div class="detail-label">Sustainability</div>
                             <div class="detail-value" id="sustainabilityScore">-</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #2196f3;">
-                            <div class="detail-label">👥 Responsabilité sociale</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Social</div>
                             <div class="detail-value" id="socialScore">-</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #ff9800;">
-                            <div class="detail-label">🔍 Transparence</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Transparency</div>
                             <div class="detail-value" id="transparencyScore">-</div>
                         </div>
-                        <div class="detail-item" style="border-left-color: #9c27b0;">
-                            <div class="detail-label">⚖️ Éthique des affaires</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Business Ethics</div>
                             <div class="detail-value" id="businessEthicsScore">-</div>
                         </div>
                     </div>
 
-                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                        <h4 style="margin-bottom: 10px; color: #333;">📋 Analyse détaillée</h4>
-                        <p id="ethicsAnalysis" style="color: #666; line-height: 1.6;">L'analyse éthique de cette marque sera affichée ici.</p>
+                    <div style="margin-top: 10px; padding: 5px; background: #c0c0c0; border: 2px inset #c0c0c0;">
+                        <h4 style="margin-bottom: 5px; color: #000; font-size: 0.9em;">Analysis</h4>
+                        <p id="ethicsAnalysis" style="color: #000; line-height: 1.4; font-size: 0.8em;">Ethical analysis will be displayed here.</p>
                     </div>
                 </div>
             </div>
@@ -525,15 +475,15 @@
                 
                 // Simuler les étapes d'analyse avec délais
                 const steps = [
-                    '🌐 Connexion à l\'URL...',
-                    '📥 Téléchargement du contenu...',
-                    '🔍 Analyse du texte de la page...',
-                    '🔗 Analyse des liens et URLs...',
-                    '🖼️ Analyse des images et alt-text...',
-                    '🏷️ Analyse des attributs data-*...',
-                    '📋 Analyse des métadonnées...',
-                    '🎨 Analyse des classes CSS...',
-                    '📊 Compilation des résultats...'
+                    'Connecting to fashion website...',
+                    'Downloading content...',
+                    'Scanning for fashion brands...',
+                    'Analyzing product links...',
+                    'Checking brand logos...',
+                    'Reading brand attributes...',
+                    'Extracting metadata...',
+                    'Analyzing CSS classes...',
+                    'Compiling fashion results...'
                 ];
                 
                 let currentStep = 0;
@@ -556,26 +506,32 @@
             }
             
             simulateUrlAnalysis(url) {
-                // Simulation d'analyse basée sur l'URL
+                // Simulation d'analyse basée sur l'URL - Focus Mode/Fashion
                 const urlLower = url.toLowerCase();
                 let simulatedBrands = [];
                 
-                // Détection basée sur l'URL
+                // Détection basée sur l'URL - Marques de mode uniquement
                 if (urlLower.includes('nike')) {
                     simulatedBrands = ['nike', 'air jordan', 'jordan'];
-                } else if (urlLower.includes('apple')) {
-                    simulatedBrands = ['apple', 'iphone', 'macbook', 'ipad'];
-                } else if (urlLower.includes('amazon')) {
-                    simulatedBrands = ['amazon', 'alexa', 'prime'];
-                } else if (urlLower.includes('samsung')) {
-                    simulatedBrands = ['samsung', 'galaxy'];
+                } else if (urlLower.includes('adidas')) {
+                    simulatedBrands = ['adidas', 'adidas originals', 'adidas performance'];
                 } else if (urlLower.includes('zara')) {
-                    simulatedBrands = ['zara'];
-                } else if (urlLower.includes('fnac')) {
-                    simulatedBrands = ['sony', 'microsoft', 'dell', 'hp'];
+                    simulatedBrands = ['zara', 'zara home'];
+                } else if (urlLower.includes('hm') || urlLower.includes('h&m')) {
+                    simulatedBrands = ['h&m', 'h&m home'];
+                } else if (urlLower.includes('uniqlo')) {
+                    simulatedBrands = ['uniqlo', 'uniqlo japan'];
+                } else if (urlLower.includes('gap')) {
+                    simulatedBrands = ['gap', 'gap kids'];
+                } else if (urlLower.includes('puma')) {
+                    simulatedBrands = ['puma', 'puma sport'];
+                } else if (urlLower.includes('converse')) {
+                    simulatedBrands = ['converse', 'converse all star'];
+                } else if (urlLower.includes('vans')) {
+                    simulatedBrands = ['vans', 'vans old skool'];
                 } else {
-                    // Marques génériques pour les autres sites
-                    simulatedBrands = ['nike', 'adidas', 'apple', 'samsung'];
+                    // Marques de mode génériques pour les autres sites
+                    simulatedBrands = ['nike', 'adidas', 'zara', 'h&m'];
                 }
                 
                 // Créer des résultats simulés
@@ -594,8 +550,9 @@
                         classes: []
                     },
                     byCategory: {
-                        'Mode': simulatedBrands.filter(b => ['nike', 'adidas', 'zara'].includes(b)),
-                        'Électronique': simulatedBrands.filter(b => ['apple', 'samsung', 'sony', 'microsoft', 'dell', 'hp'].includes(b))
+                        'Sportswear': simulatedBrands.filter(b => ['nike', 'adidas', 'puma', 'converse', 'vans'].includes(b)),
+                        'Fast Fashion': simulatedBrands.filter(b => ['zara', 'h&m', 'uniqlo', 'gap'].includes(b)),
+                        'Luxury': simulatedBrands.filter(b => ['gucci', 'chanel', 'louis vuitton', 'hermes'].includes(b))
                     }
                 };
                 
@@ -611,12 +568,12 @@
                 document.getElementById('pageUrl').textContent = this.currentUrl || 'URL analysée';
                 
                 // Afficher les résultats par source
-                document.getElementById('textResults').textContent = `${this.currentResults.bySource.text.length} marques`;
-                document.getElementById('linksResults').textContent = `${this.currentResults.bySource.links.length} marques`;
-                document.getElementById('imagesResults').textContent = `${this.currentResults.bySource.images.length} marques`;
-                document.getElementById('attributesResults').textContent = `${this.currentResults.bySource.attributes.length} marques`;
-                document.getElementById('metadataResults').textContent = `${this.currentResults.bySource.metadata.length} marques`;
-                document.getElementById('classesResults').textContent = `${this.currentResults.bySource.classes.length} marques`;
+                document.getElementById('textResults').textContent = `${this.currentResults.bySource.text.length} fashion brands`;
+                document.getElementById('linksResults').textContent = `${this.currentResults.bySource.links.length} fashion brands`;
+                document.getElementById('imagesResults').textContent = `${this.currentResults.bySource.images.length} fashion brands`;
+                document.getElementById('attributesResults').textContent = `${this.currentResults.bySource.attributes.length} fashion brands`;
+                document.getElementById('metadataResults').textContent = `${this.currentResults.bySource.metadata.length} fashion brands`;
+                document.getElementById('classesResults').textContent = `${this.currentResults.bySource.classes.length} fashion brands`;
                 
                 // Afficher les catégories
                 this.displayCategories();
@@ -627,47 +584,31 @@
                 container.innerHTML = '';
                 
                 if (Object.keys(this.currentResults.byCategory).length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Aucune marque détectée sur cette page.</p>';
+                    container.innerHTML = '<p style="text-align: center; color: #000; padding: 10px;">No fashion brands detected on this page.</p>';
                     return;
                 }
                 
                 for (const [category, brands] of Object.entries(this.currentResults.byCategory)) {
                     const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'stat-item';
-                    categoryDiv.style.marginBottom = '15px';
+                    categoryDiv.className = 'detail-item';
+                    categoryDiv.style.marginBottom = '10px';
                     
                     const categoryTitle = document.createElement('h4');
-                    categoryTitle.textContent = `📂 ${category} (${brands.length} marques)`;
-                    categoryTitle.style.marginBottom = '10px';
-                    categoryTitle.style.color = '#333';
+                    categoryTitle.textContent = `${category} (${brands.length} fashion brands)`;
+                    categoryTitle.style.marginBottom = '5px';
+                    categoryTitle.style.color = '#000';
+                    categoryTitle.style.fontSize = '0.9em';
                     
                     const brandsList = document.createElement('div');
                     brandsList.style.display = 'flex';
                     brandsList.style.flexWrap = 'wrap';
-                    brandsList.style.gap = '8px';
+                    brandsList.style.gap = '5px';
                     
                     brands.forEach(brand => {
                         const brandTag = document.createElement('span');
                         brandTag.textContent = brand;
-                        brandTag.style.background = '#4facfe';
-                        brandTag.style.color = 'white';
-                        brandTag.style.padding = '4px 8px';
-                        brandTag.style.borderRadius = '12px';
-                        brandTag.style.fontSize = '0.9em';
-                        brandTag.style.cursor = 'pointer';
-                        brandTag.style.transition = 'all 0.3s ease';
-                        brandTag.title = `Cliquez pour voir le score éthique de ${brand}`;
-                        
-                        // Effet hover
-                        brandTag.addEventListener('mouseenter', () => {
-                            brandTag.style.background = '#667eea';
-                            brandTag.style.transform = 'translateY(-2px)';
-                        });
-                        
-                        brandTag.addEventListener('mouseleave', () => {
-                            brandTag.style.background = '#4facfe';
-                            brandTag.style.transform = 'translateY(0)';
-                        });
+                        brandTag.className = 'brand-tag';
+                        brandTag.title = `Click to see ethical score for fashion brand ${brand}`;
                         
                         // Clic pour afficher le score éthique
                         brandTag.addEventListener('click', () => {
@@ -697,7 +638,7 @@
                 
                 // Score éthique global
                 const totalScore = ethicsData.total;
-                document.getElementById('ethicsScoreText').textContent = `Score éthique: ${totalScore}/100`;
+                document.getElementById('ethicsScoreText').textContent = `Score: ${totalScore}/100`;
                 document.getElementById('ethicsScoreFill').style.width = `${totalScore}%`;
                 document.getElementById('ethicsLevel').textContent = this.getEthicsLevel(totalScore);
                 
@@ -804,12 +745,12 @@
                 // Reset des valeurs
                 document.getElementById('totalBrands').textContent = '0';
                 document.getElementById('totalCategories').textContent = '0';
-                document.getElementById('textResults').textContent = '0 marques';
-                document.getElementById('linksResults').textContent = '0 marques';
-                document.getElementById('imagesResults').textContent = '0 marques';
-                document.getElementById('attributesResults').textContent = '0 marques';
-                document.getElementById('metadataResults').textContent = '0 marques';
-                document.getElementById('classesResults').textContent = '0 marques';
+                document.getElementById('textResults').textContent = '0 fashion brands';
+                document.getElementById('linksResults').textContent = '0 fashion brands';
+                document.getElementById('imagesResults').textContent = '0 fashion brands';
+                document.getElementById('attributesResults').textContent = '0 fashion brands';
+                document.getElementById('metadataResults').textContent = '0 fashion brands';
+                document.getElementById('classesResults').textContent = '0 fashion brands';
                 document.getElementById('categoriesContainer').innerHTML = '';
             }
         }
@@ -829,13 +770,13 @@
             const url = urlInput.value.trim();
             
             if (!url) {
-                alert('Veuillez entrer une URL à analyser');
+                alert('Please enter a fashion website URL to analyze');
                 return;
             }
             
             // Validation basique de l'URL
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                alert('L\'URL doit commencer par http:// ou https://');
+                alert('URL must start with http:// or https://');
                 return;
             }
             
@@ -869,8 +810,8 @@
         
         // Auto-analyse au chargement de la page
         window.addEventListener('load', () => {
-            console.log('🚀 Moteur de détection de marques chargé');
-            console.log('📊 Base de données:', visualizer.engine.brands.length, 'marques');
+            console.log('Fashion Brand Detection Engine loaded');
+            console.log('Database:', visualizer.engine.brands.length, 'fashion brands');
         });
     </script>
 </body>
