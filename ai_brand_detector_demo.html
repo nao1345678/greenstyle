@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 IA Analyseur Éthique de Marques - Démonstration Interactive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .analyze-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4facfe;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+
+        .result-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .confidence-bar {
+            background: #e9ecef;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #0abde3);
+            border-radius: 10px;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .confidence-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .confidence-text {
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .ai-learning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .ai-learning h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ai-learning h3::before {
+            content: '🧠';
+            margin-right: 10px;
+        }
+
+        .learning-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .examples h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .example-tag {
+            background: #1976d2;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .example-tag:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Moteur de Détection de Marques</h1>
+            <p>Visualisez l'analyse multi-sources en temps réel - Détection intelligente sur la page</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 style="margin-bottom: 20px; color: #333;">🔍 Analyse Multi-Sources de la Page</h2>
+                <div class="input-group">
+                    <button id="analyzeBtn" class="analyze-btn">
+                        🚀 Analyser cette Page
+                    </button>
+                    <button id="clearBtn" class="analyze-btn" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+                        🗑️ Effacer
+                    </button>
+                </div>
+                
+                <div class="examples">
+                    <h3>💡 Le moteur analyse automatiquement :</h3>
+                    <div class="example-tags">
+                        <span class="example-tag" style="background: #4facfe;">📝 Texte de la page</span>
+                        <span class="example-tag" style="background: #43e97b;">🔗 Liens et URLs</span>
+                        <span class="example-tag" style="background: #fa709a;">🖼️ Images et alt-text</span>
+                        <span class="example-tag" style="background: #ffecd2;">🏷️ Attributs data-*</span>
+                        <span class="example-tag" style="background: #a8edea;">📋 Métadonnées</span>
+                        <span class="example-tag" style="background: #d299c2;">🎨 Classes CSS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">🔍 Analyse multi-sources en cours...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-icon">🎯</div>
+                        <div class="result-title">Résultats de Détection</div>
+                    </div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Marques trouvées</div>
+                            <div class="detail-value" id="totalBrands">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Catégories détectées</div>
+                            <div class="detail-value" id="totalCategories">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Sources analysées</div>
+                            <div class="detail-value" id="sourcesAnalyzed">6</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">URL de la page</div>
+                            <div class="detail-value" id="pageUrl">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-icon">📊</div>
+                        <div class="result-title">Analyse par Source</div>
+                    </div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item" style="border-left-color: #4facfe;">
+                            <div class="detail-label">📝 Texte de la page</div>
+                            <div class="detail-value" id="textResults">0 marques</div>
+                        </div>
+                        <div class="detail-item" style="border-left-color: #43e97b;">
+                            <div class="detail-label">🔗 Liens et URLs</div>
+                            <div class="detail-value" id="linksResults">0 marques</div>
+                        </div>
+                        <div class="detail-item" style="border-left-color: #fa709a;">
+                            <div class="detail-label">🖼️ Images et alt-text</div>
+                            <div class="detail-value" id="imagesResults">0 marques</div>
+                        </div>
+                        <div class="detail-item" style="border-left-color: #ffecd2;">
+                            <div class="detail-label">🏷️ Attributs data-*</div>
+                            <div class="detail-value" id="attributesResults">0 marques</div>
+                        </div>
+                        <div class="detail-item" style="border-left-color: #a8edea;">
+                            <div class="detail-label">📋 Métadonnées</div>
+                            <div class="detail-value" id="metadataResults">0 marques</div>
+                        </div>
+                        <div class="detail-item" style="border-left-color: #d299c2;">
+                            <div class="detail-label">🎨 Classes CSS</div>
+                            <div class="detail-value" id="classesResults">0 marques</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-learning" id="aiLearning">
+                    <h3>🏷️ Marques par Catégorie</h3>
+                    <p id="categoryAnalysis">Les marques détectées sont organisées par catégorie avec leurs sources de détection.</p>
+                    
+                    <div id="categoriesContainer">
+                        <!-- Les catégories seront générées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="brand_detection_engine.js"></script>
+    <script>
+        // Interface de visualisation du moteur de détection
+        class BrandDetectionVisualizer {
+            constructor() {
+                this.engine = new BrandDetectionEngine();
+                this.currentResults = null;
+                this.analysisCount = 0;
+            }
+            
+            analyzePage() {
+                this.analysisCount++;
+                
+                // Simuler les étapes d'analyse avec délais
+                const steps = [
+                    '🔍 Analyse du texte de la page...',
+                    '🔗 Analyse des liens et URLs...',
+                    '🖼️ Analyse des images et alt-text...',
+                    '🏷️ Analyse des attributs data-*...',
+                    '📋 Analyse des métadonnées...',
+                    '🎨 Analyse des classes CSS...',
+                    '📊 Compilation des résultats...'
+                ];
+                
+                let currentStep = 0;
+                const stepInterval = setInterval(() => {
+                    if (currentStep < steps.length) {
+                        document.getElementById('loadingText').textContent = steps[currentStep];
+                        currentStep++;
+                    } else {
+                        clearInterval(stepInterval);
+                        
+                        // Lancer l'analyse réelle
+                        this.currentResults = this.engine.analyzePage();
+                        this.displayResults();
+                        
+                        // Masquer le loading
+                        document.getElementById('loading').classList.remove('show');
+                        document.getElementById('resultsSection').classList.add('show');
+                        document.getElementById('analyzeBtn').disabled = false;
+                    }
+                }, 300);
+            }
+            
+            displayResults() {
+                if (!this.currentResults) return;
+                
+                // Afficher les statistiques principales
+                document.getElementById('totalBrands').textContent = this.currentResults.statistics.totalFound;
+                document.getElementById('totalCategories').textContent = this.currentResults.statistics.categoriesFound;
+                document.getElementById('pageUrl').textContent = window.location.href;
+                
+                // Afficher les résultats par source
+                document.getElementById('textResults').textContent = `${this.currentResults.bySource.text.length} marques`;
+                document.getElementById('linksResults').textContent = `${this.currentResults.bySource.links.length} marques`;
+                document.getElementById('imagesResults').textContent = `${this.currentResults.bySource.images.length} marques`;
+                document.getElementById('attributesResults').textContent = `${this.currentResults.bySource.attributes.length} marques`;
+                document.getElementById('metadataResults').textContent = `${this.currentResults.bySource.metadata.length} marques`;
+                document.getElementById('classesResults').textContent = `${this.currentResults.bySource.classes.length} marques`;
+                
+                // Afficher les catégories
+                this.displayCategories();
+                
+                // Log dans la console
+                this.engine.logResults();
+            }
+            
+            displayCategories() {
+                const container = document.getElementById('categoriesContainer');
+                container.innerHTML = '';
+                
+                if (Object.keys(this.currentResults.byCategory).length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Aucune marque détectée sur cette page.</p>';
+                    return;
+                }
+                
+                for (const [category, brands] of Object.entries(this.currentResults.byCategory)) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'stat-item';
+                    categoryDiv.style.marginBottom = '15px';
+                    
+                    const categoryTitle = document.createElement('h4');
+                    categoryTitle.textContent = `📂 ${category} (${brands.length} marques)`;
+                    categoryTitle.style.marginBottom = '10px';
+                    categoryTitle.style.color = '#333';
+                    
+                    const brandsList = document.createElement('div');
+                    brandsList.style.display = 'flex';
+                    brandsList.style.flexWrap = 'wrap';
+                    brandsList.style.gap = '8px';
+                    
+                    brands.forEach(brand => {
+                        const brandTag = document.createElement('span');
+                        brandTag.textContent = brand;
+                        brandTag.style.background = '#4facfe';
+                        brandTag.style.color = 'white';
+                        brandTag.style.padding = '4px 8px';
+                        brandTag.style.borderRadius = '12px';
+                        brandTag.style.fontSize = '0.9em';
+                        brandTag.title = `Marque détectée: ${brand}`;
+                        brandsList.appendChild(brandTag);
+                    });
+                    
+                    categoryDiv.appendChild(categoryTitle);
+                    categoryDiv.appendChild(brandsList);
+                    container.appendChild(categoryDiv);
+                }
+            }
+            
+            clearResults() {
+                this.currentResults = null;
+                document.getElementById('resultsSection').classList.remove('show');
+                
+                // Reset des valeurs
+                document.getElementById('totalBrands').textContent = '0';
+                document.getElementById('totalCategories').textContent = '0';
+                document.getElementById('textResults').textContent = '0 marques';
+                document.getElementById('linksResults').textContent = '0 marques';
+                document.getElementById('imagesResults').textContent = '0 marques';
+                document.getElementById('attributesResults').textContent = '0 marques';
+                document.getElementById('metadataResults').textContent = '0 marques';
+                document.getElementById('classesResults').textContent = '0 marques';
+                document.getElementById('categoriesContainer').innerHTML = '';
+            }
+        }
+        
+        // Initialiser le visualiseur
+        const visualizer = new BrandDetectionVisualizer();
+        
+        // Éléments DOM
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loading = document.getElementById('loading');
+        const resultsSection = document.getElementById('resultsSection');
+        
+        // Fonction d'analyse
+        function analyzePage() {
+            // Afficher le loading
+            loading.classList.add('show');
+            resultsSection.classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            // Lancer l'analyse
+            visualizer.analyzePage();
+        }
+        
+        function clearResults() {
+            visualizer.clearResults();
+        }
+        
+        // Event listeners
+        analyzeBtn.addEventListener('click', analyzePage);
+        clearBtn.addEventListener('click', clearResults);
+        
+        // Auto-analyse au chargement de la page
+        window.addEventListener('load', () => {
+            console.log('🚀 Moteur de détection de marques chargé');
+            console.log('📊 Base de données:', visualizer.engine.brands.length, 'marques');
+        });
+    </script>
+</body>
+</html>
