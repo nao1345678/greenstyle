@@ -1,6 +1,5 @@
 <script setup>
 const props = defineProps({
-  // mets ton image ici : /src/assets/heel-plant.png (ou autre)
   logoSrc: { type: String, default: '/src/assets/heel-plant.png' },
 })
 </script>
@@ -10,80 +9,66 @@ const props = defineProps({
     <div class="nav-inner">
       <img class="logo" :src="logoSrc" alt="Greenstyle" />
 
-      <!-- LEFT -->
-      <a class="link left-1" href="#">Recherche détaillée</a>
-      <a class="link left-2" href="#">Tableau de bord</a>
-
-      <!-- RIGHT -->
-      <a class="link right-1" href="#">À propos de nous</a>
-      <a class="link right-2" href="#">Mon compte</a>
+      <nav aria-label="Navigation principale">
+        <a class="link left-1" href="#">Recherche détaillée</a>
+        <a class="link left-2" href="#">Tableau de bord</a>
+        <a class="link right-1" href="#">À propos de nous</a>
+        <a class="link right-2" href="#">Mon compte</a>
+      </nav>
 
       <div class="nav-rule" aria-hidden="true"></div>
     </div>
   </header>
 </template>
 
-<style>
-:root{
-  --bg: #DAC9AF;
-  --green: #2F6A35;
-}
-
-/* barre entière */
+<style scoped>
 .nav-root{
-  background: var(--bg);
+  background: var(--page-bg);
+  position: sticky; top:0; left:0; right:0; z-index:1000;
 }
 
-/* conteneur fixe 1280px pour coller aux positions Figma */
 .nav-inner{
-  width: 100vw;
-  height:85px;             /* hauteur suffisante pour le "Top: 76px" visuel */
-  margin: 0;
-  position: relative;        /* permet les positions absolues des liens */
+  width: 100%;
+  height: 85px;
+  position: relative;
 }
 
-/* hairline sous la nav */
 .nav-rule{
   position: absolute;
-  left: 104px;      /* Figma */
-  top: 80px;       /* Figma */
-  width: 1100px;    /* Figma */
-  height: 1px;      /* ligne pleine */
-  background: #fff; /* BLANC */
-  transform: scaleY(0.5);     /* rendu visuel 0.5 px */
+  left: 5%;
+  top: 80px;
+  width: 90vw;
+  height: 1px;
+  background: #fff;
+  transform: scaleY(.5);
   transform-origin: top left;
   z-index: 2;
   pointer-events: none;
 }
 
-/* logo à gauche (ajuste la taille si besoin) */
 .logo{
   position: absolute;
-  left: 24px;                /* marge visuelle à gauche */
-  top: 0px;
-  width: 61px;               /* ~taille perçue sur la capture */
+  top: 8px;
+  width: 61px;
   height: auto;
 }
 
-/* style commun des liens */
 .link{
   position: absolute;
-  top: 34px;                 /* aligne verticalement tous les items */
+  top: 34px;
   font-family: "Jersey 10", system-ui, sans-serif;
   font-weight: 400;
-  font-size: 17px;           /* hauteur perçue 17px dans Figma */
+  font-size: 17px;
   line-height: 1;
-  color: var(--green);
+  color: var(--green-dark);
   text-decoration: none;
-  /* petit relief comme sur la capture */
   text-shadow: 5px 5px 8px #ffffff;
 }
-
-/* positions EXACTES (Left) issues de ta maquette */
-.left-1 { left: 93px; }      /* Recherche détaillée */
-.left-2 { left: 255px; }     /* Tableau de bord */
-.right-1{ left: 1026px; }    /* À propos de nous */
-.right-2{ left: 1175px; }    /* Mon compte */
-
 .link:hover{ text-decoration: underline; }
+.link:focus-visible{ outline: 2px solid var(--green); outline-offset: 2px; }
+
+.left-1 { left: 4.5%; }
+.left-2 { left: 14.5%; }
+.right-1{ right: 15%; }
+.right-2{ right: 5%; }
 </style>
