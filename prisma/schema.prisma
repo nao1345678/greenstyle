@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Site {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  nom_site String
+  url      String
+
+  marques  Marque[] @relation("SiteMarque")
+}
+
+model Marque {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  nom_marque         String
+  logo               String?
+  lien_web           String?
+  catégorie_marque   String?
+  gamme_prix         String?
+  matières_resp      String?
+  certifications     String?
+  pays_origine       String?
+  gestions_invendues Boolean?
+  transparence_chaînes String?
+  impact_env_global  Int?
+  éthique_travail    String?
+  score_final        Int?
+  description_marque String?
+
+  sites        Site[]        @relation("SiteMarque")
+  alternatives Alternative[] @relation("MarqueAlternative")
+  utilisateurs Utilisateur[] @relation("UtilisateurMarque")
+}
+
+model Alternative {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+
+  marque   Marque?    @relation("MarqueAlternative", fields: [marqueId], references: [id])
+  marqueId String?    @db.ObjectId
+
+  produits Produit[]  @relation("AlternativeProduit")
+}
+
+model Produit {
+  id                 String      @id @default(auto()) @map("_id") @db.ObjectId
+  nom_produit        String
+  description_produit String
+
+  alternative   Alternative? @relation("AlternativeProduit", fields: [alternativeId], references: [id])
+  alternativeId String?      @db.ObjectId
+}
+
+model Utilisateur {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  nom_utilisateur String
+  prénom          String
+  mail            String
+  mot_de_passe    String
+
+  marques Marque[] @relation("UtilisateurMarque")
+}
