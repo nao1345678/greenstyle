@@ -1,0 +1,16 @@
+Nao :
+
+- Présentation du doc (système de notation) 
+- Pour la prochaine réu ajouter table catégorie avec id_catégorie et nom; liste exhaustive marque et de catégories
+
+Mael :
+
+- Ajout de colonnes dans la DB, idée de badges basé sur impact env et ethique trvaille et si un des deux à 5/5 on décerne badge; probleme (ou mettre dans le front)
+
+Idée d'amélioration / Objectif :
+
+- scrapper les infos manuellemnt 
+- scrapper une liste de tous les liens des sites qu'on veut scrapper 
+- script python pour les infos 
+- faire api quand db pleine pour récup/insérer infos sur marques 
+- idée objectif prochain run (remplissage db fini)
