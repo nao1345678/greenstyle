@@ -28,3 +28,10 @@ __pycache__
 data/
 scrapping/scrapping_v4/data/
 
+# Env files
+.env
+.venv
+
+# caache file
+
+__pycache__
