@@ -1,0 +1,35 @@
+Compte rendu de réunion : 
+Zakarya : 
+- script de création des tables pour la base de données pour les tables :
+    - alternatives 
+    - brands 
+    - sites 
+    - users 
+
+- il faudrait ajouter un tableau de favoris avec :
+    - id_tableau 
+    - nom_tableau 
+    - id_user (clé étrangère)
+    - image_couverture
+    - listes_sites (array)
+
+- il faudrait supprimer le script de création de la table PRODUITS 
+
+- reflexion globale sur le fonctionnement de la base de données 
+
+Manu :
+- création d'une API backend Python sur FastAPI et tests sur Postman ppour établir si le routes de bases (telles que création d'utilisateur) sont fonctionnelles 
+- il faut supprimer des schémas PRODUITS
+- il faut ajouter la table FAVORIS
+
+Setup d'une date pour la création finale de la base de données au Mardi 23 Septembre!!
+
+Françoise : 
+- avancement sur le front du site web d'une des deux pages (la page historique et utilisateur)
+
+Nao : 
+- chefferie de projet globale 
+- rédaction du document sur ka réflexion de l'architecture complète du projet 
+- création d'une répartition des tâches et attribution d'un degré de priorité sur chacune
+
+TO DO : préparer le suivi et s'occuper du Git 
