@@ -1,12 +1,13 @@
 from fastapi import APIRouter
-from models.marque import Marque
+from models.marque import Marque, MarqueCreate
 
 router = APIRouter(prefix="/marques", tags=["Marques"])
 
 @router.post("/")
-async def create_marque(marque: Marque):
-    await marque.insert()
-    return marque
+async def create_marque(marque: MarqueCreate):
+    marque_db = Marque(**marque.model_dump())  # Convertit le schéma en Document Beanie
+    await marque_db.insert()
+    return marque_db
 
 @router.get("/")
 async def list_marques():

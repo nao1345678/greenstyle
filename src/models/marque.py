@@ -1,14 +1,12 @@
-from typing import Optional, List
-from beanie import Document, Link
-from .site import Site
-from .alternative import Alternative
+from beanie import Document
+from pydantic import BaseModel
 
+# ---- SCHEMA d'entrée (reçoit les données du body JSON via Postman) ----
+class MarqueCreate(BaseModel):
+    nom: str
+    pays: str
+
+# ---- DOCUMENT (ce qui est stocké en DB) ----
 class Marque(Document):
-    nom_marque: str
-    description_marque: Optional[str] = None
-    score_final: Optional[int] = None
-    sites: Optional[List[Link[Site]]] = None
-    alternatives: Optional[List[Link[Alternative]]] = None
-
-    class Settings:
-        name = "marques"
+    nom: str
+    pays: str

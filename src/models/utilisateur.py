@@ -1,13 +1,14 @@
-from typing import Optional, List
-from beanie import Document, Link
-from .marque import Marque
+from beanie import Document
+from pydantic import BaseModel, EmailStr
 
+# ---- SCHEMA d'entrée (body JSON pour créer un user) ----
+class UtilisateurCreate(BaseModel):
+    nom: str
+    email: EmailStr
+    age: int
+
+# ---- DOCUMENT stocké en DB ----
 class Utilisateur(Document):
-    nom_utilisateur: str
-    prénom: str
-    mail: str
-    mot_de_passe: str
-    marques: Optional[List[Link[Marque]]] = None
-
-    class Settings:
-        name = "utilisateurs"
+    nom: str
+    email: EmailStr
+    age: int

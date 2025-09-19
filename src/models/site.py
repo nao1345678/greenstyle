@@ -1,11 +1,9 @@
-from typing import Optional, List
 from beanie import Document, Link
-from .marque import Marque
+from typing import List, Optional
 
 class Site(Document):
-    nom_site: str
     url: str
-    marques: Optional[List[Link[Marque]]] = None
+    marques: Optional[List["Link[Marque]"]]  # "Marque" en string
 
     class Settings:
         name = "sites"

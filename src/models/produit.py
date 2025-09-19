@@ -1,11 +1,9 @@
-from typing import Optional
 from beanie import Document, Link
-from .alternative import Alternative
+from typing import Optional
 
 class Produit(Document):
-    nom_produit: str
-    description_produit: str
-    alternative: Optional[Link[Alternative]] = None
+    nom: str
+    marque: Optional["Link[Marque]"]
 
     class Settings:
         name = "produits"
