@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import ClothCard from './ClothCard.vue'
+import ClothCard from './clothCard.vue'
 
 const props = defineProps({
   items: {
