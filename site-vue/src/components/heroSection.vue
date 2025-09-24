@@ -114,7 +114,7 @@ const query = ref('')
     color: #ffffff;
     position: absolute;
     z-index: 10;
-    bottom: -3%;
+    bottom: 17%;
     right: 9%;
 }
 
@@ -160,7 +160,7 @@ const query = ref('')
 }
 .flower{ 
     right: -25%;
-    top: -22%;
+    top: -11%;
     height: 230px;
 }
 .kiss{
