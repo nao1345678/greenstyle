@@ -26,10 +26,12 @@ const props = defineProps({
       <h2 class="heading">{{ title }}</h2>
       <div class="grid" :style="{ '--cols': cols }">
         <ProductCard
-          v-for="p in items"
-          :key="p.id ?? p.src"
-          v-bind="p"
-        />
+        v-for="p in items"
+        :key="p.id ?? p.src"
+        :src="p.src"
+        :alt="p.alt"
+        :to="{ name: 'marque-detail', params: { id: p.id } }"
+      />
       </div>
     </div>
   </section>

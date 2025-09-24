@@ -7,7 +7,6 @@ import SearchBar from './SearchBar.vue'
 import { ref } from 'vue'
 const query = ref('')
 
-const goSearch = () => console.log('TODO: router vers la page recherche')
 </script>
 
 <template>
@@ -98,7 +97,6 @@ const goSearch = () => console.log('TODO: router vers la page recherche')
     font-weight: 400;
 }
 
-/* contenu */
 .window-body{
   position: relative;
   min-height: 260px;
