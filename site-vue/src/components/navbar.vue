@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router'
 const props = defineProps({
   logoSrc: { type: String, default: '/src/assets/heel-plant.png' },
 })
@@ -7,7 +8,9 @@ const props = defineProps({
 <template>
   <header class="nav-root">
     <div class="nav-inner">
-      <img class="logo" :src="logoSrc" alt="Greenstyle" />
+      <RouterLink :to="{ name: 'home' }">
+        <img class="logo" :src="logoSrc" alt="Greenstyle" />
+      </RouterLink>
 
       <nav aria-label="Navigation principale">
         <a class="link left-1" href="#">Recherche détaillée</a>
