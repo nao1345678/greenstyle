@@ -1,0 +1,15 @@
+Présentations :
+
+Avancement côté front app -> prepration de 70% du squelette de l'app en attendant du back
+Avancement coté back -> scripts de création des tables
+IA absent mais -> scrapping de sites internet pour récupérer le nom de la marque et le site web.
+Systeme de notation -> basé sur pays d'origine, matières responsables, certifications, gestion des invendus, transparence chaine de production basé sur SerpAPI + scrapping
+Remarques techniques :
+
+Tables en français -> privilégier l'anglais
+MDP pas hashés + renvoyés en clair
+API beaucoup trop en retard, au 3ème suivi.
+Remarques générales :
+
+Énorme retard côté back, on est encore sur un setup suivi 3.
+Il faudrait mieux découper les tickets afin d'avoir un suivi plus précis sur les différentes tâches
