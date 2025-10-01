@@ -1,0 +1,7 @@
+Compte rendu de la réunion du 10 octobre 
+
+- établissement des différents CRUD à mettre en place => 10 oct 
+- traduction des éléments en frnçais en anglais => 3 oct 
+- script SerpAPI => 10 oct 
+- script scrapping => 10 oct
+- scrpt ONG => 10 oct
