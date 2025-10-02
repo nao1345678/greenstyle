@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.marque import Marque, MarqueCreate
+from models.brand import Marque, MarqueCreate
 
 router = APIRouter(prefix="/marques", tags=["Marques"])
 

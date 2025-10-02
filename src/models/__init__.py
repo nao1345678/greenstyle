@@ -1,13 +1,17 @@
-from .marque import Marque
+from .brand import Brand
 from .site import Site
-from .produit import Produit
+from .product import Product
 from .alternative import Alternative
-from .utilisateur import Utilisateur
+from .user import User
+from .category import Category
+from .favorite import Favorite
 
 __all__ = [
-    Marque,
+    Brand,
     Site,
-    Produit,
+    Product,
     Alternative,
-    Utilisateur,
+    User,
+    Category,
+    Favorite,
 ]
