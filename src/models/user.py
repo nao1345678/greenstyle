@@ -1,10 +1,10 @@
 from beanie import Document
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
+from typing import Optional
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 
-# ---- INPUT SCHEMA (JSON body) ----
 class UserCreate(BaseModel):
     username: str
     firstname: str
@@ -14,7 +14,26 @@ class UserCreate(BaseModel):
     def hash_password(self):
         self.password = pwd_context.hash(self.password)
 
-# ---- DOCUMENT stored in DB ----
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    firstname: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+
+    def hash_password(self):
+        if self.password:
+            self.password = pwd_context.hash(self.password)
+
+
+# 👉 Schéma de sortie sans password
+class UserOut(BaseModel):
+    id: str
+    username: str
+    firstname: str
+    email: EmailStr
+
+
 class User(Document):
     username: str
     firstname: str
@@ -22,7 +41,7 @@ class User(Document):
     password: str
 
     class Settings:
-        name = "users"  # matches Mongo collection
+        name = "users"
 
     def verify_password(self, password: str) -> bool:
         return pwd_context.verify(password, self.password)

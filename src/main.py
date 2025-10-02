@@ -3,8 +3,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 import models
 from config import MONGO_URL
-from routes.marque_routes import router as marque_router
-from routes.utilisateur_routes import router as utilisateur_router
+from routes.brand_routes import router as brand_router
+from routes.user_routes import router as user_router
 
 app = FastAPI()
 
@@ -17,8 +17,8 @@ async def app_init():
     )
 
 # brancher les routes ici
-app.include_router(marque_router)
-app.include_router(utilisateur_router)
+app.include_router(brand_router)
+app.include_router(user_router)
 
 @app.get("/")
 async def root():

@@ -1,116 +1,131 @@
-// Sélectionner / créer la base
-use greenstyle_DB;
+// Select / create the database
+db = db.getSiblingDB('greenstyle_DB');
 
 // ---------------- USERS ----------------
 db.createCollection("users", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_utilisateur", "nom_utilisateur", "prenom_utilisateur", "mail", "mot_de_passe"],
-            properties: {
-                id_utilisateur: { bsonType: "string", description: "ID unique de l'utilisateur" },
-                nom_utilisateur: { bsonType: "string", description: "nom de l'utilisateur" },
-                prenom_utilisateur: { bsonType: "string", description: "prénom de l'utilisateur" },
-                mail: { bsonType: "string", description: "email unique de l'utilisateur" },
-                mot_de_passe: { bsonType: "string", description: "mot de passe hashé" }
-            }
-        }
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["username", "firstname", "email", "password"],
+      properties: {
+        username: { bsonType: "string", description: "user login name" },
+        firstname: { bsonType: "string", description: "first name" },
+        email: { bsonType: "string", description: "unique user email" },
+        password: { bsonType: "string", description: "bcrypt hashed password" }
+      }
     }
+  }
 });
-db.users.createIndex({ "mail": 1 }, { unique: true });
+// unique email
+db.users.createIndex({ email: 1 }, { unique: true });
 
 // ---------------- CATEGORIES ----------------
 db.createCollection("categories", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_categorie", "nom_categorie"],
-            properties: {
-                id_categorie: { bsonType: "string", description: "ID unique de la catégorie" },
-                nom_categorie: { bsonType: "string", description: "nom de la catégorie" }
-            }
-        }
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name"],
+      properties: {
+        name: { bsonType: "string", description: "category name" }
+      }
     }
+  }
 });
 
 // ---------------- BRANDS ----------------
 db.createCollection("brands", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_marque", "nom_marque", "lien_web"],
-            properties: {
-                id_marque: { bsonType: "string", description: "ID unique de la marque" },
-                nom_marque: { bsonType: "string", description: "nom de la marque" },
-                logo: { bsonType: "string", description: "URL du logo" },
-                lien_web: { bsonType: "string", description: "site web de la marque" },
-                id_categorie: {
-                    bsonType: "array",
-                    items: { bsonType: "string" },
-                    description: "liste des catégories associées"
-                },
-                gamme_prix: { bsonType: "int", description: "note prix (sur 5)" },
-                matieres_resp: { bsonType: "int", description: "% matières responsables" },
-                certifications: { bsonType: "array", items: { bsonType: "string" }, description: "certifications" },
-                pays_origine: { bsonType: "string", description: "pays d'origine" },
-                pays_production: { bsonType: "string", description: "pays de production" },
-                gestions_invendues: { bsonType: "string", description: "gestion des invendus" },
-                transparence_chaines: { bsonType: "string", description: "niveau transparence chaîne" },
-                impact_env_global: { bsonType: "double", description: "note impact environnement (sur 5)" },
-                ethique_travail: { bsonType: "double", description: "note éthique travail (sur 5)" },
-                score_final: { bsonType: "double", description: "score final calculé" },
-                description_marque: { bsonType: "string", description: "description" },
-                badge_planete: { bsonType: "bool", description: "badge d'excellence planète" },
-                badge_travail: { bsonType: "bool", description: "badge d'excellence travail" },
-                sites_associes: { bsonType: "array", items: { bsonType: "string" }, description: "liste des sites" }
-            }
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["brand_name"],
+      properties: {
+        brand_name: { bsonType: "string", description: "brand name" },
+        logo: { bsonType: "string", description: "logo URL" },
+        website: { bsonType: "string", description: "brand website" },
+        category_id: { bsonType: ["string", "null"], description: "single category id (optional)" },
+
+        price_range: { bsonType: ["double", "int", "null"], description: "price score (0–5)" },
+        sustainable_materials: { bsonType: ["double", "int", "null"], description: "responsible materials % / score" },
+        certifications: { bsonType: ["string", "null"], description: "certifications (free text or CSV)" },
+        country_origin: { bsonType: ["string", "null"], description: "origin country" },
+        country_production: { bsonType: ["string", "null"], description: "production country" },
+        unsold_management: { bsonType: ["string", "null"], description: "unsold stock policy" },
+        supply_chain_transparency: { bsonType: ["string", "null"], description: "transparency level" },
+
+        global_env_impact: { bsonType: ["double", "int", "null"], description: "environment impact score (0–5)" },
+        labor_ethics: { bsonType: ["double", "int", "null"], description: "labor ethics score (0–5)" },
+        final_score: { bsonType: ["double", "int", "null"], description: "final score (0–5)" },
+
+        short_description: { bsonType: ["string", "null"], description: "short description" },
+        description: { bsonType: ["string", "null"], description: "long description" },
+
+        planet_badge: { bsonType: ["bool", "null"], description: "planet excellence badge" },
+        labor_badge: { bsonType: ["bool", "null"], description: "labor excellence badge" },
+
+        // if you later want to link sites by id strings:
+        site_ids: {
+          bsonType: ["array", "null"],
+          items: { bsonType: "string" },
+          description: "related site ids (optional)"
         }
+      }
     }
+  }
 });
+// helpful indexes
+db.brands.createIndex({ brand_name: 1 });
 
 // ---------------- ALTERNATIVES ----------------
 db.createCollection("alternatives", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_alternative", "description", "id_marque", "categorie"],
-            properties: {
-                id_alternative: { bsonType: "string", description: "ID unique alternative" },
-                description: { bsonType: "string", description: "description" },
-                id_marque: { bsonType: "string", description: "clé étrangère vers la marque" },
-                categorie: { bsonType: "string", description: "catégorie concernée" }
-            }
-        }
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["description"],
+      properties: {
+        description: { bsonType: "string", description: "alternative description" },
+        brand_id: { bsonType: ["string", "null"], description: "FK to brands._id as string (optional)" },
+        category: { bsonType: ["string", "null"], description: "target category (optional)" }
+      }
     }
+  }
 });
 
 // ---------------- SITES ----------------
 db.createCollection("sites", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_site", "nom_site", "url"],
-            properties: {
-                id_site: { bsonType: "string", description: "ID unique site" },
-                nom_site: { bsonType: "string", description: "nom du site" },
-                url: { bsonType: "string", description: "url du site" }
-            }
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["url"],
+      properties: {
+        url: { bsonType: "string", description: "site URL" },
+        // optional: keep links to brand ids as strings if you need
+        brand_ids: {
+          bsonType: ["array", "null"],
+          items: { bsonType: "string" },
+          description: "related brand ids (optional)"
         }
+      }
     }
+  }
 });
+// helpful indexes
+db.sites.createIndex({ url: 1 }, { unique: true });
 
-// ---------------- FAVORIS ----------------
-db.createCollection("favoris", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id_favori", "id_user", "id_marque"],
-            properties: {
-                id_favori: { bsonType: "string", description: "ID unique du favori" },
-                id_user: { bsonType: "string", description: "clé étrangère utilisateur" },
-                id_marque: { bsonType: "string", description: "clé étrangère marque" },
-                listes_sites: { bsonType: "array", items: { bsonType: "string" }, description: "sites associés" }
-            }
+// ---------------- FAVORITES ----------------
+db.createCollection("favorites", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "brand_id"],
+      properties: {
+        user_id: { bsonType: "string", description: "FK to users._id as string" },
+        brand_id: { bsonType: "string", description: "FK to brands._id as string" },
+        site_ids: {
+          bsonType: ["array", "null"],
+          items: { bsonType: "string" },
+          description: "optional related site ids"
         }
+      }
     }
+  }
 });
