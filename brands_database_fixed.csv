@@ -1,47 +1,47 @@
-category,brand,aliases
-streetwear,Supreme,
-streetwear,Stussy,
-streetwear,Off-White,
-streetwear,A Bathing Ape,
-streetwear,Palace,
-streetwear,Kith,
-streetwear,Fear of God,
-streetwear,Aimé Leon Dore,
-streetwear,Carhartt WIP,
-streetwear,Patta,
-streetwear,Noah,
-streetwear,Comme des Garçons,
-streetwear,Vetements,
-streetwear,Anti Social Social Club,
-streetwear,Billionaire Boys Club,
-streetwear,Undefeated,
-streetwear,Human Made,
-streetwear,Stone Island,
-streetwear,Heron Preston,
-streetwear,Moncler,
-streetwear,Adidas,"adidas originals,adidas performance"
-streetwear,Nike,"nike air,air jordan"
-casual,Uniqlo,"uniqlo japan"
-casual,Gap,"gap kids"
-casual,H&M,"h&m home"
-casual,Zara,"zara home"
-casual,COS,
-casual,Mango,
-casual,Everlane,
-casual,J.Crew,
-casual,Madewell,
-casual,Levi's,"levi's,levis"
-casual,Lacoste,"lacoste sport"
-casual,Tommy Hilfiger,"tommy"
-casual,Ralph Lauren,"polo ralph lauren"
-casual,Gant,
-casual,Abercrombie & Fitch,
-casual,Benetton,"benetton group"
-casual,Scotch & Soda,
-casual,Asos Design,
-casual,Banana Republic,
-casual,Petit Bateau,
-casual,Ben Sherman,
+category,brand,aliases,logo,website,price_range,sustainable_materials,certifications,country_origin,country_production,unsold_management,supply_chain_transparency,global_env_impact,labor_ethics,final_score,short_description,description,planet_badge,labor_badge
+streetwear,Supreme,,https://supreme.com/logo.png,https://supreme.com,4,,,,,,,,,,,,,,
+streetwear,Stussy,,https://stussy.com/logo.png,https://stussy.com,3,,,,,,,,,,,,,,
+streetwear,Off-White,,https://off---white.com/logo.png,https://off---white.com,5,,,,,,,,,,,,,,
+streetwear,A Bathing Ape,,https://bape.com/logo.png,https://bape.com,4,,,,,,,,,,,,,,
+streetwear,Palace,,https://palaceskateboards.com/logo.png,https://palaceskateboards.com,4,,,,,,,,,,,,,,
+streetwear,Kith,,https://kith.com/logo.png,https://kith.com,4,,,,,,,,,,,,,,
+streetwear,Fear of God,,https://fearofgod.com/logo.png,https://fearofgod.com,5,,,,,,,,,,,,,,
+streetwear,Aimé Leon Dore,,https://aimeleondore.com/logo.png,https://aimeleondore.com,4,,,,,,,,,,,,,,
+streetwear,Carhartt WIP,,https://carhartt-wip.com/logo.png,https://carhartt-wip.com,3,,,,,,,,,,,,,,
+streetwear,Patta,,https://patta.nl/logo.png,https://patta.nl,3,,,,,,,,,,,,,,
+streetwear,Noah,,https://noahny.com/logo.png,https://noahny.com,4,,,,,,,,,,,,,,
+streetwear,Comme des Garçons,,https://comme-des-garcons.com/logo.png,https://comme-des-garcons.com,5,,,,,,,,,,,,,,
+streetwear,Vetements,,https://vetements.com/logo.png,https://vetements.com,5,,,,,,,,,,,,,,
+streetwear,Anti Social Social Club,,https://antisocialsocialclub.com/logo.png,https://antisocialsocialclub.com,3,,,,,,,,,,,,,,
+streetwear,Billionaire Boys Club,,https://bbcicecream.com/logo.png,https://bbcicecream.com,4,,,,,,,,,,,,,,
+streetwear,Undefeated,,https://undefeated.com/logo.png,https://undefeated.com,3,,,,,,,,,,,,,,
+streetwear,Human Made,,https://humanmade.jp/logo.png,https://humanmade.jp,4,,,,,,,,,,,,,,
+streetwear,Stone Island,,https://stoneisland.com/logo.png,https://stoneisland.com,4,,,,,,,,,,,,,,
+streetwear,Heron Preston,,https://heronpreston.com/logo.png,https://heronpreston.com,4,,,,,,,,,,,,,,
+streetwear,Moncler,,https://moncler.com/logo.png,https://moncler.com,5,,,,,,,,,,,,,,
+streetwear,Adidas,"adidas originals,adidas performance",https://adidas.com/logo.png,https://adidas.com,3,25,"Recycled Polyester,Better Cotton Initiative",Germany,"China,Vietnam,Indonesia,India",Donation and recycling programs,Moderate,2.5,2.8,2.65,Sportswear brand with sustainability initiatives,Global sportswear brand committed to reducing environmental impact,false,false
+streetwear,Nike,"nike air,air jordan",https://nike.com/logo.png,https://nike.com,3,30,"Recycled Materials,Better Cotton Initiative",USA,"China,Vietnam,Indonesia",Nike Grind recycling program,Good,3.2,2.5,2.85,Leading sportswear brand with sustainability goals,Innovative sportswear brand focused on sustainable materials and circular design,true,false
+casual,Uniqlo,"uniqlo japan",https://uniqlo.com/logo.png,https://uniqlo.com,2,15,"Better Cotton Initiative",Japan,"China,Vietnam,Bangladesh",Basic recycling programs,Moderate,2.0,2.2,2.1,Japanese fast fashion brand,Fast fashion retailer focused on quality basics,false,false
+casual,Gap,"gap kids",https://gap.com/logo.png,https://gap.com,2,20,"Better Cotton Initiative,Waterless",USA,"China,Vietnam,Bangladesh",Gap Inc. recycling initiatives,Moderate,2.3,2.0,2.15,American casual wear brand,Global casual wear brand with sustainability commitments,false,false
+casual,H&M,"h&m home",https://hm.com/logo.png,https://hm.com,2,25,"Better Cotton Initiative,Recycled Polyester",Sweden,"Bangladesh,China,Vietnam",H&M Garment Collecting program,Good,2.8,2.5,2.65,Swedish fast fashion leader,Global fast fashion retailer with strong sustainability initiatives,true,false
+casual,Zara,"zara home",https://zara.com/logo.png,https://zara.com,3,10,"Better Cotton Initiative",Spain,"Spain,Portugal,Morocco,Turkey",Limited recycling programs,Low,1.8,2.0,1.9,Spanish fast fashion giant,Global fast fashion leader with limited transparency,false,false
+casual,COS,,https://cos.com/logo.png,https://cos.com,4,35,"Better Cotton Initiative,Recycled Materials",Sweden,"Europe,Turkey",COS recycling initiatives,Good,3.5,3.0,3.25,Premium minimalist brand,Scandinavian minimalist brand with sustainability focus,true,true
+casual,Mango,,https://mango.com/logo.png,https://mango.com,3,15,"Better Cotton Initiative",Spain,"Turkey,Morocco,China",Basic sustainability programs,Moderate,2.2,2.3,2.25,Spanish fashion retailer,Global fashion retailer with growing sustainability efforts,false,false
+casual,Everlane,,https://everlane.com/logo.png,https://everlane.com,3,40,"Radical Transparency",USA,"USA,Italy,Japan",Transparent pricing and sourcing,Excellent,4.2,4.0,4.1,Transparent fashion brand,Radically transparent fashion brand committed to ethical production,true,true
+casual,J.Crew,,https://jcrew.com/logo.png,https://jcrew.com,3,20,"Better Cotton Initiative",USA,"China,Vietnam,Peru",Limited sustainability programs,Moderate,2.5,2.8,2.65,American preppy brand,Classic American brand with moderate sustainability efforts,false,false
+casual,Madewell,,https://madewell.com/logo.png,https://madewell.com,3,25,"Better Cotton Initiative,Denim Recycling",USA,"USA,China,Vietnam",Denim recycling programs,Good,3.0,3.2,3.1,Denim-focused brand,Denim-focused brand with recycling initiatives,true,true
+casual,Levi's,"levi's,levis",https://levi.com/logo.png,https://levi.com,3,30,"Better Cotton Initiative,Waterless",USA,"USA,Mexico,Bangladesh",Levi's SecondHand program,Good,3.5,3.0,3.25,Iconic denim brand,Iconic American denim brand with strong sustainability commitments,true,true
+casual,Lacoste,"lacoste sport",https://lacoste.com/logo.png,https://lacoste.com,3,20,"Better Cotton Initiative",France,"France,Portugal,Morocco",Limited sustainability programs,Moderate,2.8,3.0,2.9,French sportswear brand,French sportswear brand with crocodile logo,false,false
+casual,Tommy Hilfiger,"tommy",https://tommy.com/logo.png,https://tommy.com,3,25,"Better Cotton Initiative",USA,"China,Vietnam,Bangladesh",Tommy Hilfiger sustainability initiatives,Moderate,2.5,2.3,2.4,American preppy brand,Global lifestyle brand with sustainability commitments,false,false
+casual,Ralph Lauren,"polo ralph lauren",https://ralphlauren.com/logo.png,https://ralphlauren.com,4,20,"Better Cotton Initiative",USA,"USA,Italy,China",Limited sustainability programs,Moderate,2.3,2.5,2.4,American luxury brand,Iconic American luxury brand with moderate sustainability efforts,false,false
+casual,Gant,,https://gant.com/logo.png,https://gant.com,3,15,"Better Cotton Initiative",Sweden,"Europe,Turkey",Basic sustainability programs,Moderate,2.0,2.2,2.1,Swedish preppy brand,Swedish-American brand with classic style,false,false
+casual,Abercrombie & Fitch,,https://abercrombie.com/logo.png,https://abercrombie.com,3,15,"Better Cotton Initiative",USA,"China,Vietnam,Bangladesh",Limited sustainability programs,Low,2.0,2.0,2.0,American casual brand,American casual wear brand with limited sustainability efforts,false,false
+casual,Benetton,"benetton group",https://benetton.com/logo.png,https://benetton.com,3,20,"Better Cotton Initiative",Italy,"Italy,Turkey,Bangladesh",Benetton sustainability programs,Moderate,2.5,2.8,2.65,Italian colorful brand,Italian brand known for colorful knitwear and social campaigns,false,false
+casual,Scotch & Soda,,https://scotch-soda.com/logo.png,https://scotch-soda.com,3,15,"Better Cotton Initiative",Netherlands,"Turkey,China,Vietnam",Basic sustainability programs,Moderate,2.2,2.3,2.25,Dutch lifestyle brand,Dutch lifestyle brand with Amsterdam-inspired style,false,false
+casual,Asos Design,,https://asos.com/logo.png,https://asos.com,2,10,"Better Cotton Initiative",UK,"China,Bangladesh,Turkey",ASOS sustainability initiatives,Moderate,2.0,2.5,2.25,Online fashion retailer,Global online fashion retailer with sustainability goals,false,false
+casual,Banana Republic,,https://bananarepublic.com/logo.png,https://bananarepublic.com,3,20,"Better Cotton Initiative",USA,"China,Vietnam,Peru",Gap Inc. sustainability programs,Moderate,2.3,2.0,2.15,American workwear brand,American brand focused on workwear and travel,false,false
+casual,Petit Bateau,,https://petit-bateau.com/logo.png,https://petit-bateau.com,3,25,"Better Cotton Initiative",France,"France,Turkey",French sustainable practices,Good,3.0,3.5,3.25,French children's brand,French brand specializing in children's and underwear,true,true
+casual,Ben Sherman,,https://bensherman.com/logo.png,https://bensherman.com,3,15,"Better Cotton Initiative",UK,"UK,Portugal,China",Limited sustainability programs,Moderate,2.0,2.2,2.1,British mod brand,British brand known for mod and ska culture,false,false
 footwear,Nike,"nike air,air jordan"
 footwear,Adidas,"adidas originals,adidas performance"
 footwear,Converse,"converse all star"
