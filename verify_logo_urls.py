@@ -53,6 +53,75 @@ def find_logo_on_website(website_url, brand_name):
     
     return None
 
+def find_logo_alternative_sources(brand_name, website_url):
+    """
+    Cherche le logo sur des sources alternatives
+    """
+    if not website_url:
+        return None
+        
+    domain = website_url.replace('https://', '').replace('http://', '')
+    alternative_sources = [
+        f"https://logo.clearbit.com/{domain}",
+        f"https://www.google.com/s2/favicons?domain={domain}&sz=256",
+        f"https://api.faviconkit.com/{domain}/256",
+        f"https://icons.duckduckgo.com/ip3/{domain}.ico",
+    ]
+    
+    # Recherche sur des CDN de logos populaires
+    cdn_sources = [
+        f"https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/{brand_name.lower().replace(' ', '-').replace('&', 'and')}.png",
+        f"https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/{brand_name.lower().replace(' ', '-').replace('&', 'and')}.png",
+    ]
+    
+    all_sources = alternative_sources + cdn_sources
+    
+    for source_url in all_sources:
+        try:
+            is_valid, message = verify_logo_url(source_url)
+            if is_valid:
+                print(f"    Logo trouvé sur source alternative: {source_url}")
+                return source_url
+        except Exception as e:
+            continue
+    
+    return None
+
+def find_logo_comprehensive(brand_name, website_url):
+    """
+    Recherche complète du logo avec plusieurs stratégies
+    """
+    # Stratégie 1: Site officiel
+    if website_url:
+        logo_url = find_logo_on_website(website_url, brand_name)
+        if logo_url:
+            is_valid, message = verify_logo_url(logo_url)
+            if is_valid:
+                return logo_url
+    
+    # Stratégie 2: Sources alternatives
+    logo_url = find_logo_alternative_sources(brand_name, website_url)
+    if logo_url:
+        return logo_url
+    
+    # Stratégie 3: Recherche générique sur Google Images (simulée)
+    # Note: Dans un vrai projet, on utiliserait l'API Google Custom Search
+    generic_logo_urls = [
+        f"https://logoeps.com/wp-content/uploads/2013/03/{brand_name.lower().replace(' ', '-')}-vector-logo.png",
+        f"https://seeklogo.com/images/{brand_name.lower().replace(' ', '-')}-logo.png",
+    ]
+    
+    for logo_url in generic_logo_urls:
+        try:
+            is_valid, message = verify_logo_url(logo_url)
+            if is_valid:
+                print(f"    Logo trouvé sur source générique: {logo_url}")
+                return logo_url
+        except Exception as e:
+            continue
+    
+    return None
+
 def verify_logo_url(logo_url):
     """
     Vérifie si une URL de logo est accessible
@@ -104,25 +173,21 @@ def process_brands_csv(csv_file):
                 updated_brands.append(brand)
                 continue
         
-        # Essayer de trouver un nouveau logo
-        if website:
-            print(f"  Recherche du logo sur {website}")
-            new_logo = find_logo_on_website(website, brand_name)
+        # Essayer de trouver un nouveau logo avec recherche complète
+        print(f"  Recherche complète du logo pour {brand_name}")
+        new_logo = find_logo_comprehensive(brand_name, website)
+        
+        if new_logo:
+            is_valid, message = verify_logo_url(new_logo)
+            print(f"  Logo trouvé: {new_logo} - {is_valid} - {message}")
             
-            if new_logo:
-                is_valid, message = verify_logo_url(new_logo)
-                print(f"  Nouveau logo trouvé: {new_logo} - {is_valid} - {message}")
-                
-                if is_valid:
-                    brand['logo'] = new_logo
-                else:
-                    brand['logo'] = ''  # Vider si invalide
+            if is_valid:
+                brand['logo'] = new_logo
             else:
-                print(f"  Aucun logo trouvé sur le site")
-                brand['logo'] = ''  # Vider si non trouvé
+                brand['logo'] = ''  # Vider si invalide
         else:
-            print(f"  Pas de site web, logo vidé")
-            brand['logo'] = ''
+            print(f"  Aucun logo trouvé pour {brand_name}")
+            brand['logo'] = ''  # Vider si non trouvé
         
         updated_brands.append(brand)
         
