@@ -1,283 +1,93 @@
-# Brand Detection System
+# Groupe de kassak_s 1057515
 
-A comprehensive brand detection system that analyzes web pages to identify commercial brands using multiple detection methods including text analysis, link extraction, and image attribute scanning.
 
-## Overview
 
-This project provides a complete solution for detecting brands on e-commerce websites and other commercial pages. It includes both Python-based scraping tools and JavaScript implementations for browser extensions and client-side detection.
+## Getting started
 
-## Core Components
+To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-### Python Modules
+Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-- **brand_scraper.py**: Core brand detection scraper with configurable delays and error handling
-- **advanced_brand_scraper.py**: Enhanced scraper with sophisticated detection algorithms
-- **test_brands.py**: Comprehensive test suite for validation and debugging
-- **example_usage.py**: Practical usage examples and integration patterns
+## Add your files
 
-### JavaScript Modules
+- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
+- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
 
-- **brand_detection_engine.js**: Client-side brand detection engine
-- **brand_detector_extension.ts**: TypeScript implementation for browser extensions
-- **simple_brand_detector.js**: Lightweight detection module
-- **learning_brand_detector.js**: Machine learning enhanced detector
+```
+cd existing_repo
+git remote add origin https://rendu-git.etna-alternance.net/module-10016/activity-53705/group-1057515.git
+git branch -M main
+git push -uf origin main
+```
 
-### Data Files
+## Integrate with your tools
 
-- **brands_database.csv**: Primary brand database
-- **brands_database_fixed.csv**: Corrected and enhanced brand database
-- **requirements.txt**: Python dependencies
+- [ ] [Set up project integrations](https://rendu-git.etna-alternance.net/module-10016/activity-53705/group-1057515/-/settings/integrations)
+
+## Collaborate with your team
+
+- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
+- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
+- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
+- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
+- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+
+## Test and Deploy
+
+Use the built-in continuous integration in GitLab.
+
+- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
+- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
+- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
+- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
+- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+
+***
+
+# Editing this README
+
+When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+
+## Suggestions for a good README
+
+Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+
+## Name
+Choose a self-explaining name for your project.
+
+## Description
+Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+
+## Badges
+On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+
+## Visuals
+Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd ETH.IA
-```
-
-2. Install Python dependencies:
-```bash
-pip install -r requirements.txt
-```
+Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
 ## Usage
-
-### Basic Brand Detection
-
-Analyze a single URL for brand presence:
-
-```bash
-python brand_scraper.py https://example.com
-```
-
-### Advanced Configuration
-
-Use the advanced scraper with custom settings:
-
-```bash
-python advanced_brand_scraper.py https://example.com --delay 2.0 --verbose
-```
-
-### Testing
-
-Run the comprehensive test suite:
-
-```bash
-python test_brands.py
-```
-
-### JavaScript Integration
-
-Include the brand detection engine in web applications:
-
-```html
-<script src="brand_detection_engine.js"></script>
-<script>
-    const detector = new BrandDetector();
-    detector.analyzePage();
-</script>
-```
-
-## How It Works
-
-### Detection Methods
-
-1. **Text Analysis**: Scans page content for brand mentions using pattern matching
-2. **Link Analysis**: Extracts brands from URLs and link text
-3. **Image Analysis**: Identifies brands in image alt attributes and titles
-4. **Attribute Scanning**: Searches data attributes for brand information
-
-### Brand Database
-
-The system maintains a comprehensive database of commercial brands across multiple categories:
-
-- Fashion and Apparel
-- Electronics and Technology
-- Automotive
-- Cosmetics and Beauty
-- Luxury Goods
-- Consumer Electronics
-
-### Processing Pipeline
-
-1. **URL Validation**: Ensures the target URL is accessible
-2. **Content Extraction**: Retrieves HTML content with proper encoding
-3. **Parsing**: Uses BeautifulSoup for structured HTML parsing
-4. **Brand Matching**: Applies multiple detection algorithms
-5. **Result Compilation**: Aggregates findings from all sources
-6. **Output Generation**: Formats results for analysis
-
-## Configuration
-
-### Scraper Settings
-
-- **Delay**: Configurable delays between requests (default: 1.0s)
-- **Timeout**: HTTP request timeout settings
-- **User-Agent**: Customizable browser identification
-- **Retry Logic**: Automatic retry for failed requests
-
-### Brand Detection Parameters
-
-- **Case Sensitivity**: Configurable case matching
-- **Fuzzy Matching**: Approximate string matching support
-- **Minimum Length**: Filter for brand name length
-- **Custom Databases**: Support for external brand lists
-
-## Output Format
-
-Results are provided in structured JSON format:
-
-```json
-{
-  "url": "https://example.com",
-  "total_brands_found": 5,
-  "brands": ["nike", "adidas", "apple", "samsung", "sony"],
-  "brands_in_text": ["nike", "adidas"],
-  "brands_in_links": ["apple", "samsung"],
-  "brands_in_images": ["sony"],
-  "text_length": 15420,
-  "processing_time": 2.34
-}
-```
-
-## Browser Extension
-
-The TypeScript extension provides real-time brand detection:
-
-- **Content Script**: Analyzes page content as it loads
-- **Background Service**: Manages brand database updates
-- **Popup Interface**: User-friendly results display
-- **Settings Panel**: Customizable detection parameters
-
-## Testing and Validation
-
-### Test Coverage
-
-- **Basic Functionality**: Core detection algorithms
-- **Error Handling**: Network failures and invalid URLs
-- **Custom Brands**: User-defined brand lists
-- **Performance**: Processing time and memory usage
-- **Edge Cases**: Special characters and encoding issues
-
-### Validation Methods
-
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: End-to-end workflow validation
-- **Performance Tests**: Load and stress testing
-- **Browser Tests**: Extension functionality verification
-
-## Performance Considerations
-
-### Optimization Strategies
-
-- **Caching**: Result caching for repeated requests
-- **Parallel Processing**: Multi-threaded analysis where appropriate
-- **Memory Management**: Efficient data structures and cleanup
-- **Network Optimization**: Connection pooling and reuse
-
-### Resource Usage
-
-- **CPU**: Minimal processing overhead
-- **Memory**: Efficient string handling and data structures
-- **Network**: Respectful request patterns with delays
-- **Storage**: Compact result formats
-
-## Security and Ethics
-
-### Responsible Usage
-
-- **Rate Limiting**: Built-in delays to prevent server overload
-- **User-Agent**: Proper browser identification
-- **Error Handling**: Graceful failure without server impact
-- **Data Privacy**: No personal information collection
-
-### Legal Compliance
-
-- **robots.txt**: Respect for site crawling policies
-- **Terms of Service**: Compliance with website usage terms
-- **Data Protection**: No sensitive data collection or storage
-- **Educational Purpose**: Intended for research and learning
-
-## Troubleshooting
-
-### Common Issues
-
-**Connection Errors**
-- Verify internet connectivity
-- Check URL accessibility
-- Increase delay settings
-- Verify firewall settings
-
-**No Brands Detected**
-- Confirm URL is correct
-- Try product or category pages
-- Extend brand database
-- Check for JavaScript-rendered content
-
-**Module Import Errors**
-- Install all dependencies: `pip install -r requirements.txt`
-- Verify Python version compatibility
-- Check file permissions
-- Validate import paths
-
-### Debug Mode
-
-Enable verbose output for detailed analysis:
-
-```bash
-python brand_scraper.py https://example.com --verbose
-```
-
-## Development
-
-### Project Structure
-
-```
-ETH.IA/
-├── brand_scraper.py              # Core detection module
-├── advanced_brand_scraper.py     # Enhanced detection
-├── test_brands.py               # Test suite
-├── example_usage.py             # Usage examples
-├── brand_detection_engine.js    # JavaScript engine
-├── brand_detector_extension.ts  # Browser extension
-├── brands_database.csv          # Brand database
-├── requirements.txt             # Python dependencies
-└── README.md                   # This file
-```
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Implement changes with tests
-4. Submit a pull request
-5. Ensure all tests pass
-
-### Code Standards
-
-- **Python**: PEP 8 compliance
-- **JavaScript**: ESLint configuration
-- **TypeScript**: Strict type checking
-- **Documentation**: Comprehensive docstrings
-- **Testing**: Minimum 80% coverage
-
-## License
-
-This project is provided for educational and research purposes. Users are responsible for complying with website terms of service and applicable laws when using this software.
+Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
 ## Support
+Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
-For issues, questions, or contributions:
+## Roadmap
+If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-1. Check existing documentation
-2. Review test cases for examples
-3. Examine error logs for debugging
-4. Submit detailed issue reports
+## Contributing
+State if you are open to contributions and what your requirements are for accepting them.
 
-## Version History
+For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
 
-- **v1.0.0**: Initial release with core functionality
-- **v1.1.0**: Added advanced scraper and browser extension
-- **v1.2.0**: Enhanced brand database and performance optimizations
-- **v1.3.0**: Comprehensive test suite and documentation updates 
+You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+
+## Authors and acknowledgment
+Show your appreciation to those who have contributed to the project.
+
+## License
+For open source projects, say how it is licensed.
+
+## Project status
+If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.

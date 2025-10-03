@@ -1,0 +1,30 @@
+Hery :
+Home page finie.
+
+Maël :
+L’IA parvient à scraper des sites monomarques et à leur attribuer des notes basées sur des critères fictifs pour l’instant.
+Elle détecte aussi plusieurs marques sur les sites multi-marques, mais nous ne sommes pas encore sûrs qu’elle les détecte toutes.
+En attente de la BDD pour obtenir les critères réels.
+
+Naledi :
+Interface du popup prête, en attente des données.
+
+Manu :
+Absent.
+
+Zakarya :
+A remplacé Stark et aide Maël sur l’IA.
+
+Françoise :
+Développe le front du site.
+
+Événement :
+Départ de Stark.
+
+Pour la semaine prochaine
+
+Mise en place de la BDD (Zakarya, Manu).
+
+Finaliser le reste des pages du site.
+
+Réunion en milieu de semaine pour réorganiser les équipes.
