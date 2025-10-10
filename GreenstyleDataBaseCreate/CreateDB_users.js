@@ -11,30 +11,30 @@ db.createCollection("users", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["id_utilisateur", "nom_utilisateur", "prénom", "mail", "mot_de_passe"],
+            required: ["user_id", "last_name", "first_name", "email", "password"],
             properties: {
-                id_utilisateur: {
+                user_id: {
                     bsonType: "string",
-                    description: "identifiant unique de l'utilisateur"
+                    description: "Identifiant unique de l'utilisateur"
                 },
-                nom_utilisateur: {
+                last_name: {
                     bsonType: "string",
-                    description: "nom de famille de l'utilisateur"
+                    description: "Nom de famille de l'utilisateur"
                 },
-                prénom: {
+                first_name: {
                     bsonType: "string",
-                    description: "prénom de l'utilisateur"
+                    description: "Prénom de l'utilisateur"
                 },
-                mail: {
+                email: {
                     bsonType: "string",
-                    description: "adresse email de l'utilisateur"
+                    description: "Adresse email de l'utilisateur"
                 },
-                mot_de_passe: {
+                password: {
                     bsonType: "string",
-                    description: "mot de passe hashé de l'utilisateur"
+                    description: "Mot de passe hashé de l'utilisateur"
                 }
             }
         }
     }
 });
-db.users.createIndex({ "mail": 1 }, { unique: true });
+db.users.createIndex({ "email": 1 }, { unique: true });

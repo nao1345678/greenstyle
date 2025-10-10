@@ -1,34 +1,33 @@
-db.createCollection("favoris", {
+db.createCollection("favorites", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["id_tableau", "nom_tableau", "id_user", "image_couverture", "listes_sites"],
+            required: ["fav_id", "fav_name", "user_id", "cover_image", "site_list"],
             properties: {
-                id_tableau: {
+                board_id: {
                     bsonType: "string",
-                    description: "identifiant unique du tableau de favoris"
+                    description: "Identifiant unique du tableau de favoris"
                 },
-                nom_tableau: {
+                board_name: {
                     bsonType: "string",
-                    description: "nom du tableau de favoris (ex: 'Mes marques éthiques')"
+                    description: "Nom du tableau de favoris (ex: 'Mes marques éthiques')"
                 },
-                id_user: {
+                user_id: {
                     bsonType: "string",
-                    description: "clé étrangère vers l'ID de l'utilisateur"
+                    description: "Clé étrangère vers l'ID de l'utilisateur"
                 },
-                image_couverture: {
+                cover_image: {
                     bsonType: "string",
                     description: "URL de l'image de couverture du tableau"
                 },
-                listes_sites: {
+                site_list: {
                     bsonType: "array",
                     items: {
                         bsonType: "string"
                     },
-                    description: "tableau de références aux identifiants des sites favoris"
+                    description: "Tableau de références aux identifiants des sites favoris"
                 }
             }
         }
     }
 });
-

@@ -7,20 +7,19 @@ const database = 'greenstyle_DB;';
 // The current database to use.
 use(database);
 
-// Create a new collection.
 db.createCollection("sites", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["id_site", "nom_site", "url"],
+            required: ["site_id", "site_name", "url"],
             properties: {
-                id_site: {
+                site_id: {
                     bsonType: "string",
-                    description: "identifiant unique du site"
+                    description: "Identifiant unique du site"
                 },
-                nom_site: {
+                site_name: {
                     bsonType: "string",
-                    description: "nom du site"
+                    description: "Nom du site"
                 },
                 url: {
                     bsonType: "string",

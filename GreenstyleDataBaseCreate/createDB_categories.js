@@ -2,7 +2,7 @@ db.createCollection("categories", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["id_categorie", "nom_categorie"],
+            required: ["id_categorie", "name_categorie"],
             properties: {
                 id_categorie: {
                     bsonType: "string",

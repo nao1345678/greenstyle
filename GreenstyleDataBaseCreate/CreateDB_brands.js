@@ -11,76 +11,82 @@ db.createCollection("brands", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["id_marque", "nom_marque", "lien_web", "categorie_marque", "gamme_prix", "matieres_resp", "certifications", "pays_origine", "gestions_invendues", "transparence_chaines", "impact_env_global", "ethique_travail", "score_final", "description_marque", "sites_associes"],
+            required: ["brand_id", "brand_name", "web_link", "brand_category", "price_range", "responsible_materials", "certifications", "country_of_origin", "unsold_management", "supply_chain_transparency", "global_environmental_impact", "labor_ethics", "final_score", "brand_description", "associated_sites"],
             properties: {
-                id_marque: {
+                brand_id: {
                     bsonType: "string",
-                    description: "identifiant unique de la marque"
+                    description: "Identifiant unique de la marque"
                 },
-                nom_marque: {
+                brand_name: {
                     bsonType: "string",
-                    description: "nom de la marque"
+                    description: "Nom de la marque"
                 },
                 logo: {
                     bsonType: "string",
                     description: "URL du logo de la marque"
                 },
-                lien_web: {
+                web_link: {
                     bsonType: "string",
                     description: "URL du site web de la marque"
                 },
-                id_categorie: {
+                brand_category: {
                     bsonType: "string",
-                    description: "clé étrangère vers l'ID de la marque"
+                    description: "Catégorie de la marque (ex: 'vêtements', 'accessoires')"
                 },
-                gamme_prix: {
+                price_range: {
                     bsonType: "int",
-                    description: "gamme de prix de la marque (note sur 5)"
+                    description: "Gamme de prix de la marque (note sur 5)"
                 },
-                matieres_resp: {
+                responsible_materials: {
                     bsonType: "int",
-                    description: "pourcentage de matières responsables"
+                    description: "Pourcentage de matières responsables"
                 },
                 certifications: {
                     bsonType: "array",
-                    description: "liste de certifications de la marque (ex: ['GOTS', 'Fair Trade'])"
+                    description: "Liste des certifications de la marque (ex: ['GOTS', 'Fair Trade'])"
                 },
-                pays_origine: {
+                country_of_origin: {
                     bsonType: "string",
-                    description: "pays d'origine de la marque"
+                    description: "Pays d'origine de la marque"
                 },
-                pays_production: {
+                country_of_production: {
                     bsonType: "array",
-                    description: "pays de production de la marque"
+                    description: "Pays de production de la marque"
                 },
-                gestions_invendues: {
+                unsold_management: {
                     bsonType: "string",
-                    description: "politique de gestion des invendus"
+                    description: "Politique de gestion des invendus"
                 },
-                transparence_chaines: {
+                supply_chain_transparency: {
                     bsonType: "string",
-                    description: "niveau de transparence de la chaîne d'approvisionnement"
+                    description: "Niveau de transparence de la chaîne d'approvisionnement"
                 },
-                impact_env_global: {
+                global_environmental_impact: {
                     bsonType: "double",
-                    description: "score d'impact environnemental (note sur 5)"
+                    description: "Score d'impact environnemental (note sur 5)"
                 },
-                ethique_travail: {
+                labor_ethics: {
                     bsonType: "double",
-                    description: "score d'éthique du travail (note sur 5)"
+                    description: "Score d'éthique du travail (note sur 5)"
                 },
-                score_final: {
+                final_score: {
                     bsonType: "double",
-                    description: "score final (moyenne des deux scores, sur 5)"
+                    description: "Score final (moyenne des deux scores, sur 5)"
                 },
-                description_marque: {
+                brand_description: {
                     bsonType: "string",
-                    description: "description de la marque"
+                    description: "Description de la marque"
                 },
+                associated_sites: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "string"
+                    },
+                    description: "Tableau de références aux identifiants des sites associés à la marque"
+                }
             }
         }
     }
 });
-
 // More information on the `createCollection` command can be found at:
 // https://www.mongodb.com/docs/manual/reference/method/db.createCollection/
