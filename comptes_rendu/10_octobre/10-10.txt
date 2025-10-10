@@ -1,0 +1,61 @@
+Compte Rendu – 10 octobre 2025
+
+Maël
+
+Travail réalisé :
+
+Connexion de l’IA avec la base de données terminée.
+
+La sortie est désormais formatée selon la structure de la base.
+
+Problème identifié : l’URL du logo ne fonctionne pas toujours. Une solution temporaire est en place, mais elle n’est pas parfaite.
+
+À faire pour le vendredi 17 octobre :
+
+Affiner les résultats générés par l’IA.
+
+Naledi
+
+Travail réalisé :
+
+Refonte des catégories de marques.
+
+Réorganisation et rangement des marques par catégorie.
+
+Script de scraping pour les rapports et sites d’ONG en cours de finalisation.
+
+Problème :
+
+Le script ne retourne encore aucune marque en tant que fast fashion pour le moment.
+
+Manu
+
+Travail réalisé :
+
+Traduction complète de la base de données effectuée.
+
+Finalisation du script de scraping via SerpAPI en cours.
+
+Hery
+
+Travail réalisé :
+
+Les routes bdd -> back -> front sont reliées .
+
+Prochaine étape :
+
+préparer le script d'insertion des données obtenu avec les scrapper dans la bdd
+
+Françoise
+
+Travail réalisé :
+
+Page tableau de bord terminé.
+
+Page détail des marques en cours de développement.
+
+Zackarya
+
+Travail réalisé :
+
+Script de calcul des scores en cours.
