@@ -1,46 +1,72 @@
-<script setup>
-import { useRoute } from 'vue-router'
-import { ref } from 'vue'
-import NavBar from '../../components/navbar.vue'
-import Intro from '../../components/intro.vue'
-import clothGrid from '../../components/clothGrid.vue'
-const route = useRoute()
+<!-- src/pages/marques/[id].vue -->
+<script setup lang="ts">
+import { onMounted, ref } from "vue"
+import { RouterLink } from "vue-router"
 
-const Marques = ref('Marques');
-const text = ref("Notre mission est de vous offrir un classement éthique des marques de vêtements, en se basant sur une analyse sans précédent. Pour cela, nous avons développé une méthodologie rigoureuse, s'appuyant sur l'examen minutieux de données précises : le prix, la pollution générée, les pratiques de travail éthiques, mais aussi des critères fins comme la taille de l'entreprise, les catégories de vêtements proposées ou les certifications obtenues. Chaque marque est ainsi passée au crible pour vous offrir une transparence totale.");
+import NavBar from "../../components/navbar.vue"
+import Intro from "../../components/intro.vue"
+import ProductGrid from "../../components/ProductGrid.vue"
+
+import { listBrands, type BrandOut } from "../../api/brand"
+
+const title = ref("Marques")
+const intro = ref(
+  "Notre mission est de vous offrir un classement éthique des marques de vêtements…"
+)
+
+type GridItem = { id: string; src: string; alt: string }
+const items = ref<GridItem[]>([])
+const loading = ref(false)
+const error = ref<string | null>(null)
+
+onMounted(async () => {
+  loading.value = true
+  error.value = null
+  try {
+    const brands: BrandOut[] = await listBrands()
+    items.value = brands.map(b => ({
+      id: b.id,                                  // on garde l'id réel, mais on ne filtre pas
+      src: b.logo || "https://placehold.co/600x450?text=Logo",
+      alt: b.brand_name,
+    }))
+  } catch (e: any) {
+    error.value = e?.response?.data?.detail || e.message
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
-  <navBar />
+  <NavBar />
   <div class="page-bg">
-    <div class="intro">
-      <Intro :title="Marques" :text="text" />
-    </div>
-    <div class="clothGrid">
-      <clothGrid />
-    </div>
+    <main class="wrap">
+      <RouterLink to="/marques" class="back">← Toutes les marques</RouterLink>
+
+      <div class="intro">
+        <Intro :title="title" :text="intro" />
+      </div>
+
+      <p v-if="loading" class="state">Chargement…</p>
+      <p v-else-if="error" class="state err">{{ error }}</p>
+
+      <div v-else class="grid-wrap">
+        <ProductGrid :items="items" title="Toutes les marques" :cols="4" />
+      </div>
+    </main>
   </div>
 </template>
 
-<style scoped> 
-
+<style scoped>
 .page-bg{
   background: #fff5e6;
   min-height: 100svh;
   padding: 16px 0;
 }
-
-.intro{
-  max-width: 70vw;
-  margin-left: 2.5vw;
-  padding: 0 24px;
-}
-
-.clothGrid{
-  max-width: 90vw;
-  margin-left: 2.5vw;
-  margin-top: 5vh;
-  padding: 0 24px;
-}
-
+.wrap{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.back{ display:inline-block; margin: 6px 0 10px; text-decoration:none; color:#555; }
+.intro{ max-width: 70vw; }
+.state{ margin: 12px 0; }
+.err{ color:#b00020; }
+.grid-wrap{ margin-top: 12px; }
 </style>
