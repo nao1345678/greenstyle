@@ -1,0 +1,84 @@
+{
+    "categories": [
+        {
+            "id_category": 1,
+            "name": "Shoes"
+        },
+        {
+            "id_category": 2,
+            "name": "Basics"
+        },
+        {
+            "id_category": 3,
+            "name": "Dresses"
+        },
+        {
+            "id_category": 4,
+            "name": "Sleepwear"
+        },
+        {
+            "id_category": 5,
+            "name": "Swimwear"
+        },
+        {
+            "id_category": 6,
+            "name": "Activewear"
+        },
+        {
+            "id_category": 7,
+            "name": "Streetwear"
+        },
+        {
+            "id_category": 8,
+            "name": "Suits"
+        },
+        {
+            "id_category": 9,
+            "name": "Bags"
+        },
+        {
+            "id_category": 10,
+            "name": "Accessories"
+        },
+        {
+            "id_category": 11,
+            "name": "Alt"
+        },
+        {
+            "id_category": 12,
+            "name": "Denim"
+        },
+        {
+            "id_category": 13,
+            "name": "Lingerie"
+        },
+        {
+            "id_category": 14,
+            "name": "Plus Size"
+        },
+        {
+            "id_category": 15,
+            "name": "Maternity"
+        },
+        {
+            "id_category": 16,
+            "name": "Kids wear"
+        },
+        {
+            "id_category": 17,
+            "name": "Jewelry"
+        },
+        {
+            "id_category": 18,
+            "name": "Tall"
+        },
+        {
+            "id_category": 19,
+            "name": "Luxury"
+        },
+        {
+            "id_category": 20,
+            "name": "Other"
+        }
+    ]
+}

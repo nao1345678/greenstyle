@@ -1,0 +1,301 @@
+{
+    "brands_by_category": [
+        {
+            "category_id": 2,
+            "category_name": "Basics",
+            "brands": [
+                "H&M",
+                "Zara",
+                "Uniqlo",
+                "Gap",
+                "Mango",
+                "ASOS Design",
+                "Vero Moda",
+                "ONLY",
+                "Armedangels",
+                "Colorful Standard",
+                "Knowledge Cotton Apparel",
+                "Loom",
+                "Thinking Mu",
+                "Baserange",
+                "Organic Basics",
+                "People Tree",
+                "La Gentle Factory",
+                "Everlane"
+            ]
+        },
+        {
+            "category_id": 1,
+            "category_name": "Shoes",
+            "brands": [
+                "Steve Madden (Diffusion)",
+                "Aldo",
+                "Call It Spring",
+                "Public Desire",
+                "Ego Official",
+                "Veja",
+                "NAE Vegan Shoes",
+                "Minuit sur Terre",
+                "Jules & Jenn",
+                "Ubac",
+                "Duuo",
+                "Ector Sneakers",
+                "M. Moustache",
+                "Odaje",
+                "Ethletic"
+            ]
+        },
+        {
+            "category_id": 3,
+            "category_name": "Dresses",
+            "brands": [
+                "PrettyLittleThing",
+                "Missguided",
+                "Fashion Nova",
+                "Nasty Gal",
+                "Chi Chi London",
+                "Reformation",
+                "Christy Dawn",
+                "People Tree",
+                "Mara Hoffman (Robes occasion)",
+                "Dao Davy"
+            ]
+        },
+        {
+            "category_id": 13,
+            "category_name": "Lingerie",
+            "brands": [
+                "Victoria's Secret PINK",
+                "La Senza",
+                "Ann Summers",
+                "Aerie",
+                "Olly Lingerie",
+                "Nénés Paris",
+                "erlich textil",
+                "Perdième (Culottes menstruelles)",
+                "Underprotection",
+                "Le Slip Français (Lingerie)"
+            ]
+        },
+        {
+            "category_id": 6,
+            "category_name": "Activewear",
+            "brands": [
+                "Gymshark",
+                "Fabletics",
+                "Nike (Fashion lines)",
+                "Adidas (Fashion lines)",
+                "Patagonia (Outdoor)",
+                "Icebreaker (Laine mérinos)",
+                "Girlfriend Collective",
+                "Outdoor Voices (Slow Lines)",
+                "Gayaskin"
+            ]
+        },
+        {
+            "category_id": 12,
+            "category_name": "Denim",
+            "brands": [
+                "Levi's (Fast Lines)",
+                "Zara (Denim)",
+                "G-Star Raw",
+                "Wrangler (Fast Lines)",
+                "1083 (Made in France)",
+                "Nudie Jeans",
+                "Kuyichi",
+                "MUD Jeans",
+                "Warp + Weft"
+            ]
+        },
+        {
+            "category_id": 14,
+            "category_name": "Plus Size",
+            "brands": [
+                "Torrid",
+                "Yours Clothing",
+                "ASOS Curve",
+                "Boohoo Plus",
+                "Octavie et Léonie",
+                "Quintessence",
+                "Loud Bodies",
+                "Hope & Harvest",
+                "Big Fab Fashion (Made in France)"
+            ]
+        },
+        {
+            "category_id": 7,
+            "category_name": "Streetwear",
+            "brands": [
+                "Forever 21",
+                "PacSun",
+                "Urban Outfitters (Apparel)",
+                "Topman",
+                "Patagonia (Casual)",
+                "Dedicated",
+                "Stanley/Stella",
+                "Colorful Standard"
+            ]
+        },
+        {
+            "category_id": 4,
+            "category_name": "Sleepwear",
+            "brands": [
+                "Primark (Pajamas)",
+                "Peter Alexander",
+                "Victoria's Secret PINK (Sleep)",
+                "H&M Home (Pajamas)",
+                "People Tree (Sleepwear)",
+                "Underprotection (Sleep)",
+                "Blanc Cerise (Linge de lit/nuit)",
+                "Thought (Bambou/Coton Bio)"
+            ]
+        },
+        {
+            "category_id": 5,
+            "category_name": "Swimwear",
+            "brands": [
+                "Zaful Swim",
+                "Cupshe",
+                "Shein Swim",
+                "Missguided Swim",
+                "Nénés Paris (Swim)",
+                "Underprotection (Swim)",
+                "Fisch",
+                "Ayla Swim",
+                "Fair Harbor"
+            ]
+        },
+        {
+            "category_id": 9,
+            "category_name": "Bags",
+            "brands": [
+                "Zara (Bags)",
+                "Parfois (Bags)",
+                "Aldo (Bags)",
+                "Guess (Diffusion)",
+                "Hindbag (Sacs en coton bio)",
+                "Nodie's (Maroquinerie Made in France)",
+                "Faguo (Sacs)",
+                "Bilum (Upcyclé)",
+                "Matt & Nat (Vegan)"
+            ]
+        },
+        {
+            "category_id": 10,
+            "category_name": "Accessories",
+            "brands": [
+                "Accessorize",
+                "Claire's",
+                "H&M Accessories",
+                "Parfois (Accessories)",
+                "Original Duckhead (Parapluies)",
+                "Saint Lazare (Ceintures upcyclées)",
+                "Thought (Accessoires)",
+                "Jules & Jenn (Petite maroquinerie)"
+            ]
+        },
+        {
+            "category_id": 17,
+            "category_name": "Jewelry",
+            "brands": [
+                "Lovisa",
+                "Six",
+                "Accessorize (Jewelry)",
+                "Shein (Jewelry)",
+                "J'ai vu la Vierge",
+                "Paulette à Bicyclette",
+                "Oh My Gold (Éthique)",
+                "Etsy (Slow Sellers)"
+            ]
+        },
+        {
+            "category_id": 8,
+            "category_name": "Suits",
+            "brands": [
+                "Zara (Suits)",
+                "H&M (Suits)",
+                "ASOS Suits",
+                "Next (Suits)",
+                "Sumissura (Sur-mesure)",
+                "Hockerty (Sur-mesure)",
+                "Blancheporte (Slow Lines)",
+                "Charles Tyrwhitt (Chemises éthiques)"
+            ]
+        },
+        {
+            "category_id": 19,
+            "category_name": "Luxury",
+            "brands": [
+                "Mara Hoffman",
+                "Mara Hoffman",
+                "Ganni (Conscious Lines)",
+                "Kowtow",
+                "Eileen Fisher (Sustainable)",
+                "Sézane (Diffusion/Éthique)",
+                "Maison 123 (Slow Lines)"
+            ]
+        },
+        {
+            "category_id": 11,
+            "category_name": "Alt",
+            "brands": [
+                "Hot Topic",
+                "Dolls Kill (Fast Lines)",
+                "Killstar (Fast Lines)",
+                "Disturbia",
+                "Shein (Goth/Alt)"
+            ]
+        },
+        {
+            "category_id": 15,
+            "category_name": "Maternity",
+            "brands": [
+                "ASOS Maternity",
+                "H&M MAMA",
+                "Motherhood Maternity",
+                "Seraphine (Slow Lines)",
+                "Boob Design",
+                "Nomads (Slow Lines)"
+            ]
+        },
+        {
+            "category_id": 16,
+            "category_name": "Kids wear",
+            "brands": [
+                "Carter's",
+                "Okaïdi",
+                "Zara Kids",
+                "The Children's Place",
+                "Mini Rodini",
+                "Frugi",
+                "Maxomorra",
+                "Lindex (Kids Bio)"
+            ]
+        },
+        {
+            "category_id": 18,
+            "category_name": "Tall",
+            "brands": [
+                "ASOS Tall",
+                "Next Tall",
+                "Long Tall Sally",
+                "Warp + Weft (Denim Longueur)",
+                "Loom (Slow Lines)"
+            ]
+        },
+        {
+            "category_id": 20,
+            "category_name": "Other",
+            "brands": [
+                "Primark",
+                "Boohoo",
+                "AliExpress (Clothing)",
+                "Shein",
+                "Patagonia (Worn Wear Program)",
+                "Vinted",
+                "Depop",
+                "Vestiaire Collective"
+            ]
+        }
+    ]
+}
