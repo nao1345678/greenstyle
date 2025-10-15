@@ -1,0 +1,66 @@
+[
+  {
+    "brand": "Nike",
+    "brand_name": "Nike",
+    "logo": null,
+    "website": null,
+    "categories": [],
+    "price_range": "$",
+    "country_origin": "Netherlands",
+    "country_production": "Vietnam",
+    "ngo_links": [
+      "https://directory.goodonyou.eco/brand/nike",
+      "https://goodonyou.eco/how-ethical-is-nike/",
+      "https://cleanclothes.org/news/2025/nike-ignores-unpaid-workers-appeal-on-five-year-anniversary-of-factory-closure",
+      "https://cleanclothes.org/file-repository/nike-lies-report-july-2024-1.pdf",
+      "https://cleanclothes.org/news/2024/activists-disrupt-nike-olympic-advertising-extravaganza-with-unpaid-workers-demands",
+      "https://cleanclothes.org/campaigns/nikesteals",
+      "https://cleanclothes.org/news/2024/ahead-of-nike-record-olympic-spend-investors-and-activists-urge-nike-to-settle-debt-with-workers",
+      "https://cleanclothes.org/news/2024/victory-for-newly-unionised-garment-workers-in-nike-factory",
+      "https://cleanclothes.org/news/2023/nike-board-executives-under-fire"
+    ]
+  },
+  {
+    "brand": "Veja",
+    "brand_name": "VEJA",
+    "logo": null,
+    "website": null,
+    "categories": [],
+    "price_range": "$",
+    "country_origin": "Portugal",
+    "country_production": "Portugal",
+    "ngo_links": [
+      "https://www.bcorporation.net/en-us/find-a-b-corp/company/veja/",
+      "https://directory.goodonyou.eco/brand/veja",
+      "https://goodonyou.eco/the-ultimate-guide-to-sustainable-sneakers/",
+      "https://goodonyou.eco/sustainable-childrens-shoes/",
+      "https://goodonyou.eco/ethical-sustainable-shoes-2/",
+      "https://goodonyou.eco/trans-seasonal-fashion/",
+      "https://goodonyou.eco/sustainable-running-shoes/",
+      "https://goodonyou.eco/alternatives-skechers/",
+      "https://directory.goodonyou.eco/brand/star-child",
+      "https://goodonyou.eco/sustainable-work-shoes/"
+    ]
+  },
+  {
+    "brand": "Armedangels",
+    "brand_name": null,
+    "logo": null,
+    "website": null,
+    "categories": [],
+    "price_range": "$",
+    "country_origin": "Germany",
+    "country_production": "Germany",
+    "ngo_links": [
+      "https://directory.goodonyou.eco/brand/armedangels",
+      "https://www.fairwear.org/brands/armedangels/",
+      "https://www.fairwear.org/resources/armedangels-social-report-2021",
+      "https://goodonyou.eco/armedangels-detox-denim/",
+      "https://www.fairwear.org/resources/armedangels-social-report-2018",
+      "https://www.fairwear.org/resources/armedangels-performance-check-2022",
+      "https://www.fairwear.org/resources/armedangels-social-report-2017",
+      "https://goodonyou.eco/most-ethical-and-sustainable-clothing-brands-from-germany/",
+      "https://www.fairwear.org/stories/german-fashion-brand-armedangels-joins-fwf/"
+    ]
+  }
+]
