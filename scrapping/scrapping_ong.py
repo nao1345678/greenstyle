@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -10,52 +11,59 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
+from typing import List, Dict, Any
 
-# Configuration
+# Configuration globale pour stocker la liste des marques
 BRANDS_TO_SCRAP = None
+# Motif de tous les mots-clés critiques. Utilisé pour déterminer si un document est dénonciateur.
+CRITICAL_KEYWORDS = r"""(esclavage|servitude|travail forcé|travail obligatoire|modern slavery|
+forced labor|exploitation|sous-traitance abusive|travail d'enfants|enfants ouvriers|child labor|
+child exploitation|mineurs exploités|salaire vital|salaire décent|living wage|sous-payé|mal payé|
+faible rémunération|heures supplémentaires|overtime|temps de travail illégal|
+non-respect des horaires|non-respect de la sécurité|conditions dangereuses|sécurité défaillante|Rana Plaza|
+accidents de travail|safety violations|droits bafoués|abus|maltraitance|harcèlement|syndicat interdit|rights violated|
+abuse|harassment|Manque de transparence|due diligence|chaines d'approvisionnement opaques|lack of transparency|
+supply chain risks|Ouïghours|Uighurs|Xinjiang|Israel|Israël|Israeli|Israéliens|Palestiniens|Palestine|Gaza|
+sous-remunere|underpaid|debt bondage|human trafficking|abusif|dangereux|non-conformité|
+contrefaçon|non-respect des normes|prison labor|salaires impayés|wage theft|sweatshop|atelier de misère|
+pauvreté extrême|extreme poverty|droit de s'organiser|liberté d'association|freedom of association|
+discrimination|toxic|toxique|produits chimiques nocifs|dangereux pour la santé|violences)"""
 
 def get_brands(): 
     """
     Récupère les marques cibles depuis le fichier JSON.
-    (La logique est inchangée et est bonne pour la préparation)
     """
     global BRANDS_TO_SCRAP
     brands_list = []
     
-    # Chemin présumé du JSON
     try:
         base_dir = os.path.dirname(os.path.abspath(__file__))
     except NameError:
         base_dir = os.getcwd()
         
-    file_path = os.path.join(base_dir, "../ressources/jsons/brands.json")
+    file_path = "../ressources/jsons/brands.json"
     
-    if not os.path.exists(file_path):
-        print(f"Erreur: Le fichier brands.json n'a pas été trouvé à l'emplacement: {file_path}")
-        return []
-
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
             brands_list = [brand.lower() for category in data["brands_by_category"] for brand in category["brands"]]
             brands_list = [b for b in brands_list if len(b) >= 3 or '&' in b]
             
+            # DEBUG: Afficher quelques marques pour vérification
+            print(f"DEBUG: Exemples de marques dans la liste: {brands_list[:20]}")
+            
+            BRANDS_TO_SCRAP = brands_list
+            print(f"✅ Nombre total de marques extraites du JSON : {len(BRANDS_TO_SCRAP)}")
+            return BRANDS_TO_SCRAP
+
     except Exception as e:
-        print(f"Erreur lors du chargement ou de l'analyse du JSON : {e}")
+        print(f"❌ Erreur lors du chargement ou de l'analyse du JSON : {e}")
         return []
 
-    BRANDS_TO_SCRAP = brands_list
-    print(f"Nombre total de marques extraites : {len(BRANDS_TO_SCRAP)}")
-    print("\nListe des marques (extrait, en minuscules) :")
-    print(BRANDS_TO_SCRAP[:5] + ["..."] + BRANDS_TO_SCRAP[-5:]) 
-    
-    return BRANDS_TO_SCRAP
-
-
-def get_text_from_url(url, response):
+def get_text_from_url(url: str, response: requests.Response) -> str:
     """
-    Extrait le texte d'une réponse HTTP, qu'il s'agisse de HTML ou de PDF.
-    (La logique d'extraction est inchangée)
+    V8 : Extrait le texte COMPLET du document sous forme d'une seule chaîne
+    en privilégiant l'extraction de blocs pour le HTML pour un texte plus propre.
     """
     content_type = response.headers.get('Content-Type', '').lower()
     full_text = ""
@@ -67,44 +75,43 @@ def get_text_from_url(url, response):
             pdf_file = io.BytesIO(response.content)
             reader = PdfReader(pdf_file)
             for page in reader.pages:
-                # Ajout d'un espace pour faciliter la recherche de bornes de mots
-                full_text += page.extract_text() + " "
+                full_text += page.extract_text() + "\n"
             
-            # Retourne le texte complet dans une liste pour une analyse globale/par ligne
-            return full_text.split('\n')
+            return full_text
         except Exception as e:
-            print(f"Erreur lors de la lecture du PDF avec PyPDF2 : {e}")
-            return []
+            print(f"❌ Erreur lors de la lecture du PDF avec PyPDF2 : {e}")
+            return ""
     
     else:
         # Traitement du HTML
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # SÉLECTION LARGE : On cible toutes les balises de contenu
+        # Supprime les scripts et styles pour le nettoyage
+        for junk in soup(['script', 'style']):
+            junk.decompose()
+            
+        # SÉLECTION DES BALISES DE CONTENU (pour un texte plus pertinent et structuré)
         paragraphes = soup.find_all([
-            'p', 'li', 'h3', 'h2', 'h1', 'td', 'th', 
-            'a', 'span', 'strong', 'em', 'figcaption', 'blockquote'
+            'p', 'li', 'h3', 'h2', 'h1', 'td', 'th', 'a', 'span', 'strong', 'em', 
+            'figcaption', 'blockquote'
         ])
         
-        # Retourne une liste de blocs de texte
-        return [
+        # Concatène les blocs avec des espaces ou sauts de ligne (pour séparer les mots)
+        text_blocks = [
             element.get_text(strip=True) 
             for element in paragraphes 
-            if len(element.get_text(strip=True)) > 20
+            if len(element.get_text(strip=True)) > 20 # Ignore les très petites chaînes
         ]
+        
+        return ' '.join(text_blocks)
 
 
-def extract_problematic_terms(url, brands_list):
+def extract_problematic_terms(url: str, brands_list: List[str]) -> Dict[str, List[Dict[str, str]]]:
     """
-    Récupère le contenu d'une URL et cherche des mentions de marques cibles
-    associées à des mots-clés de critique DANS LE MÊME BLOC OU À PROXIMITÉ (100 caractères).
+    V8 : Logique Document Critique Global / Maximum Recall.
     """
     critical_mentions = {}
     
-    # Motif de capture pour identifier quel mot critique a matché
-    # REMARQUE : Ces mots-clés sont sensibles à la casse pour capturer la version originale.
-    critical_keywords_pattern = r"(esclavage moderne|salaire vital|ouïghours|non-respect de la sécurité|Rana Plaza|Manque de transparence|heures supplémentaires|abus|travail forcé|exploitation|sous-payé|droits bafoués|travail d'enfants|modern slavery|living wage|Uighurs|safety violations|lack of transparency|excessive overtime|forced labor|exploitation|underpaid|rights violated|child labor)"
-
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -113,69 +120,121 @@ def extract_problematic_terms(url, brands_list):
         response = requests.get(url, headers=headers, timeout=20) 
         response.raise_for_status() 
 
-        text_blocks = get_text_from_url(url, response)
+        # Étape 1 : Obtenir le texte COMPLET
+        full_document_text = get_text_from_url(url, response)
         
-        # 1. Joindre tous les blocs de texte pour former le texte complet du document (nécessaire pour la recherche de proximité)
-        full_document_text = ' '.join(text_blocks)
-        normalized_full_text = full_document_text.lower()
-        
-        # 2. Chercher les occurrences de chaque marque dans le document complet
-        for marque in brands_list:
+        if not full_document_text:
+            print("— Contenu non lisible ou vide.")
+            return {}
             
-            # Recherche de toutes les positions de la marque
-            # (Note: la marque est en minuscules dans brands_list)
-            # La regex est plus simple ici car on cherche dans le texte continu
-            for match in re.finditer(re.escape(marque), normalized_full_text):
-                start_index = match.start()
-                end_index = match.end()
+        normalized_full_text = full_document_text.lower()
+
+        # DEBUG pour l'article des 83 marques
+        if "83-marques-esclave-ouighour" in url:
+            print(f"DEBUG: Longueur du texte extrait: {len(full_document_text)}")
+            print(f"DEBUG: Échantillon du texte: {full_document_text[:500]}...")
+            
+            # Test manuel sur quelques marques connues
+            test_brands = ["nike", "adidas", "zara", "h&m", "gap", "uniqlo", "puma"]
+            print("DEBUG: Test de présence de marques connues:")
+            for brand in test_brands:
+                if brand in normalized_full_text:
+                    print(f"  ✅ {brand} TROUVÉ")
+                else:
+                    print(f"  ❌ {brand} NON TROUVÉ")
+
+        # Étape 2 : Vérification du Marqueur de Dénonciation (sur le document entier)
+        match_critique_global = re.search(CRITICAL_KEYWORDS, normalized_full_text, re.IGNORECASE)
+        
+        if not match_critique_global:
+            print("— Document non jugé critique (aucun mot-clé majeur trouvé).")
+            return {}
+        
+        # Mot-clé critique qui a validé le document comme "dénonciateur"
+        mot_cle_de_critique_global = match_critique_global.group(1).strip()
+        print(f"📍 Mot-clé critique détecté: '{mot_cle_de_critique_global}'")
+        
+        # Étape 3 : Extraction avec normalisation TRÈS flexible
+        marques_trouvees = 0
+        for marque in brands_list:
+            # Nettoyer la marque (supprimer parenthèses et annotations)
+            marque_clean = re.sub(r'\s*\([^)]*\)', '', marque).strip()
+            
+            # NOUVELLE APPROCHE : Recherche très flexible
+            found = False
+            
+            # 1. Recherche simple dans le texte normalisé
+            if marque_clean.lower() in normalized_full_text:
+                found = True
+            
+            # 2. Recherche sans espaces
+            elif marque_clean.replace(' ', '').lower() in normalized_full_text.replace(' ', ''):
+                found = True
+            
+            # 3. Recherche avec variations communes pour &
+            elif '&' in marque_clean:
+                variants = [
+                    marque_clean.replace('&', 'and'),
+                    marque_clean.replace('&', ' and '),
+                    marque_clean.replace('&', ''),
+                    marque_clean.replace('&', ' ')
+                ]
+                for variant in variants:
+                    if variant.lower() in normalized_full_text:
+                        found = True
+                        break
+            
+            # 4. Recherche par mots (pour les marques composées)
+            elif ' ' in marque_clean:
+                words = marque_clean.lower().split()
+                if all(word in normalized_full_text for word in words):
+                    found = True
+            
+            if found:
+                marques_trouvees += 1
+                if marque not in critical_mentions:
+                    critical_mentions[marque] = []
                 
-                # Définir la fenêtre de recherche de proximité (100 caractères avant/après)
-                # On utilise le texte COMPLET (full_document_text)
+                # Trouver la première occurrence de la marque pour un extrait contextuel
+                first_brand_match = re.search(re.escape(marque_clean), full_document_text, re.IGNORECASE)
+                if not first_brand_match:
+                    # Recherche plus flexible pour l'extrait
+                    first_brand_match = re.search(marque_clean.lower(), normalized_full_text)
                 
-                # La fenêtre de recherche inclut 10000 caractères avant le début et après la fin de la marque
-                search_window_start = max(0, start_index - 10000)
-                search_window_end = min(len(full_document_text), end_index + 10000)
+                context_excerpt = "Marque citée dans le document dénonciateur."
+                if first_brand_match:
+                    start_index = first_brand_match.start()
+                    context_start = max(0, start_index - 150)
+                    context_end = min(len(full_document_text), start_index + 150)
+                    context_excerpt = full_document_text[context_start:context_end].strip()
+
+                mention = {
+                    "source": url, 
+                    "extrait": context_excerpt, 
+                    "mot_cle": f"Cité dans un document critiquant {mot_cle_de_critique_global}" 
+                }
                 
-                proximity_window = full_document_text[search_window_start:search_window_end]
+                critical_mentions[marque].append(mention)
+        
+        # Debug pour l'article des 83 marques
+        if "83-marques-esclave-ouighour" in url:
+            print(f"DEBUG: {marques_trouvees} marques trouvées dans l'article des 83 marques")
                 
-                # 3. Chercher un mot-clé de critique dans la fenêtre de proximité (case-insensitive)
-                match_critique = re.search(critical_keywords_pattern, proximity_window, re.IGNORECASE)
-                
-                if match_critique:
-                    # Succès : Marque et mot-clé critique sont proches.
-                    
-                    # Récupérer le mot-clé exact et l'extrait pertinent
-                    mot_cle_de_critique = match_critique.group(1).strip()
-                    
-                    if marque not in critical_mentions:
-                        critical_mentions[marque] = []
-                    
-                    # Définir l'extrait comme la fenêtre de proximité pour le contexte
-                    mention = {
-                        "source": url, 
-                        "extrait": proximity_window.strip(), # L'extrait est la fenêtre de 200+ caractères
-                        "mot_cle": mot_cle_de_critique
-                    }
-                    
-                    # Ajout de la mention si unique
-                    if mention not in critical_mentions[marque]:
-                        critical_mentions[marque].append(mention)
-                        
+        print(f"✅ {len(critical_mentions)} marques identifiées dans cette source DÉNONCIATRICE.")
         return critical_mentions
 
     except requests.exceptions.RequestException as e:
-        print(f"Erreur de connexion/requête sur {url}: {e}")
+        print(f"❌ Erreur de connexion/requête sur {url}: {e}")
         return {}
     except Exception as e:
-        print(f"Une erreur s'est produite lors de l'analyse : {e}")
+        print(f"❌ Une erreur s'est produite lors de l'analyse : {e}")
         return {}
 
-def save_results_to_json(resultats_finaux, filename="resultats_scraping_ong.json"):
-    """
-    Sauvegarde les résultats finaux en format JSON.
-    """
+
+def save_results_to_json(resultats_finaux: Dict[str, List[Dict[str, str]]], filename: str = "resultats_scraping_ong.json") -> str:
+    """ Sauvegarde les résultats finaux en format JSON. """
+    filepath = filename 
     try:
-        # Préparer les données avec métadonnées
         data = {
             "metadata": {
                 "date_generation": datetime.now().isoformat(),
@@ -185,10 +244,6 @@ def save_results_to_json(resultats_finaux, filename="resultats_scraping_ong.json
             "resultats": resultats_finaux
         }
         
-        # Sauvegarder dans le répertoire du script
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        filepath = os.path.join(base_dir, filename)
-        
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         
@@ -197,33 +252,23 @@ def save_results_to_json(resultats_finaux, filename="resultats_scraping_ong.json
         
     except Exception as e:
         print(f"❌ Erreur lors de la sauvegarde JSON : {e}")
-        return None
+        return ""
 
-def save_results_to_pdf(resultats_finaux, filename="rapport_scraping_ong.pdf"):
-    """
-    Génère un rapport PDF des résultats finaux.
-    """
+def save_results_to_pdf(resultats_finaux: Dict[str, List[Dict[str, str]]], filename: str = "rapport_scraping_ong.pdf") -> str:
+    """ Génère un rapport PDF des résultats finaux. """
+    
+    filepath = filename
+    
     try:
-        # Installer reportlab si nécessaire : pip install reportlab
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        filepath = os.path.join(base_dir, filename)
-        
         doc = SimpleDocTemplate(filepath, pagesize=letter)
         styles = getSampleStyleSheet()
         
         # Styles personnalisés
         title_style = ParagraphStyle(
-            'CustomTitle',
-            parent=styles['Title'],
-            fontSize=16,
-            spaceAfter=30,
+            'CustomTitle', parent=styles['Title'], fontSize=16, spaceAfter=30, leading=20
         )
-        
         heading_style = ParagraphStyle(
-            'CustomHeading',
-            parent=styles['Heading2'],
-            fontSize=14,
-            spaceAfter=12,
+            'CustomHeading', parent=styles['Heading2'], fontSize=14, spaceAfter=12
         )
         
         story = []
@@ -244,17 +289,25 @@ def save_results_to_pdf(resultats_finaux, filename="rapport_scraping_ong.pdf"):
             story.append(Paragraph("📋 DÉTAILS PAR MARQUE", heading_style))
             
             for marque, details in resultats_finaux.items():
-                # Nom de la marque
                 story.append(Paragraph(f"🚨 {marque.upper()}", heading_style))
                 story.append(Paragraph(f"Trouvé dans {len(details)} mention(s) critique(s).", styles['Normal']))
                 
                 for i, detail in enumerate(details, 1):
-                    story.append(Paragraph(f"<b>Mention {i}:</b>", styles['Normal']))
-                    story.append(Paragraph(f"• <b>Mot-clé critique :</b> {detail['mot_cle'].strip()}", styles['Normal']))
-                    story.append(Paragraph(f"• <b>Source :</b> {detail['source']}", styles['Normal']))
+                    story.append(Paragraph(f"<br/><b>Mention {i}:</b>", styles['Normal']))
+                    story.append(Paragraph(f"• <b>Motif de critique :</b> {detail['mot_cle'].strip()}", styles['Normal']))
+                    story.append(Paragraph(f"• <b>Source :</b> <font color='blue'>{detail['source']}</font>", styles['Normal']))
+                    
+                    # Préparation de l'extrait
+                    extracted_text = detail['extrait']
+                    
+                    # Mise en évidence (HTML pour ReportLab)
+                    marque_display = marque.upper()
+                    # Mettre la marque en gras
+                    extracted_text = re.sub(re.escape(marque), f'<b>{marque_display}</b>', extracted_text, flags=re.IGNORECASE)
                     
                     # Limiter l'extrait pour le PDF
-                    extrait_limite = detail['extrait'][:800] + "..." if len(detail['extrait']) > 800 else detail['extrait']
+                    extrait_limite = extracted_text[:1200] + "..." if len(extracted_text) > 1200 else extracted_text
+                    
                     story.append(Paragraph(f"• <b>Extrait :</b> {extrait_limite}", styles['Normal']))
                     story.append(Spacer(1, 0.1*inch))
                 
@@ -269,12 +322,14 @@ def save_results_to_pdf(resultats_finaux, filename="rapport_scraping_ong.pdf"):
         
     except ImportError:
         print("❌ Pour générer un PDF, installez reportlab : pip install reportlab")
-        return None
+        return ""
     except Exception as e:
         print(f"❌ Erreur lors de la génération du PDF : {e}")
-        return None
+        return ""
 
-#  EXECUTION DU SCRIPT (inchangée)
+# ==============================================================================
+# EXECUTION DU SCRIPT
+# ==============================================================================
 
 # --- Initialisation des marques ---
 get_brands()
@@ -283,7 +338,7 @@ if not BRANDS_TO_SCRAP:
     exit()
 
 urls_a_scrapper = [
-    "https://www.oxfamfrance.org/agir-oxfam/impact-de-la-mode-consequences-sociales-environnementales/", 
+   "https://www.oxfamfrance.org/agir-oxfam/impact-de-la-mode-consequences-sociales-environnementales/", 
     "https://www.business-humanrights.org/en/latest-news/fast-fashion-et-seconde-main-un-jeu-de-dupes-r%C3%A9v%C3%A9l%C3%A9-par-des-trackeurs/",
     "https://disclose.ngo/fr/article/kiabi-shein-decathlon-la-fast-fashion-encaisse-des-millions-deuros-dargent-public-avec-le-don-de-vetements-invendus",
     
@@ -295,18 +350,18 @@ urls_a_scrapper = [
     
     "https://www.fashionrevolution.org/fashion-transparency-index-2023/", 
     "https://thefairdude.fr/be-fair/fair-wear-foundation/", 
-    "https://www.fairwear.org/", 
     "https://www.publiceye.ch/fr/thematiques/industrie-textile", 
     "https://labourbehindthelabel.org/campaigns/living-wage/", 
-    "https://directory.goodonyou.eco",
-    "https://www.aspi.org.au/report/uyghurs-sale",
+    "https://www.capital.fr/entreprises-marches/shein-epingle-pour-pollution-et-esclavage-moderne-1489612",
+    "https://fr.fashionnetwork.com/news/Une-ong-pointe-ces-marques-qui-alimentent-l-esclavage-moderne-,296014.html",
+    "https://adaptationmagazine.com/entendre/83-marques-esclave-ouighour", # La cible principale pour la liste des 83 marques
     "https://www.hrw.org/report/2019/12/18/fashions-next-trend/accelerating-supply-chain-transparency-apparel-and-footwear", 
     "https://www.zerowastefrance.org/mobilisation-de-la-coalition-stop-fast-fashion-10-tonnes-de-dechets-textiles-deposes-devant-le-senat-pour-ladoption-de-la-loi-anti-fast-fashion/",
 ]
 
 resultats_finaux = {}
 
-print("\n" + "🔍 Démarrage du scraping des rapports d'ONG (V4 : Recherche par Proximité 20000 caractères)...")
+print("\n" + "🔍 Démarrage du scraping des rapports d'ONG (V8 : Maximum Recall)...")
 print("-" * 50)
 
 for url in urls_a_scrapper:
@@ -319,50 +374,34 @@ for url in urls_a_scrapper:
             if marque not in resultats_finaux:
                 resultats_finaux[marque] = []
             
-            resultats_finaux[marque].extend(details) 
+            # Nous n'ajoutons que la première mention par URL, car la critique est globale au document
+            if not any(d['source'] == url for d in resultats_finaux[marque]):
+                 resultats_finaux[marque].extend(details)
         
-        print(f"✅ Marques identifiées dans cette source : {', '.join(resultats_url.keys())}")
+        print(f"✅ {len(resultats_url)} marques identifiées dans cette source DÉNONCIATRICE.")
     else:
-        print("— Aucune mention de marque critique trouvée à proximité (20000 caractères).")
+        print("— Document non pertinent (pas assez de mots-clés critiques trouvés) ou aucune de vos marques citée.")
 
 print("\n" + "=" * 50)
-print("🛑 **SYNTHÈSE FINALE : MARQUES CRITIQUÉES POUR LES DROITS HUMAINS** 🛑")
+print(f"🛑 SYNTHÈSE FINALE : {len(resultats_finaux)} MARQUES CRITIQUÉES 🛑")
 print("=" * 50)
 
 if resultats_finaux:
     for marque, details in resultats_finaux.items():
-        print(f"\n### 🚨 {marque.upper()}")
-        print(f"Trouvé dans **{len(details)}** mention(s) critique(s).")
-        for detail in details:
-            print(f"> **Mot-clé critique :** {detail['mot_cle'].strip()}")
-            print(f"> Source : {detail['source']}")
-            print(f"> **Extrait (Proximité de la mention) :**")
-            # Mise en évidence de la marque et du mot-clé
-            extracted_text = detail['extrait']
-            
-            # Mettre la marque en gras
-            marque_display = marque.upper()
-            extracted_text = re.sub(re.escape(marque), f'**{marque_display}**', extracted_text, flags=re.IGNORECASE)
-            
-            # Mettre le mot-clé en gras
-            extracted_text = extracted_text.replace(detail['mot_cle'], f"**{detail['mot_cle']}**")
-            
-            print(f"   {extracted_text[:500]}...")
-            print("-" * 30)
-            
+        # Affichage synthétique final
+        sources_uniques = set([d['source'] for d in details])
+        print(f"### 🚨 {marque.upper()} : Trouvé dans {len(details)} mention(s) / {len(sources_uniques)} source(s) différente(s).")
+        
     # Génération des fichiers de sortie
     print("\n" + "=" * 50)
     print("📄 GÉNÉRATION DES RAPPORTS")
     print("=" * 50)
     
     # Sauvegarder en JSON
-    json_file = save_results_to_json(resultats_finaux)
+    save_results_to_json(resultats_finaux)
     
     # Sauvegarder en PDF
-    pdf_file = save_results_to_pdf(resultats_finaux)
+    save_results_to_pdf(resultats_finaux)
     
-    if json_file or pdf_file:
-        print(f"\n✅ Rapports générés avec succès dans le répertoire du script.")
-        
 else:
-    print("Aucune marque n'a été clairement signalée dans les URL testées avec un mot-clé de critique à proximité.")
+    print("Aucune marque n'a été clairement signalée dans les URL testées.")
