@@ -131,7 +131,7 @@ def extract_problematic_terms(url, brands_list):
                 
                 # Définir la fenêtre de recherche de proximité (100 caractères avant/après)
                 # On utilise le texte COMPLET (full_document_text)
-                
+                sc
                 # La fenêtre de recherche inclut 10000 caractères avant le début et après la fin de la marque
                 search_window_start = max(0, start_index - 10000)
                 search_window_end = min(len(full_document_text), end_index + 10000)
