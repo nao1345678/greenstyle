@@ -1,0 +1,402 @@
+[
+  {
+    "company": "Cotton on Group",
+    "value": "5.0"
+  },
+  {
+    "company": "Free People",
+    "value": "0.0"
+  },
+  {
+    "company": "Pull & Bear",
+    "value": "0.0"
+  },
+  {
+    "company": "Zara",
+    "value": "0.0"
+  },
+  {
+    "company": "Hollister",
+    "value": "7.5"
+  },
+  {
+    "company": "Anthropologie",
+    "value": "0.0"
+  },
+  {
+    "company": "The North Face Inc.",
+    "value": "7.5"
+  },
+  {
+    "company": "Victoria's Secret",
+    "value": "5.0"
+  },
+  {
+    "company": "Calvin Klein Inc.",
+    "value": "7.5"
+  },
+  {
+    "company": "Target",
+    "value": "5.0"
+  },
+  {
+    "company": "Banana Republic",
+    "value": "7.5"
+  },
+  {
+    "company": "Old Navy",
+    "value": "7.5"
+  },
+  {
+    "company": "Intimissimi S.p.A",
+    "value": "7.5"
+  },
+  {
+    "company": "Walmart",
+    "value": "0.0"
+  },
+  {
+    "company": "Jack & Jones",
+    "value": "7.5"
+  },
+  {
+    "company": "Vero Moda",
+    "value": "7.5"
+  },
+  {
+    "company": "Hugo Boss AG",
+    "value": "7.5"
+  },
+  {
+    "company": "Reebok International Ltd.",
+    "value": "0.0"
+  },
+  {
+    "company": "Bershka",
+    "value": "0.0"
+  },
+  {
+    "company": "Sports Direct",
+    "value": "0.0"
+  },
+  {
+    "company": "Massimo Dutti S.A.",
+    "value": "0.0"
+  },
+  {
+    "company": "Kiabi",
+    "value": "2.5"
+  },
+  {
+    "company": "Joe Fresh",
+    "value": "2.5"
+  },
+  {
+    "company": "Tom Tailor",
+    "value": "7.5"
+  },
+  {
+    "company": "Ermenegildo Zegna",
+    "value": "7.5"
+  },
+  {
+    "company": "Max Mara",
+    "value": "0.0"
+  },
+  {
+    "company": "Calzedonia",
+    "value": "10.0"
+  },
+  {
+    "company": "New Yorker",
+    "value": "0.0"
+  },
+  {
+    "company": "Anta Sports Products",
+    "value": "0.0"
+  },
+  {
+    "company": "Aritzia",
+    "value": "0.0"
+  },
+  {
+    "company": "Jack Wolfskin",
+    "value": "5.0"
+  },
+  {
+    "company": "Hermes International",
+    "value": "2.5"
+  },
+  {
+    "company": "Lee (brand)",
+    "value": "7.5"
+  },
+  {
+    "company": "Christian Dior",
+    "value": "0.0"
+  },
+  {
+    "company": "Vans",
+    "value": "7.5"
+  },
+  {
+    "company": "Mr Price",
+    "value": "0.0"
+  },
+  {
+    "company": "Coach Stores Limited",
+    "value": "5.0"
+  },
+  {
+    "company": "Falabella",
+    "value": "0.0"
+  },
+  {
+    "company": "Eddie Bauer",
+    "value": "0.0"
+  },
+  {
+    "company": "Bosideng International Holdings Limited",
+    "value": "0.0"
+  },
+  {
+    "company": "Next PLC",
+    "value": "7.5"
+  },
+  {
+    "company": "Gianni Versace S.r.l.",
+    "value": "2.5"
+  },
+  {
+    "company": "Dolce & Gabbana",
+    "value": "0.0"
+  },
+  {
+    "company": "Balenciaga",
+    "value": "0.0"
+  },
+  {
+    "company": "Belle International Holdings",
+    "value": "0.0"
+  },
+  {
+    "company": "Bottega Veneta",
+    "value": "0.0"
+  },
+  {
+    "company": "Saint Laurent",
+    "value": "0.0"
+  },
+  {
+    "company": "Dick's Sporting Goods",
+    "value": "7.5"
+  },
+  {
+    "company": "Kesko Corporation",
+    "value": "5.0"
+  },
+  {
+    "company": "Chloe",
+    "value": "5.0"
+  },
+  {
+    "company": "JD Sports Fashion plc",
+    "value": "5.0"
+  },
+  {
+    "company": "New Balance Athletic Shoe, Inc.",
+    "value": "7.5"
+  },
+  {
+    "company": "Brunello Cucinelli",
+    "value": "0.0"
+  },
+  {
+    "company": "TOD'S",
+    "value": "0.0"
+  },
+  {
+    "company": "Fast Retailing",
+    "value": "7.5"
+  },
+  {
+    "company": "Steve Madden",
+    "value": "0.0"
+  },
+  {
+    "company": "Boohoo.com",
+    "value": "7.5"
+  },
+  {
+    "company": "Nordstrom",
+    "value": "7.5"
+  },
+  {
+    "company": "Semir",
+    "value": "0.0"
+  },
+  {
+    "company": "LL Bean",
+    "value": "0.0"
+  },
+  {
+    "company": "Capri Holdings Ltd (formerly Michael Kors)",
+    "value": "2.5"
+  },
+  {
+    "company": "Woolworths Holdings Limited",
+    "value": "2.5"
+  },
+  {
+    "company": "Ted Baker",
+    "value": "0.0"
+  },
+  {
+    "company": "Hudson's Bay Company",
+    "value": "0.0"
+  },
+  {
+    "company": "Sainsbury's",
+    "value": "7.5"
+  },
+  {
+    "company": "Forever 21",
+    "value": "0.0"
+  },
+  {
+    "company": "Kmart Australia",
+    "value": "7.5"
+  },
+  {
+    "company": "Kohl's",
+    "value": "0.0"
+  },
+  {
+    "company": "Decathlon Group",
+    "value": "0.0"
+  },
+  {
+    "company": "John Lewis",
+    "value": "5.0"
+  },
+  {
+    "company": "Ross Stores",
+    "value": "0.0"
+  },
+  {
+    "company": "S.Oliver",
+    "value": "7.5"
+  },
+  {
+    "company": "Giorgio Armani SpA",
+    "value": "0.0"
+  },
+  {
+    "company": "Mizuno Corporation",
+    "value": "7.5"
+  },
+  {
+    "company": "Salvatore Ferragamo SpA",
+    "value": "5.0"
+  },
+  {
+    "company": "Zalando SE",
+    "value": "7.5"
+  },
+  {
+    "company": "Marimekko",
+    "value": "7.5"
+  },
+  {
+    "company": "Dillard's, Inc.",
+    "value": "0.0"
+  },
+  {
+    "company": "Carter's Inc",
+    "value": "5.0"
+  },
+  {
+    "company": "Lacoste",
+    "value": "5.0"
+  },
+  {
+    "company": "Fendi",
+    "value": "7.5"
+  },
+  {
+    "company": "Truworths",
+    "value": "0.0"
+  },
+  {
+    "company": "Ralph Lauren Corporation",
+    "value": "7.5"
+  },
+  {
+    "company": "DSW Inc.",
+    "value": "0.0"
+  },
+  {
+    "company": "Moncler",
+    "value": "0.0"
+  },
+  {
+    "company": "New Look Retail Group",
+    "value": "7.5"
+  },
+  {
+    "company": "Airwair International Ltd (Dr Martens)",
+    "value": "7.5"
+  },
+  {
+    "company": "REI",
+    "value": "2.5"
+  },
+  {
+    "company": "Asos",
+    "value": "7.5"
+  },
+  {
+    "company": "Brooks Sports, Inc",
+    "value": "7.5"
+  },
+  {
+    "company": "Lindex",
+    "value": "7.5"
+  },
+  {
+    "company": "American Eagle Outfitters",
+    "value": "0.0"
+  },
+  {
+    "company": "Guess? Inc",
+    "value": "7.5"
+  },
+  {
+    "company": "Quiksilver Inc",
+    "value": "0.0"
+  },
+  {
+    "company": "Columbia Sportswear",
+    "value": "7.5"
+  },
+  {
+    "company": "Skechers USA Inc",
+    "value": "0.0"
+  },
+  {
+    "company": "Kate Spade & Company",
+    "value": "5.0"
+  },
+  {
+    "company": "Lands' End, Inc.",
+    "value": "0.0"
+  },
+  {
+    "company": "Urban Outfitters",
+    "value": "0.0"
+  },
+  {
+    "company": "Marc Jacobs",
+    "value": "0.0"
+  }
+]
