@@ -1,6 +1,13 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+env_path = find_dotenv()
+if not env_path:
+    env_path = Path(__file__).resolve().parent.parent / ".env"
 
-MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017/greenstyle_DB")
+load_dotenv(dotenv_path=env_path)
+
+MONGO_URL = os.getenv("MONGO_URL")
+if not MONGO_URL:
+    raise RuntimeError("MONGO_URL manquant : vérifie ton .env (emplacement/nom de variable)")

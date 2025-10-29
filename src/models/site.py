@@ -1,36 +1,40 @@
 from typing import List, Optional
-
 from beanie import Document, Link
-from pydantic import BaseModel
-
+from pydantic import BaseModel, AnyUrl
+from pymongo import IndexModel, ASCENDING
 from models.brand import Brand
 
-
-# ---- INPUT SCHEMA ----
 class SiteCreate(BaseModel):
+    url: AnyUrl | str
+    brand_ids: Optional[List[str]] = None
+
+class SiteUpdate(BaseModel):
+    url: Optional[AnyUrl | str] = None
+    brand_ids: Optional[List[str]] = None
+
+class SiteOut(BaseModel):
+    id: str
     url: str
-    brand_ids: Optional[List[str]] = None  # Mongo ObjectIds as strings
+    brand_ids: List[str]
+    brand_names: List[str]
 
-
-# ---- DOCUMENT stored in DB ----
 class Site(Document):
     url: str
     brands: Optional[List[Link[Brand]]] = None
 
     class Settings:
         name = "sites"
+        indexes = [
+            IndexModel([("url", ASCENDING)], unique=True, name="uniq_site_url"),
+        ]
 
     @classmethod
     async def from_create(cls, data: "SiteCreate") -> "Site":
-        """
-        Helper to build a Site from the input schema.
-        Resolves brand_ids into Brand documents if provided.
-        """
         brand_docs: Optional[List[Brand]] = None
         if data.brand_ids:
             brand_docs = []
             for bid in data.brand_ids:
-                brand = await Brand.get(bid)
-                if brand:
-                    brand_docs.append(brand)
-        return cls(url=data.url, brands=brand_docs)
+                b = await Brand.get(bid)
+                if b:
+                    brand_docs.append(b)
+        return cls(url=str(data.url), brands=brand_docs)
