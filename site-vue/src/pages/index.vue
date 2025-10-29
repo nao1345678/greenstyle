@@ -2,6 +2,8 @@
 import NavBar from '../components/navbar.vue'
 import HeroSection from '../components/heroSection.vue'
 import ProductGrid from '../components/ProductGrid.vue'
+import { onMounted, ref } from 'vue'
+import { listUsers } from '@/api/users'
 
 const items = [
   { id: 1, src: '/src/assets/product1.png', alt: '…' },
@@ -10,6 +12,11 @@ const items = [
   { id: 4, src: '/src/assets/product4.png', alt: '…' },
 ]
 const goSearch = () => window.alert("TODO: router vers la page recherche");
+
+const users = ref([])
+onMounted(async () => { users.value = await listUsers()
+  console.log(users.value)
+ })
 </script>
 
 <template>

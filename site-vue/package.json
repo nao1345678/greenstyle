@@ -9,11 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.12.2",
     "unplugin-vue-router": "^0.15.0",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@vitejs/plugin-vue": "^6.0.1",
     "vite": "^7.1.2"
   }
