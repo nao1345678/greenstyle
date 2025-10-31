@@ -2,6 +2,7 @@ group-1057515/
 
 # Données utilisateur du système d'IA
 user_data/
+user_accounts/
 *.json
 
 # Python
