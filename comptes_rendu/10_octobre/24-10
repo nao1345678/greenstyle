@@ -1,0 +1,26 @@
+Compte-rendu
+Françoise
+Le front est presque terminé.
+La semaine prochaine : résoudre les conflits.
+Zakarya
+Le calcul du score est terminé.
+On donne un JSON en entrée.
+Le système retourne une note.
+La semaine prochaine : récupérer les données depuis la base de données au lieu du JSON.
+Maël
+Scraping :
+Certification : ok.
+Pourcentage de matière recyclée : ok.
+Gestion des invendus : ok.
+Transparence de la chaîne : à améliorer.
+Éthique du travail : à améliorer.
+IA :
+Lit une page web et récupère les informations pertinentes.
+Question : avons-nous réellement besoin d’une IA pour cela ?
+Rend les informations en JSON et CSV.
+Manu
+Scraping terminé avec SerpAPI.
+Export en JSON et CSV.
+La semaine prochaine : merge request sur main + connexion à la base de données.
+Hery
+Va faire le script d’insertion des différents JSON et CSV des scrapers dans la base de données et crud
