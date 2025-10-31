@@ -1,9 +1,22 @@
 from beanie import Document
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 
 
-# ---- INPUT SCHEMA (create) ----
+def _to_float_or_none(v):
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return float(v)
+    if isinstance(v, str):
+        s = v.strip().replace(",", ".")
+        try:
+            return float(s)
+        except ValueError:
+            return None
+    return None
+
+
 class BrandCreate(BaseModel):
     brand_name: str
     logo: Optional[str] = None
@@ -16,7 +29,7 @@ class BrandCreate(BaseModel):
     country_origin: Optional[str] = None
     country_production: Optional[str] = None
     unsold_management: Optional[str] = None
-    supply_chain_transparency: Optional[str] = None
+    supply_chain_transparency: Optional[float] = None
 
     global_env_impact: Optional[float] = None
     labor_ethics: Optional[float] = None
@@ -28,8 +41,12 @@ class BrandCreate(BaseModel):
     planet_badge: Optional[bool] = False
     labor_badge: Optional[bool] = False
 
+    @field_validator("supply_chain_transparency", mode="before")
+    @classmethod
+    def _coerce_sct_create(cls, v):
+        return _to_float_or_none(v)
 
-# ---- INPUT SCHEMA (update / partial) ----
+
 class BrandUpdate(BaseModel):
     brand_name: Optional[str] = None
     logo: Optional[str] = None
@@ -42,7 +59,7 @@ class BrandUpdate(BaseModel):
     country_origin: Optional[str] = None
     country_production: Optional[str] = None
     unsold_management: Optional[str] = None
-    supply_chain_transparency: Optional[str] = None
+    supply_chain_transparency: Optional[float] = None
 
     global_env_impact: Optional[float] = None
     labor_ethics: Optional[float] = None
@@ -54,8 +71,12 @@ class BrandUpdate(BaseModel):
     planet_badge: Optional[bool] = None
     labor_badge: Optional[bool] = None
 
+    @field_validator("supply_chain_transparency", mode="before")
+    @classmethod
+    def _coerce_sct_update(cls, v):
+        return _to_float_or_none(v)
 
-# ---- OUTPUT SCHEMA (what we return) ----
+
 class BrandOut(BaseModel):
     id: str
     brand_name: str
@@ -69,7 +90,7 @@ class BrandOut(BaseModel):
     country_origin: Optional[str] = None
     country_production: Optional[str] = None
     unsold_management: Optional[str] = None
-    supply_chain_transparency: Optional[str] = None
+    supply_chain_transparency: Optional[float] = None
 
     global_env_impact: Optional[float] = None
     labor_ethics: Optional[float] = None
@@ -82,7 +103,6 @@ class BrandOut(BaseModel):
     labor_badge: Optional[bool] = False
 
 
-# ---- DOCUMENT (Mongo) ----
 class Brand(Document):
     brand_name: str
     logo: Optional[str] = None
@@ -95,7 +115,7 @@ class Brand(Document):
     country_origin: Optional[str] = None
     country_production: Optional[str] = None
     unsold_management: Optional[str] = None
-    supply_chain_transparency: Optional[str] = None
+    supply_chain_transparency: Optional[float] = None
 
     global_env_impact: Optional[float] = None
     labor_ethics: Optional[float] = None
@@ -109,3 +129,8 @@ class Brand(Document):
 
     class Settings:
         name = "brands"
+
+    @field_validator("supply_chain_transparency", mode="before")
+    @classmethod
+    def _coerce_sct_doc(cls, v):
+        return _to_float_or_none(v)
