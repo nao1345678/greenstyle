@@ -1,1 +1,12 @@
 group-1057515/
+
+# Données utilisateur du système d'IA
+user_data/
+*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
