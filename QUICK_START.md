@@ -18,20 +18,63 @@ python3 test_fashion_ai.py
 
 Cela validera que tous les composants fonctionnent correctement.
 
-### Option 2: Lancer la démonstration complète
+### Option 2: Démonstration avec authentification (RECOMMANDÉ)
+
+```bash
+python3 example_with_authentication.py
+```
+
+Cette démonstration montre le système complet:
+- Inscription et connexion d'utilisateurs
+- Authentification sécurisée
+- Interactions avec les marques
+- Recommandations personnalisées
+- Persistance des données
+
+### Option 3: Démonstration IA simple (sans authentification)
 
 ```bash
 python3 example_usage.py
 ```
 
-Cette démonstration crée deux utilisateurs avec des profils différents et montre:
-- Comment le système apprend des préférences
-- Comment les recommandations s'adaptent à chaque utilisateur
-- Comment comparer les profils
+Version simplifiée focalisée uniquement sur l'IA d'apprentissage.
 
 ## Utilisation dans votre code
 
-### Exemple minimal
+### Avec authentification (système complet)
+
+```python
+from integrated_fashion_system import IntegratedFashionSystem
+
+# Initialise le système complet
+system = IntegratedFashionSystem(
+    brands_csv_path='brands_database_with_recycled_materials.csv'
+)
+
+# Inscription d'un utilisateur
+result = system.register(
+    email="alice@example.com",
+    password="SecurePass123",
+    username="alice_eco"
+)
+
+if result['success']:
+    token = result['session_token']
+    
+    # Interactions
+    system.record_brand_interaction(token, "Patagonia", "like")
+    system.record_brand_interaction(token, "Supreme", "dislike")
+    
+    # Recommandations personnalisées
+    recs = system.get_personalized_recommendations(token)
+    for rec in recs['recommendations']:
+        print(f"{rec['brand_name']}: {rec['score']:.3f}")
+    
+    # Déconnexion
+    system.logout(token)
+```
+
+### Sans authentification (IA uniquement)
 
 ```python
 from fashion_ai_api import FashionAI
