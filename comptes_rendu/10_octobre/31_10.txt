@@ -1,0 +1,41 @@
+Compte rendu de la réunion du 31 octobre (joyeux halloween)
+
+Hery 
+API mise en place 
+Swagger mis en place 
+DB remplie par les données récoltées 
+
+Mael 
+Reflexion sur l'utilisation de l'iA 
+Ajout de recommandations 
+
+Nao 
+A réussi à scrapper l'API wikirate 
+Données de transparence de la chaîne de production et salaire minimum 
+
+
+
+
+Mise en place d'issues et préparation du dernier run avant la soutenance blanche 
+Attributions des tâches 
+
+Zakarya 
+Script de calcul des scores 
+Page à propos de nous dans le front 
+Modif table utilisateur pour les recommandations 
+
+Hery 
+Ajout des routes dans l'API pour ajuster les recommandations 
+
+Manu 
+Modifier les MLD ET MCD 
+Faire le front : page détails 
+
+Nao 
+Front de l'extension 
+Fin de maquette 
+Dessin des badges 
+
+Mael
+Affiner l'utilisation de l'IA
+Front : page dashboard 
