@@ -25,7 +25,7 @@ onMounted(async () => {
   try {
     const brands: BrandOut[] = await listBrands()
     items.value = brands.map(b => ({
-      id: b.id,                                  // on garde l'id réel, mais on ne filtre pas
+      id: b.id,                                
       src: b.logo || "https://placehold.co/600x450?text=Logo",
       alt: b.brand_name,
     }))
@@ -41,7 +41,6 @@ onMounted(async () => {
   <NavBar />
   <div class="page-bg">
     <main class="wrap">
-      <RouterLink to="/marques" class="back">← Toutes les marques</RouterLink>
 
       <div class="intro">
         <Intro :title="title" :text="intro" />

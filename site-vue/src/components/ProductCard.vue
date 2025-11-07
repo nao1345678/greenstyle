@@ -10,7 +10,7 @@ const props = defineProps({
 
 <template>
   <RouterLink class="card" :to="to">
-    <img :src="src" :alt="alt" loading="lazy" />
+    <img :alt="alt" loading="lazy" />
   </RouterLink>
 </template>
 

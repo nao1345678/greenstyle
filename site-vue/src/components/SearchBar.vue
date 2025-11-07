@@ -20,7 +20,6 @@ const onSubmit = () => emit("search", props.modelValue)
     @submit.prevent="onSubmit"
   >
     <span class="icon" aria-hidden="true">
-      <!-- loupe SVG -->
       <svg viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="7" />
         <line x1="16.65" y1="16.65" x2="21" y2="21" />
@@ -34,7 +33,6 @@ const onSubmit = () => emit("search", props.modelValue)
       @input="onInput"
     />
 
-    <!-- accesibilité -->
     <button type="submit" class="visually-hidden">Rechercher</button>
   </form>
 </template>
@@ -43,17 +41,16 @@ const onSubmit = () => emit("search", props.modelValue)
 .searchbar{
   width: min(var(--w), 92vw);
   height: var(--h);
-  margin: 24px auto 0;                   /* centrée sous le hero */
+  margin: 24px auto 0;
   padding: 0 16px 0 14px;
   display: flex; align-items: center; gap: 10px;
 
-  background: rgba(255,255,255,0.9);      /* 90% blanc */
-  border: 1px solid #68B771;             /* bordure figma */
-  border-radius: 50px;                    /* rayon 50px */
+  background: rgba(255,255,255,0.9);
+  border: 1px solid #68B771;
+  border-radius: 50px;
   -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);             /* blur 2 */
+  backdrop-filter: blur(2px);
 
-  /* petite ombre très légère optionnelle */
   box-shadow: 0 1px 0 rgba(0,0,0,.04);
 }
 

@@ -62,7 +62,6 @@ function resetSort(){
 
 <template>
   <section class="cloth-grid-wrap">
-    <!-- BARRE DE FILTRES -->
     <div class="toolbar">
       <div class="chip" :class="{ open: openMenu==='price', active: sortKey==='price' }">
         <button class="chip-btn" @click="toggleMenu('price')">
@@ -75,7 +74,6 @@ function resetSort(){
         </div>
       </div>
 
-      <!-- Boutons “maquette” (visuels) -->
       <div class="chip"><button class="chip-btn" disabled><span class="label">Lieu de production</span><span class="caret" /></button></div>
       <div class="chip"><button class="chip-btn" disabled><span class="label">Travail</span><span class="caret" /></button></div>
       <div class="chip"><button class="chip-btn" disabled><span class="label">Pollution</span><span class="caret" /></button></div>
@@ -98,7 +96,6 @@ function resetSort(){
       <button class="reset" @click="resetSort">Réinitialiser les filtres</button>
     </div>
 
-    <!-- GRILLE -->
     <div class="grid" :style="{ '--cols': cols }">
       <ClothCard
         v-for="(p, i) in sortedItems"
@@ -116,10 +113,9 @@ function resetSort(){
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 
 :root{
-  --pill-color: #00320B;    /* couleur texte & border */
+  --pill-color: #00320B;
 }
 
-/* --- Toolbar --- */
 .toolbar{
   display:flex;
   align-items:center;
@@ -134,7 +130,6 @@ function resetSort(){
   position: relative;
 }
 
-/* “Pill” exact style */
 .chip-btn{
   display:inline-flex;
   align-items:center;

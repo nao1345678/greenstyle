@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Header
 from pydantic import BaseModel
@@ -12,6 +13,8 @@ import requests
 from models.brand import Brand
 from services.wikirate import fetch_answers, living_wage_score, to_float
 from services.wikirate import living_wage_letter_score
+from services.serpapi import scrape_brand
+from models.brand import Brand
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
@@ -80,6 +83,11 @@ class ScrapeRequest(BaseModel):
     max_pages: Optional[int] = None
     connect_timeout: Optional[float] = None
     read_timeout: Optional[float] = None
+
+class SerpScrapeRequest(BaseModel):
+    brands: List[str]
+    update_brand: bool = True
+    save_dump: bool = True
 
 
 def map_metric_to_field(metric_title: str, metric_id: int) -> Optional[str]:
@@ -190,3 +198,46 @@ async def scrape_wikirate(payload: ScrapeRequest, x_admin_token: str | None = He
         "changes": changes[:100],
         "pagination": {"limit": limit, "max_pages": max_pages, "timeouts": {"connect": cto, "read": rto}},
     }
+
+
+@router.post("/scrape/serpapi")
+async def scrape_serpapi(payload: SerpScrapeRequest, x_admin_token: str | None = Header(default=None)):
+    if ADMIN_TOKEN and x_admin_token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    out_rows = []
+    changes = []
+
+    dump_dir = ROOT / "data" / "serp"
+    if payload.save_dump:
+        dump_dir.mkdir(parents=True, exist_ok=True)
+
+    for bname in payload.brands:
+        row = scrape_brand(bname)
+        out_rows.append(row)
+
+        if payload.save_dump:
+            (dump_dir / f"serp_{bname.replace(' ','_')}.json").write_text(
+                json.dumps(row, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+
+        if payload.update_brand:
+            b = await Brand.find_one({"brand_name": bname}) or Brand(brand_name=bname)
+            if row.get("logo") and not b.logo: b.logo = row["logo"]
+            if row.get("website") and not b.website: b.website = row["website"]
+            if row.get("categories"):
+                cur = set(b.sustainable_materials or [])
+                b.categories = row["categories"]
+            if row.get("price_range") and (b.price_range is None):
+                b.price_range = row["price_range"]
+            if row.get("country_origin") and not b.country_origin:
+                b.country_origin = row["country_origin"]
+            if row.get("country_production") and not b.country_production:
+                b.country_production = row["country_production"]
+            if row.get("ngo_links"):
+                b.certifications = (b.certifications or []) + row["ngo_links"]
+
+            await b.save()
+            changes.append({"brand": bname, "updated_fields": [k for k in ("logo","website","price_range","country_origin","country_production") if row.get(k)]})
+
+    return {"count": len(out_rows), "changes": changes[:100], "preview": out_rows[:5]}
