@@ -1,6 +1,5 @@
 import { http } from "./http"
 
-// === Types (miroir de BrandOut côté FastAPI) ===
 export interface BrandOut {
   id: string
   brand_name: string
@@ -23,7 +22,6 @@ export interface BrandOut {
   labor_badge?: string | null
 }
 
-// En cas de création/màj côté admin (facultatif ici)
 export type BrandCreate = Omit<BrandOut, "id">
 export type BrandUpdate = Partial<BrandCreate>
 

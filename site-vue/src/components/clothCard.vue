@@ -34,19 +34,16 @@ const stars = computed(() => {
       <div class="row">
         <div class="stars" aria-label="note">
           <svg v-for="(t, i) in stars" :key="i" viewBox="0 0 24 24" class="star">
-            <!-- étoile vide -->
             <path
               v-if="t==='empty'"
               d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"
               class="empty"
             />
-            <!-- étoile pleine -->
             <path
               v-else-if="t==='full'"
               d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"
               class="full"
             />
-            <!-- demi étoile -->
             <g v-else>
               <defs>
                 <clipPath :id="`half-${i}`">
