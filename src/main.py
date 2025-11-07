@@ -9,6 +9,7 @@ from routes.favorite_routes import router as favorite_router
 from routes.category_routes import router as category_router
 from routes.alternative_routes import router as alternative_router
 from routes.site_routes import router as site_router
+from routes.admin_routes import router as admin_router
 
 app = FastAPI()
 
@@ -26,6 +27,7 @@ app.include_router(favorite_router)
 app.include_router(category_router)
 app.include_router(alternative_router)
 app.include_router(site_router)
+app.include_router(admin_router)
 
 @app.get("/")
 async def root():
