@@ -9,30 +9,24 @@ from typing import Dict, Any, List, Optional
 import requests
 from dotenv import load_dotenv
 
-# ========================
-# Config
-# ========================
+
 load_dotenv()
 SERP_API_KEY = os.getenv("SERPAPI_API_KEY")
 SERP_ENDPOINT = "https://serpapi.com/search.json"
 
 if not SERP_API_KEY:
-    raise RuntimeError("⚠️ SERPAPI_API_KEY manquant. Ajoute-le dans .env")
+    raise RuntimeError(" SERPAPI_API_KEY manquant. Ajoute-le dans .env")
 
-# Anti-rate-limit simple
 def sleep_backoff(i: int):
     time.sleep(1 + min(i, 5) * 0.5)
 
 
-# ========================
-# Utilitaires SerpAPI
-# ========================
 def serp_search(q: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     base_params = {
         "engine": "google",
         "q": q,
         "api_key": SERP_API_KEY,
-        "hl": "en",    # résultats en anglais (peut être "fr" si tu préfères)
+        "hl": "en",
         "gl": "us",
     }
     if params:
@@ -68,11 +62,9 @@ def parse_organic_links(j: Dict[str, Any], domain_filters: Optional[List[str]] =
     return results
 
 
-# Heuristiques simples pour extraire des infos textuelles depuis snippets
 COUNTRY_RE = re.compile(r"\b(USA|United States|United Kingdom|UK|France|Germany|Italy|Spain|Portugal|China|Vietnam|Bangladesh|India|Turkey|Cambodia|Tunisia|Morocco|Netherlands|Sweden|Norway|Denmark|Canada|Australia|New Zealand)\b", re.I)
 
 def extract_country_from_snippets(j: Dict[str, Any]) -> Optional[str]:
-    # Tente d’abord l'answer_box / knowledge_graph
     for k in ("answer_box", "knowledge_graph"):
         block = j.get(k)
         if isinstance(block, dict):
@@ -81,7 +73,6 @@ def extract_country_from_snippets(j: Dict[str, Any]) -> Optional[str]:
             if m:
                 return m.group(0)
 
-    # Puis organic snippets
     for item in j.get("organic_results", []):
         snippet = item.get("snippet") or ""
         m = COUNTRY_RE.search(snippet)
@@ -97,20 +88,17 @@ def extract_price_range_from_snippets(j: Dict[str, Any]) -> Optional[str]:
     """
     text_blobs = []
 
-    # Answer box / Knowledge Graph
     for k in ("answer_box", "knowledge_graph"):
         block = j.get(k)
         if isinstance(block, dict):
             text_blobs.append(" ".join(str(v) for v in block.values() if isinstance(v, (str, list, dict))))
 
-    # Organic results
     for item in j.get("organic_results", []):
         for key in ("title", "snippet"):
             if item.get(key):
                 text_blobs.append(item[key])
 
     big = " \n".join(text_blobs)
-    # Quelques heuristiques simples
     if "€€€" in big or "$$$" in big:
         return "$$$"
     if "€€" in big or "$$" in big:
@@ -125,9 +113,6 @@ def extract_price_range_from_snippets(j: Dict[str, Any]) -> Optional[str]:
     return None
 
 
-# ========================
-# Pipelines d’extraction
-# ========================
 def fetch_brand_overview(brand: str) -> Dict[str, Any]:
     """
     - logo, website, name, categories via Knowledge Graph (si dispo)
@@ -162,7 +147,6 @@ def fetch_brand_extras(brand: str) -> Dict[str, Any]:
         "ngo_links": [],
     }
 
-    # Gamme prix
     try:
         j_price = serp_search(f"{brand} price range")
         extras["price_range"] = extract_price_range_from_snippets(j_price)
@@ -170,7 +154,6 @@ def fetch_brand_extras(brand: str) -> Dict[str, Any]:
     except Exception as e:
         extras["error_price"] = str(e)
 
-    # Pays d'origine
     try:
         j_origin = serp_search(f"{brand} country of origin")
         extras["country_origin"] = extract_country_from_snippets(j_origin)
@@ -178,7 +161,6 @@ def fetch_brand_extras(brand: str) -> Dict[str, Any]:
     except Exception as e:
         extras["error_origin"] = str(e)
 
-    # Pays de production
     try:
         j_prod = serp_search(f"Where are {brand} products made")
         extras["country_production"] = extract_country_from_snippets(j_prod)
@@ -186,7 +168,6 @@ def fetch_brand_extras(brand: str) -> Dict[str, Any]:
     except Exception as e:
         extras["error_production"] = str(e)
 
-    # Liens ONG (Good On You, Fair Wear, B-Corp…)
     try:
         domains = ["goodonyou.eco", "fairwear.org", "bcorporation.net", "cleanclothes.org"]
         j_ngo = serp_search(f'{brand} site:goodonyou.eco OR site:fairwear.org OR site:bcorporation.net OR site:cleanclothes.org')
@@ -205,16 +186,12 @@ def scrape_brand(brand: str) -> Dict[str, Any]:
     return base
 
 
-# ========================
-# Export
-# ========================
 def export_json(rows: List[Dict[str, Any]], path: str):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(rows, f, ensure_ascii=False, indent=2)
 
 
 def export_csv(rows: List[Dict[str, Any]], path: str):
-    # Colonnes communes
     fields = [
         "brand",
         "brand_name",
@@ -231,7 +208,6 @@ def export_csv(rows: List[Dict[str, Any]], path: str):
         w.writeheader()
         for r in rows:
             row = {k: r.get(k) for k in fields}
-            # stringify listes
             if isinstance(row.get("categories"), list):
                 row["categories"] = ", ".join([str(x) for x in row["categories"]])
             if isinstance(row.get("ngo_links"), list):
@@ -239,9 +215,6 @@ def export_csv(rows: List[Dict[str, Any]], path: str):
             w.writerow(row)
 
 
-# ========================
-# CLI
-# ========================
 def main():
     parser = argparse.ArgumentParser(description="Scrape brand info via SerpAPI")
     parser.add_argument("--brands", nargs="*", help="Noms de marques à scraper")
@@ -261,7 +234,7 @@ def main():
                     brands.append(name)
 
     if not brands:
-        print("⚠️  Aucune marque fournie. Utilise --brands Nike Patagonia ou --brands-file brands.txt")
+        print("  Aucune marque fournie. Utilise --brands Nike Patagonia ou --brands-file brands.txt")
         return
 
     rows: List[Dict[str, Any]] = []
@@ -275,7 +248,7 @@ def main():
 
     export_json(rows, args.out_json)
     export_csv(rows, args.out_csv)
-    print(f"✅ Terminé. JSON -> {args.out_json} | CSV -> {args.out_csv}")
+    print(f" Terminé. JSON -> {args.out_json} | CSV -> {args.out_csv}")
 
 
 if __name__ == "__main__":
