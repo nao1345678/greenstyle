@@ -15,7 +15,6 @@ dist-ssr
 __pycache__
 *.pyc
 
-# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -25,3 +24,7 @@ __pycache__
 *.njsproj
 *.sln
 *.sw?
+
+data/
+scrapping/scrapping_v4/data/
+

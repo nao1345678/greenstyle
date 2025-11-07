@@ -20,6 +20,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from models.brand import Brand
 from models.category import Category
 
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
 
 load_dotenv()
 
@@ -190,7 +192,7 @@ async def process_transparency_simple(paths: List[Path]):
             await upsert_brand_metric(company, "final_score", score)
             count += 1
         total += count
-        print(f"✅ {count} lignes traitées dans {path.name}")
+        print(f"{count} lignes traitées dans {path.name}")
     return total
 
 
