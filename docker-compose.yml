@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # 1. Nom du service (utilisé comme hostname)
+  mongodb:
+    # 2. Image officielle
+    image: mongo:latest
+    # 3. Variables d'environnement pour la configuration
+    # (Facultatif, souvent utilisé pour un utilisateur/mot de passe root)
+    environment:
+      # Définit le nom de la base de données par défaut
+      MONGO_INITDB_DATABASE: greenstyle_DB
+      # Variables pour créer un utilisateur/mot de passe au premier démarrage (Très recommandé en production)
+      MONGO_INITDB_ROOT_USERNAME: user_root
+      MONGO_INITDB_ROOT_PASSWORD: un_mot_de_passe_secure
+    # 4. Persistence des données
+    volumes:
+      # Assurez-vous que les données ne sont pas perdues lorsque le conteneur s'arrête
+      - mongo-data:/data/db
+    # 5. Mappage de port (Souvent inutile si seul le back-end y accède)
+    # Décommenter si vous voulez y accéder depuis votre machine hôte (ex: via MongoDB Compass)
+    # ports:
+    #   - "27017:27017"
+    restart: always
+
+# 6. Définition du volume de persistance
+volumes:
+  mongo-data:
