@@ -1,0 +1,10 @@
+# Fichier requirements.txt
+# --- Framework de l'API ---
+fastapi                     # Framework web (APIRouter, HTTPException, BackgroundTasks)
+uvicorn                     # Serveur ASGI pour exécuter FastAPI
+pydantic                    # Validation de données (BaseModel)
+
+# --- Gestion des requêtes externes et des données ---
+requests                    # Pour les requêtes HTTP (ex: appels à des services externes comme Wikirate)
+python-multipart            # Pour la gestion des formulaires (si vous avez des endpoints upload)
+
