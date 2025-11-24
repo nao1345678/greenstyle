@@ -3,12 +3,10 @@ from pydantic import BaseModel
 from models.user import User
 from models.brand import Brand
 
-# ---- INPUT SCHEMA ----
 class FavoriteCreate(BaseModel):
-    user_id: str   # ObjectId as string
-    brand_id: str  # ObjectId as string
+    user_id: str
+    brand_id: str
 
-# ---- DOCUMENT stored in DB ----
 class Favorite(Document):
     user: Link[User]
     brand: Link[Brand]

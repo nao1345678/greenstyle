@@ -26,7 +26,6 @@ class UserUpdate(BaseModel):
             self.password = pwd_context.hash(self.password)
 
 
-# 👉 Schéma de sortie sans password
 class UserOut(BaseModel):
     id: str
     username: str

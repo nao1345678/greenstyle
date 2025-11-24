@@ -6,13 +6,11 @@ from pydantic import BaseModel
 from models.brand import Brand
 
 
-# ---- INPUT SCHEMA ----
 class ProductCreate(BaseModel):
     name: str
-    brand_id: Optional[str] = None  # Mongo ObjectId as string (optional)
+    brand_id: Optional[str] = None
 
 
-# ---- DOCUMENT stored in DB ----
 class Product(Document):
     name: str
     brand: Optional[Link[Brand]] = None

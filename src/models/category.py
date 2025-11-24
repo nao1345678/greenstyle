@@ -1,13 +1,23 @@
 from beanie import Document
 from pydantic import BaseModel
+from typing import Optional
+from pymongo import IndexModel, ASCENDING
 
-# ---- INPUT SCHEMA ----
 class CategoryCreate(BaseModel):
     name: str
 
-# ---- DOCUMENT stored in DB ----
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None
+
+class CategoryOut(BaseModel):
+    id: str
+    name: str
+
 class Category(Document):
     name: str
 
     class Settings:
-        name = "categories"  # match Mongo collection
+        name = "categories"
+        indexes = [
+            IndexModel([("name", ASCENDING)], unique=True, name="uniq_category_name")
+        ]

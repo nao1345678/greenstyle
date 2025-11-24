@@ -3,11 +3,13 @@ from fastapi import APIRouter, HTTPException
 from beanie import PydanticObjectId
 
 from models.brand import Brand, BrandCreate, BrandUpdate, BrandOut
+from utils.score_color import get_score_color, get_score_label
 
 router = APIRouter(prefix="/brands", tags=["Brands"])
 
 
 def to_out(b: Brand) -> BrandOut:
+    """Convertit un Brand en BrandOut avec score_color et score_label calculés"""
     return BrandOut(
         id=str(b.id),
         brand_name=b.brand_name,
@@ -24,6 +26,8 @@ def to_out(b: Brand) -> BrandOut:
         global_env_impact=b.global_env_impact,
         labor_ethics=b.labor_ethics,
         final_score=b.final_score,
+        score_color=get_score_color(b.final_score),
+        score_label=get_score_label(b.final_score),
         short_description=b.short_description,
         description=b.description,
         planet_badge=b.planet_badge,
@@ -68,3 +72,32 @@ async def delete_brand(brand_id: PydanticObjectId) -> dict:
         raise HTTPException(status_code=404, detail="Brand not found")
     await brand.delete()
     return {"message": "Brand deleted"}
+
+
+@router.get("/name/{brand_name}", response_model=BrandOut)
+async def get_brand_by_name(brand_name: str) -> BrandOut:
+    """
+    Recherche une marque par son nom (insensible à la casse)
+    Utilisé par l'extension Chrome pour obtenir les infos de durabilité
+    """
+    # Recherche insensible à la casse
+    brand = await Brand.find_one(
+        Brand.brand_name == {"$regex": f"^{brand_name}$", "$options": "i"}
+    )
+    
+    if not brand:
+        raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
+    
+    return to_out(brand)
+
+
+@router.get("/search/{query}", response_model=List[BrandOut])
+async def search_brands(query: str, limit: int = 10) -> List[BrandOut]:
+    """
+    Recherche de marques par nom (recherche partielle)
+    """
+    brands = await Brand.find(
+        Brand.brand_name == {"$regex": query, "$options": "i"}
+    ).limit(limit).to_list()
+    
+    return [to_out(b) for b in brands]

@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-# ---- INPUT SCHEMA (create) ----
 class BrandCreate(BaseModel):
     brand_name: str
     logo: Optional[str] = None
@@ -29,7 +28,6 @@ class BrandCreate(BaseModel):
     labor_badge: Optional[bool] = False
 
 
-# ---- INPUT SCHEMA (update / partial) ----
 class BrandUpdate(BaseModel):
     brand_name: Optional[str] = None
     logo: Optional[str] = None
@@ -55,7 +53,6 @@ class BrandUpdate(BaseModel):
     labor_badge: Optional[bool] = None
 
 
-# ---- OUTPUT SCHEMA (what we return) ----
 class BrandOut(BaseModel):
     id: str
     brand_name: str
@@ -74,6 +71,8 @@ class BrandOut(BaseModel):
     global_env_impact: Optional[float] = None
     labor_ethics: Optional[float] = None
     final_score: Optional[float] = None
+    score_color: Optional[str] = None  # Couleur calculée à partir du score
+    score_label: Optional[str] = None  # Label textuel du score
 
     short_description: Optional[str] = None
     description: Optional[str] = None
@@ -82,7 +81,6 @@ class BrandOut(BaseModel):
     labor_badge: Optional[bool] = False
 
 
-# ---- DOCUMENT (Mongo) ----
 class Brand(Document):
     brand_name: str
     logo: Optional[str] = None
