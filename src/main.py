@@ -24,11 +24,16 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def app_init():
-    client = AsyncIOMotorClient(MONGO_URL)
-    await init_beanie(
-        database=client.get_default_database(),
-        document_models=models.__all__,
-    )
+    try:
+        client = AsyncIOMotorClient(MONGO_URL, serverSelectionTimeoutMS=2000)
+        await init_beanie(
+            database=client.get_default_database(),
+            document_models=models.__all__,
+        )
+        print("✅ MongoDB connecté")
+    except Exception as e:
+        print(f"⚠️  MongoDB non disponible: {e}")
+        print("⚠️  L'API fonctionne mais les données ne seront pas persistées")
 
 # brancher les routes ici
 app.include_router(brand_router)
