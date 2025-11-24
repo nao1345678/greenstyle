@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Extension GreenStyle - Page E-commerce</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header du site e-commerce */
+        .site-header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .site-header h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        /* Conteneur principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Grille de produits */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-brand {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .product-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Badge de l'extension GreenStyle */
+        .greenstyle-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .greenstyle-badge.excellent {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+
+        .greenstyle-badge.good {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .greenstyle-badge.poor {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .greenstyle-badge.unknown {
+            background: #94a3b8;
+        }
+
+        .badge-icon {
+            font-size: 14px;
+        }
+
+        /* Section d'information de l'extension */
+        .extension-info {
+            background: linear-gradient(135deg, #009C22 0%, #017740 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(1, 119, 64, 0.3);
+        }
+
+        .extension-info h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-family: "Jersey 10", system-ui, sans-serif;
+        }
+
+        .extension-info p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        /* Légende des couleurs */
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .legend h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        .legend-color.excellent { background: #22c55e; }
+        .legend-color.good { background: #f59e0b; }
+        .legend-color.poor { background: #ef4444; }
+
+        /* Contrôles de simulation */
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .controls h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #009C22;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #017740;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* API Status */
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #f8fafc;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .status-dot.offline {
+            background: #ef4444;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header du site e-commerce -->
+    <div class="site-header">
+        <div class="container">
+            <h1>🛍️ Mode & Style - Boutique en ligne</h1>
+            <p style="color: #666; margin-top: 5px;">Découvrez les dernières collections de mode</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Information sur l'extension -->
+        <div class="extension-info">
+            <h2>🌱 Extension GreenStyle Active</h2>
+            <p>
+                Cette page simule le comportement de l'extension Chrome GreenStyle. 
+                L'extension détecte automatiquement les marques présentes sur la page 
+                et affiche des badges colorés avec leur score de durabilité (0-10).
+            </p>
+        </div>
+
+        <!-- Légende -->
+        <div class="legend">
+            <h3>Légende des scores de durabilité</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color excellent"></div>
+                    <span><strong>7-10</strong> : Excellent (Vert)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color good"></div>
+                    <span><strong>4-6.9</strong> : Moyen (Orange)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color poor"></div>
+                    <span><strong>0-3.9</strong> : Faible (Rouge)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contrôles -->
+        <div class="controls">
+            <h3>Simulation de l'extension</h3>
+            <div class="control-group">
+                <button class="btn btn-primary" onclick="simulateExtension()">
+                    🔍 Détecter les marques
+                </button>
+                <button class="btn btn-secondary" onclick="removeBadges()">
+                    ❌ Masquer les badges
+                </button>
+                <div class="api-status">
+                    <span class="status-dot offline" id="apiStatusDot"></span>
+                    <span id="apiStatusText">API: Non connectée</span>
+                </div>
+                <input 
+                    type="text" 
+                    id="apiUrl" 
+                    value="http://localhost:8000" 
+                    placeholder="URL API"
+                    style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 5px; font-size: 12px;"
+                >
+                <button class="btn btn-secondary" onclick="testAPI()" style="font-size: 12px; padding: 8px 15px;">
+                    Tester API
+                </button>
+            </div>
+        </div>
+
+        <!-- Grille de produits -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Les produits seront injectés ici -->
+        </div>
+    </div>
+
+    <script>
+        // Données des produits avec marques
+        const products = [
+            { id: 1, brand: "Nike", title: "Air Max 90", price: "120€", image: "Nike" },
+            { id: 2, brand: "Adidas", title: "Stan Smith", price: "80€", image: "Adidas" },
+            { id: 3, brand: "Patagonia", title: "Better Sweater", price: "99€", image: "Patagonia" },
+            { id: 4, brand: "Zara", title: "T-shirt Basic", price: "15€", image: "Zara" },
+            { id: 5, brand: "Veja", title: "V-10 Sneakers", price: "100€", image: "Veja" },
+            { id: 6, brand: "H&M", title: "Jeans Regular", price: "29€", image: "H&M" },
+            { id: 7, brand: "Reformation", title: "Dress Floral", price: "148€", image: "Reformation" },
+            { id: 8, brand: "The North Face", title: "Jacket Puffer", price: "200€", image: "The North Face" },
+        ];
+
+        // Données de durabilité (simulation de l'API)
+        const sustainabilityData = {
+            "Nike": { score: 5.2, color: "#f59e0b", label: "Moyen" },
+            "Adidas": { score: 4.8, color: "#f59e0b", label: "Moyen" },
+            "Patagonia": { score: 8.5, color: "#22c55e", label: "Excellent" },
+            "Zara": { score: 3.8, color: "#ef4444", label: "Faible" },
+            "Veja": { score: 7.8, color: "#22c55e", label: "Excellent" },
+            "H&M": { score: 4.1, color: "#f59e0b", label: "Moyen" },
+            "Reformation": { score: 7.2, color: "#22c55e", label: "Bon" },
+            "The North Face": { score: 6.5, color: "#f59e0b", label: "Bon" },
+        };
+
+        // Afficher les produits
+        function displayProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.id = `product-${product.id}`;
+                card.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <div class="product-title">${product.title}</div>
+                        <div class="product-price">${product.price}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Simuler l'extension qui détecte les marques
+        function simulateExtension() {
+            // Supprimer les badges existants
+            removeBadges();
+
+            // Pour chaque produit, ajouter un badge si la marque est connue
+            products.forEach(product => {
+                const brandData = sustainabilityData[product.brand];
+                if (brandData) {
+                    const card = document.getElementById(`product-${product.id}`);
+                    const brandElement = card.querySelector('.product-brand');
+                    
+                    // Déterminer la classe CSS
+                    let badgeClass = 'unknown';
+                    if (brandData.score >= 7) badgeClass = 'excellent';
+                    else if (brandData.score >= 4) badgeClass = 'good';
+                    else badgeClass = 'poor';
+
+                    // Créer le badge
+                    const badge = document.createElement('div');
+                    badge.className = `greenstyle-badge ${badgeClass}`;
+                    badge.style.background = brandData.color;
+                    badge.innerHTML = `
+                        <span class="badge-icon">🌱</span>
+                        <span>${brandData.score.toFixed(1)}/10</span>
+                    `;
+                    badge.title = `${product.brand}: ${brandData.label} (${brandData.score.toFixed(1)}/10)`;
+
+                    // Ajouter le badge au produit
+                    card.style.position = 'relative';
+                    card.appendChild(badge);
+
+                    // Ajouter un indicateur sur le nom de la marque
+                    brandElement.style.position = 'relative';
+                    brandElement.style.paddingRight = '10px';
+                }
+            });
+
+            // Afficher un message de confirmation
+            console.log('[GreenStyle Extension] Marques détectées et badges affichés');
+        }
+
+        // Supprimer tous les badges
+        function removeBadges() {
+            document.querySelectorAll('.greenstyle-badge').forEach(badge => {
+                badge.remove();
+            });
+        }
+
+        // Tester la connexion à l'API
+        async function testAPI() {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const statusDot = document.getElementById('apiStatusDot');
+            const statusText = document.getElementById('apiStatusText');
+
+            if (!apiUrl) {
+                alert('Veuillez entrer une URL d\'API');
+                return;
+            }
+
+            statusText.textContent = 'API: Test en cours...';
+
+            try {
+                const response = await fetch(`${apiUrl}/`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                if (response.ok) {
+                    statusDot.className = 'status-dot online';
+                    statusText.textContent = 'API: Connectée ✓';
+                } else {
+                    throw new Error('API non accessible');
+                }
+            } catch (error) {
+                // Ne pas afficher l'erreur dans la console si c'est juste une connexion refusée
+                if (error.message && !error.message.includes('Failed to fetch') && !error.message.includes('ERR_CONNECTION_REFUSED')) {
+                    console.warn('[GreenStyle] Erreur API:', error.message);
+                }
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = 'API: Non connectée (utilise données de démo)';
+            }
+        }
+
+        // Fonction pour récupérer les données depuis l'API réelle
+        async function fetchBrandDataFromAPI(brandName) {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            if (!apiUrl) return null;
+
+            try {
+                const response = await fetch(`${apiUrl}/brands/name/${encodeURIComponent(brandName)}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return {
+                        score: data.final_score || 0,
+                        color: data.score_color || '#94a3b8',
+                        label: data.score_label || 'Non évalué'
+                    };
+                }
+            } catch (error) {
+                // Erreur silencieuse - on utilisera les données de démo
+                // Ne pas logger si c'est juste une connexion refusée (normal si l'API n'est pas démarrée)
+            }
+            return null;
+        }
+
+        // Version améliorée qui utilise l'API réelle si disponible
+        async function simulateExtensionWithAPI() {
+            removeBadges();
+
+            for (const product of products) {
+                const card = document.getElementById(`product-${product.id}`);
+                const brandElement = card.querySelector('.product-brand');
+                
+                // Essayer de récupérer depuis l'API
+                let brandData = await fetchBrandDataFromAPI(product.brand);
+                
+                // Fallback sur les données de démo si l'API n'est pas disponible
+                if (!brandData) {
+                    brandData = sustainabilityData[product.brand];
+                }
+
+                if (brandData) {
+                    let badgeClass = 'unknown';
+                    if (brandData.score >= 7) badgeClass = 'excellent';
+                    else if (brandData.score >= 4) badgeClass = 'good';
+                    else badgeClass = 'poor';
+
+                    const badge = document.createElement('div');
+                    badge.className = `greenstyle-badge ${badgeClass}`;
+                    badge.style.background = brandData.color;
+                    badge.innerHTML = `
+                        <span class="badge-icon">🌱</span>
+                        <span>${brandData.score.toFixed(1)}/10</span>
+                    `;
+                    badge.title = `${product.brand}: ${brandData.label} (${brandData.score.toFixed(1)}/10)`;
+
+                    card.style.position = 'relative';
+                    card.appendChild(badge);
+                }
+            }
+        }
+
+        // Initialisation
+        window.addEventListener('load', () => {
+            displayProducts();
+            // Simuler automatiquement l'extension après 1 seconde
+            setTimeout(simulateExtension, 1000);
+            // Tester l'API
+            setTimeout(testAPI, 500);
+        });
+    </script>
+</body>
+</html>
+
