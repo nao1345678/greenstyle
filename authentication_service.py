@@ -354,3 +354,8 @@ class AuthenticationService:
             'users_with_data_consent': len([a for a in all_accounts if a.data_sharing_consent])
         }
 
+
+
+
+
+

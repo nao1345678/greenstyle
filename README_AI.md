@@ -219,3 +219,8 @@ Le système est optimisé pour:
 - Mise à jour en temps réel des préférences
 - Sauvegarde asynchrone des données
 
+
+
+
+
+
