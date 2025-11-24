@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenStyle - Détection de Durabilité</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .search-section {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .quick-brands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .brand-tag {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .brand-tag:hover {
+            border-color: #22c55e;
+            color: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #22c55e;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .brand-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .brand-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .brand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .score-badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.2em;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-badge.excellent {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+
+        .score-badge.good {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .score-badge.poor {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .score-badge.unknown {
+            background: #94a3b8;
+        }
+
+        .brand-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            font-size: 0.85em;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.1em;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .badge-item {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #22c55e;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 5px 5px 0 0;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .api-config {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .api-config input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #fbbf24;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 GreenStyle</h1>
+            <p>Détection de durabilité des marques de mode</p>
+        </div>
+
+        <div class="main-content">
+            <div class="api-config">
+                <strong>Configuration API :</strong>
+                <input type="text" id="apiUrl" value="http://localhost:8000" placeholder="URL de l'API FastAPI">
+            </div>
+
+            <div class="search-section">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="brandInput" 
+                        class="input-field" 
+                        placeholder="Entrez le nom d'une marque (ex: Patagonia, Nike, Zara...)"
+                        autocomplete="off"
+                    >
+                    <button id="searchBtn" class="btn btn-primary">Rechercher</button>
+                    <button id="clearBtn" class="btn btn-secondary">Effacer</button>
+                </div>
+
+                <div class="quick-brands">
+                    <span style="color: #64748b; margin-right: 10px;">Recherche rapide :</span>
+                    <span class="brand-tag" onclick="searchBrand('Patagonia')">Patagonia</span>
+                    <span class="brand-tag" onclick="searchBrand('Nike')">Nike</span>
+                    <span class="brand-tag" onclick="searchBrand('Adidas')">Adidas</span>
+                    <span class="brand-tag" onclick="searchBrand('Zara')">Zara</span>
+                    <span class="brand-tag" onclick="searchBrand('H&M')">H&M</span>
+                    <span class="brand-tag" onclick="searchBrand('Veja')">Veja</span>
+                    <span class="brand-tag" onclick="searchBrand('Reformation')">Reformation</span>
+                    <span class="brand-tag" onclick="searchBrand('Everlane')">Everlane</span>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Recherche en cours...</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="results-section" id="resultsSection">
+                <!-- Les résultats seront injectés ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // Éléments DOM
+        const brandInput = document.getElementById('brandInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loading = document.getElementById('loading');
+        const resultsSection = document.getElementById('resultsSection');
+        const errorMessage = document.getElementById('errorMessage');
+        const apiUrlInput = document.getElementById('apiUrl');
+
+        // Fonction pour obtenir l'URL de l'API
+        function getApiUrl() {
+            return apiUrlInput.value.trim() || API_BASE_URL;
+        }
+
+        // Fonction pour rechercher une marque
+        async function searchBrand(brandName) {
+            if (!brandName || !brandName.trim()) {
+                showError('Veuillez entrer un nom de marque');
+                return;
+            }
+
+            // Afficher le loading
+            loading.classList.add('show');
+            resultsSection.classList.remove('show');
+            errorMessage.classList.remove('show');
+            searchBtn.disabled = true;
+
+            try {
+                const apiUrl = getApiUrl();
+                const response = await fetch(`${apiUrl}/brands/name/${encodeURIComponent(brandName.trim())}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        showError(`Marque "${brandName}" non trouvée dans la base de données`);
+                        loading.classList.remove('show');
+                        searchBtn.disabled = false;
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const brandData = await response.json();
+                displayBrand(brandData);
+            } catch (error) {
+                console.error('Erreur:', error);
+                showError(`Erreur de connexion à l'API : ${error.message}. Vérifiez que FastAPI est démarré sur ${getApiUrl()}`);
+            } finally {
+                loading.classList.remove('show');
+                searchBtn.disabled = false;
+            }
+        }
+
+        // Fonction pour afficher une marque
+        function displayBrand(brandData) {
+            const score = brandData.final_score;
+            const color = brandData.score_color || '#94a3b8';
+            const label = brandData.score_label || 'Non évalué';
+
+            // Déterminer la classe CSS selon le score
+            let badgeClass = 'unknown';
+            if (score !== null && score !== undefined) {
+                if (score >= 7) badgeClass = 'excellent';
+                else if (score >= 4) badgeClass = 'good';
+                else badgeClass = 'poor';
+            }
+
+            const html = `
+                <div class="brand-card">
+                    <div class="brand-header">
+                        <div class="brand-name">${brandData.brand_name}</div>
+                        <div class="score-badge ${badgeClass}" style="background: ${color};">
+                            <span>${score !== null && score !== undefined ? score.toFixed(1) : 'N/A'}/10</span>
+                            <span>${label}</span>
+                        </div>
+                    </div>
+
+                    <div class="brand-details">
+                        ${brandData.sustainable_materials ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Matières Recyclées</div>
+                                <div class="detail-value">${brandData.sustainable_materials}%</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${brandData.certifications ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Certifications</div>
+                                <div class="detail-value">${brandData.certifications}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${brandData.country_production ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Pays de Production</div>
+                                <div class="detail-value">${brandData.country_production}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${brandData.price_range ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Gamme de Prix</div>
+                                <div class="detail-value">${brandData.price_range}/5</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${brandData.website ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Site Web</div>
+                                <div class="detail-value">
+                                    <a href="${brandData.website}" target="_blank" style="color: #22c55e;">${brandData.website}</a>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    ${brandData.planet_badge || brandData.labor_badge ? `
+                        <div style="margin-top: 20px;">
+                            ${brandData.planet_badge ? '<span class="badge-item">🌍 Badge Planète</span>' : ''}
+                            ${brandData.labor_badge ? '<span class="badge-item">👷 Badge Travail</span>' : ''}
+                        </div>
+                    ` : ''}
+
+                    ${brandData.short_description ? `
+                        <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 10px;">
+                            <div class="detail-label">Description</div>
+                            <p style="margin-top: 10px; color: #64748b; line-height: 1.6;">${brandData.short_description}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            resultsSection.innerHTML = html;
+            resultsSection.classList.add('show');
+        }
+
+        // Fonction pour afficher une erreur
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        // Fonction pour effacer les résultats
+        function clearResults() {
+            resultsSection.classList.remove('show');
+            errorMessage.classList.remove('show');
+            brandInput.value = '';
+        }
+
+        // Event listeners
+        searchBtn.addEventListener('click', () => {
+            searchBrand(brandInput.value);
+        });
+
+        clearBtn.addEventListener('click', clearResults);
+
+        brandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBrand(brandInput.value);
+            }
+        });
+
+        // Fonction globale pour les tags rapides
+        window.searchBrand = function(brandName) {
+            brandInput.value = brandName;
+            searchBrand(brandName);
+        };
+    </script>
+</body>
+</html>
+
