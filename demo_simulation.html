@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenStyle - Démonstration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Jersey+10&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --page-bg: #DBC9AF;
+            --panel-bg: #F4E8D7;
+            --green: #009C22;
+            --green-dark: #017740;
+            --product-bg: #FFF5E6;
+            --pink: #B70064;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--page-bg);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        /* Navbar */
+        .nav-root {
+            background: var(--page-bg);
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav-inner {
+            width: 100%;
+            height: 85px;
+            position: relative;
+        }
+
+        .nav-rule {
+            position: absolute;
+            left: 5%;
+            top: 80px;
+            width: 90vw;
+            height: 1px;
+            background: #fff;
+            transform: scaleY(.5);
+            transform-origin: top left;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .logo-img {
+            position: absolute;
+            top: 8px;
+            left: 5%;
+            width: 61px;
+            height: auto;
+        }
+
+        .nav-link {
+            position: absolute;
+            top: 34px;
+            font-family: "Jersey 10", system-ui, sans-serif;
+            font-weight: 400;
+            font-size: 17px;
+            line-height: 1;
+            color: var(--green-dark);
+            text-decoration: none;
+            text-shadow: 5px 5px 8px #ffffff;
+        }
+
+        .nav-link:hover { text-decoration: underline; }
+        .nav-link.left-1 { left: 4.5%; }
+        .nav-link.left-2 { left: 14.5%; }
+        .nav-link.right-1 { right: 15%; }
+        .nav-link.right-2 { right: 5%; }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background: var(--page-bg);
+            padding: 24px 16px 64px;
+            overflow: visible;
+        }
+
+        .window {
+            position: relative;
+            z-index: 1;
+            width: min(510px, 92vw);
+            margin: 0 auto;
+            border: 3px solid var(--green-dark);
+            border-radius: 8px;
+            background: var(--panel-bg);
+            box-shadow: 0 6px 0 rgba(1,119,64,.35);
+        }
+
+        .titlebar {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            color: #e9ffef;
+            background: linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%);
+            border-bottom: 3px solid var(--green-dark);
+            border-radius: 6px 6px 0 0;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .titlebar .title {
+            font-family: "Jersey 10", system-ui, sans-serif;
+            text-shadow: 4px 4px 10px #000000;
+            font-weight: 400;
+        }
+
+        .titlebar .controls i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-left: 6px;
+            border: 2px solid #0b5a34;
+            border-radius: 2px;
+            background: #c7f7d5;
+        }
+
+        .window-body {
+            position: relative;
+            min-height: 260px;
+            padding: 28px 18px 64px;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .hero-logo {
+            font-family: "Jersey 10", system-ui, sans-serif;
+            text-shadow: 11px 10px 12px #000000;
+            font-weight: 400;
+            font-size: 110px;
+            line-height: 1;
+            color: #ffffff;
+            position: absolute;
+            z-index: 10;
+            bottom: 17%;
+            right: 9%;
+        }
+
+        .cta-button {
+            position: absolute;
+            right: 18px;
+            bottom: 16px;
+            padding: 2.5px 14px;
+            border: 2px solid var(--green-dark);
+            height: 20px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 400;
+            cursor: pointer;
+            font-family: "Jersey 10", system-ui, sans-serif;
+            text-shadow: 11px 10px 12px #000000;
+            font-size: 12px;
+        }
+
+        .cta-button:hover { filter: brightness(1.05); }
+
+        /* Search Bar */
+        .search-section {
+            position: relative;
+            z-index: 1;
+            width: min(510px, 92vw);
+            margin: 20px auto 0;
+            padding: 15px;
+            background: var(--panel-bg);
+            border: 2px solid var(--green-dark);
+            border-radius: 8px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid var(--green-dark);
+            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        /* Brands Grid */
+        .brands-section {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: "Jersey 10", system-ui, sans-serif;
+            font-size: 36px;
+            color: var(--green-dark);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Brand Card */
+        .brand-card {
+            background: var(--product-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-body {
+            padding: 15px 12px 12px;
+        }
+
+        .brand-title {
+            margin: 6px 0 10px;
+            font-family: "Jersey 10", system-ui, sans-serif;
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: 0;
+            color: #000;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .score-badge.excellent { background: var(--green); }
+        .score-badge.good { background: #f59e0b; }
+        .score-badge.poor { background: #ef4444; }
+
+        .brand-details {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-item {
+            background: rgba(255,255,255,0.5);
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+            margin: 10px 0;
+        }
+
+        .star {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+        }
+
+        .star .full { fill: #FFC107; }
+        .star .empty { fill: #E0E0E0; }
+
+        /* API Status */
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 2px solid var(--green-dark);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.online {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .status-indicator.offline {
+            background: #ef4444;
+        }
+
+        .api-input {
+            margin-top: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .test-btn {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .test-btn:hover {
+            background: var(--green-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="nav-root">
+        <div class="nav-inner">
+            <img class="logo-img" src="site-vue/src/assets/heel-plant.png" alt="Greenstyle" />
+            <nav aria-label="Navigation principale">
+                <a class="nav-link left-1" href="#recherche">Recherche détaillée</a>
+                <a class="nav-link left-2" href="#dashboard">Tableau de bord</a>
+                <a class="nav-link right-1" href="#about">À propos de nous</a>
+                <a class="nav-link right-2" href="#account">Mon compte</a>
+            </nav>
+            <div class="nav-rule" aria-hidden="true"></div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="window">
+            <div class="titlebar">
+                <span class="title">Greenstyle</span>
+                <div class="controls">
+                    <i></i><i></i>
+                </div>
+            </div>
+            <div class="window-body">
+                <h1 class="hero-logo">Greenstyle</h1>
+                <button class="cta-button" onclick="scrollToBrands()">Voir les marques</button>
+            </div>
+        </div>
+        <div class="search-section">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="searchInput"
+                placeholder="Rechercher une marque..."
+                onkeypress="if(event.key==='Enter') searchBrand()"
+            >
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="brands-section" id="brandsSection">
+        <h2 class="section-title">Marques de Mode Durable</h2>
+        <div class="brands-grid" id="brandsGrid">
+            <!-- Les marques seront injectées ici -->
+        </div>
+    </section>
+
+    <!-- API Status -->
+    <div class="api-status">
+        <div>
+            <span class="status-indicator offline" id="statusDot"></span>
+            <span id="statusText">API non connectée</span>
+        </div>
+        <input 
+            type="text" 
+            class="api-input" 
+            id="apiUrl" 
+            value="http://localhost:8000" 
+            placeholder="URL de l'API"
+        >
+        <button class="test-btn" onclick="testAPI()">Tester</button>
+    </div>
+
+    <script>
+        // Données de démonstration
+        const demoBrands = [
+            {
+                brand_name: "Patagonia",
+                final_score: 8.5,
+                score_color: "#009C22",
+                score_label: "Excellent",
+                sustainable_materials: 87,
+                certifications: "B Corp, Fair Trade",
+                country_production: "USA, Vietnam",
+                price_range: 4,
+                rating: 4.5
+            },
+            {
+                brand_name: "Veja",
+                final_score: 7.8,
+                score_color: "#009C22",
+                score_label: "Excellent",
+                sustainable_materials: 63,
+                certifications: "B Corp",
+                country_production: "Brésil",
+                price_range: 3,
+                rating: 4.2
+            },
+            {
+                brand_name: "Nike",
+                final_score: 5.2,
+                score_color: "#f59e0b",
+                score_label: "Moyen",
+                sustainable_materials: 43,
+                certifications: "Better Cotton",
+                country_production: "Chine, Vietnam",
+                price_range: 3,
+                rating: 3.5
+            },
+            {
+                brand_name: "Zara",
+                final_score: 3.8,
+                score_color: "#ef4444",
+                score_label: "Faible",
+                sustainable_materials: 22,
+                certifications: "Join Life",
+                country_production: "Espagne, Maroc",
+                price_range: 2,
+                rating: 2.8
+            },
+            {
+                brand_name: "Reformation",
+                final_score: 7.2,
+                score_color: "#009C22",
+                score_label: "Bon",
+                sustainable_materials: 58,
+                certifications: "B Corp",
+                country_production: "USA",
+                price_range: 3,
+                rating: 4.0
+            },
+            {
+                brand_name: "H&M",
+                final_score: 4.1,
+                score_color: "#f59e0b",
+                score_label: "Moyen",
+                sustainable_materials: 28,
+                certifications: "Conscious",
+                country_production: "Bangladesh",
+                price_range: 1,
+                rating: 3.0
+            }
+        ];
+
+        // Fonction pour générer les étoiles
+        function generateStars(rating) {
+            const stars = [];
+            const r = Math.max(0, Math.min(5, rating));
+            for (let i = 0; i < 5; i++) {
+                const diff = r - i;
+                if (diff >= 1) stars.push('full');
+                else if (diff >= 0.5) stars.push('half');
+                else stars.push('empty');
+            }
+            return stars;
+        }
+
+        // Fonction pour afficher les marques
+        function displayBrands(brands = demoBrands) {
+            const grid = document.getElementById('brandsGrid');
+            grid.innerHTML = '';
+
+            brands.forEach(brand => {
+                const stars = generateStars(brand.rating);
+                const badgeClass = brand.final_score >= 7 ? 'excellent' : 
+                                  brand.final_score >= 4 ? 'good' : 'poor';
+
+                const starsHTML = stars.map((type, i) => {
+                    if (type === 'full') {
+                        return `<svg viewBox="0 0 24 24" class="star"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" class="full"/></svg>`;
+                    } else if (type === 'half') {
+                        return `<svg viewBox="0 0 24 24" class="star"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" class="empty"/><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" class="full" clip-path="url(#half-${i})"/><defs><clipPath id="half-${i}"><rect x="0" y="0" width="12" height="24"/></clipPath></defs></svg>`;
+                    } else {
+                        return `<svg viewBox="0 0 24 24" class="star"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z" class="empty"/></svg>`;
+                    }
+                }).join('');
+
+                const priceHTML = Array.from({length: 5}, (_, i) => 
+                    `<span class="dollar" style="font-family: Inter, sans-serif; font-weight: 700; color: ${i < brand.price_range ? '#333' : '#B3B3B3'}; margin-right: 2px;">$</span>`
+                ).join('');
+
+                const card = document.createElement('div');
+                card.className = 'brand-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h3 class="brand-title">${brand.brand_name}</h3>
+                        <div class="score-badge ${badgeClass}" style="background: ${brand.score_color};">
+                            ${brand.final_score.toFixed(1)}/10 - ${brand.score_label}
+                        </div>
+                        <div class="stars">${starsHTML}</div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">${priceHTML}</div>
+                        <div class="brand-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Matières Recyclées</div>
+                                <div class="detail-value">${brand.sustainable_materials}%</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Certifications</div>
+                                <div class="detail-value">${brand.certifications.split(',')[0]}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Fonction de recherche
+        function searchBrand() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (!query) {
+                displayBrands();
+                return;
+            }
+            const filtered = demoBrands.filter(b => 
+                b.brand_name.toLowerCase().includes(query)
+            );
+            displayBrands(filtered);
+        }
+
+        // Fonction pour scroller vers les marques
+        function scrollToBrands() {
+            document.getElementById('brandsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Tester l'API
+        async function testAPI() {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            if (!apiUrl) {
+                alert('Veuillez entrer une URL d\'API');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/`);
+                if (response.ok) {
+                    statusDot.className = 'status-indicator online';
+                    statusText.textContent = 'API connectée';
+                } else {
+                    throw new Error('API non accessible');
+                }
+            } catch (error) {
+                statusDot.className = 'status-indicator offline';
+                statusText.textContent = 'API non connectée';
+            }
+        }
+
+        // Initialisation
+        window.addEventListener('load', () => {
+            displayBrands();
+            // Tester l'API automatiquement
+            setTimeout(testAPI, 1000);
+        });
+    </script>
+</body>
+</html>
