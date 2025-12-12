@@ -1,28 +1,54 @@
 version: '3.8'
 
 services:
-  # 1. Nom du service (utilisé comme hostname)
   mongodb:
-    # 2. Image officielle
-    image: mongo:latest
-    # 3. Variables d'environnement pour la configuration
-    # (Facultatif, souvent utilisé pour un utilisateur/mot de passe root)
+    image: mongo:6.0
+    container_name: mongodb_db
     environment:
-      # Définit le nom de la base de données par défaut
-      MONGO_INITDB_DATABASE: greenstyle_DB
-      # Variables pour créer un utilisateur/mot de passe au premier démarrage (Très recommandé en production)
-      MONGO_INITDB_ROOT_USERNAME: user_root
-      MONGO_INITDB_ROOT_PASSWORD: un_mot_de_passe_secure
-    # 4. Persistence des données
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
-      # Assurez-vous que les données ne sont pas perdues lorsque le conteneur s'arrête
       - mongo-data:/data/db
-    # 5. Mappage de port (Souvent inutile si seul le back-end y accède)
-    # Décommenter si vous voulez y accéder depuis votre machine hôte (ex: via MongoDB Compass)
-    # ports:
-    #   - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
 
-# 6. Définition du volume de persistance
+  backend:
+    container_name: backend_api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - /app/__pycache__
+    ports:
+      - "8080:3000"
+    restart: always
+
+  frontend:
+    container_name: frontend_vue
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    restart: always
+
 volumes:
   mongo-data:
+    driver: local
