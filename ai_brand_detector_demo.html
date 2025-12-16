@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Brand Detection Engine - Windows 98 Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'MS Sans Serif', sans-serif;
+            background: #c0c0c0;
+            color: #000;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+        }
+
+        .header {
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            color: #000;
+        }
+
+        .main-content {
+            padding: 10px;
+        }
+
+        .input-section {
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 200px;
+            padding: 2px 4px;
+            border: 2px inset #c0c0c0;
+            background: #fff;
+            font-family: 'MS Sans Serif', sans-serif;
+            font-size: 0.9em;
+        }
+
+        .input-field:focus {
+            outline: none;
+        }
+
+        .analyze-btn {
+            padding: 4px 8px;
+            background: #c0c0c0;
+            color: #000;
+            border: 2px outset #c0c0c0;
+            font-family: 'MS Sans Serif', sans-serif;
+            font-size: 0.9em;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .analyze-btn:hover {
+            background: #d4d0c8;
+        }
+
+        .analyze-btn:active {
+            border: 2px inset #c0c0c0;
+        }
+
+        .analyze-btn:disabled {
+            background: #c0c0c0;
+            cursor: not-allowed;
+            color: #808080;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .result-header {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #808080;
+            padding-bottom: 5px;
+        }
+
+        .result-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .confidence-bar {
+            background: #fff;
+            height: 15px;
+            border: 2px inset #c0c0c0;
+            margin: 10px 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: #000;
+            transition: width 0.5s ease;
+        }
+
+        .confidence-text {
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            margin-top: 5px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .detail-item {
+            background: #c0c0c0;
+            padding: 5px;
+            border: 2px inset #c0c0c0;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .detail-value {
+            color: #000;
+            font-size: 1em;
+        }
+
+        .ai-learning {
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .ai-learning h3 {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #000;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 2px solid #c0c0c0;
+            border-top: 2px solid #000;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            background: #c0c0c0;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .examples h3 {
+            color: #000;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .example-tag {
+            background: #c0c0c0;
+            color: #000;
+            padding: 2px 6px;
+            border: 2px outset #c0c0c0;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-family: 'MS Sans Serif', sans-serif;
+        }
+
+        .example-tag:hover {
+            background: #d4d0c8;
+        }
+
+        .example-tag:active {
+            border: 2px inset #c0c0c0;
+        }
+
+        .brand-tag {
+            background: #c0c0c0;
+            color: #000;
+            padding: 2px 6px;
+            border: 2px outset #c0c0c0;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-family: 'MS Sans Serif', sans-serif;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .brand-tag:hover {
+            background: #d4d0c8;
+        }
+
+        .brand-tag:active {
+            border: 2px inset #c0c0c0;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .main-content {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fashion Brand Detection Engine</h1>
+            <p>Mode & Fashion Analysis with Ethical Scoring</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 style="margin-bottom: 10px; color: #000; font-size: 1em;">Fashion Brand Analysis</h2>
+                <div class="input-group">
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        class="input-field" 
+                        placeholder="https://nike.com, https://zara.com, https://h&m.com..."
+                        autocomplete="off"
+                    >
+                    <button id="analyzeBtn" class="analyze-btn">
+                        ANALYZE
+                    </button>
+                    <button id="clearBtn" class="analyze-btn" style="background: #808080;">
+                        CLEAR
+                    </button>
+                </div>
+                
+                <div class="examples">
+                    <h3>Fashion Brand URLs:</h3>
+                    <div class="example-tags">
+                        <span class="example-tag" onclick="testUrl('https://nike.com')">Nike</span>
+                        <span class="example-tag" onclick="testUrl('https://zara.com')">Zara</span>
+                        <span class="example-tag" onclick="testUrl('https://hm.com')">H&M</span>
+                        <span class="example-tag" onclick="testUrl('https://adidas.com')">Adidas</span>
+                        <span class="example-tag" onclick="testUrl('https://uniqlo.com')">Uniqlo</span>
+                        <span class="example-tag" onclick="testUrl('https://gap.com')">Gap</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">Analyzing Fashion Brands...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">Fashion Brand Detection Results</div>
+                    </div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Fashion Brands Found</div>
+                            <div class="detail-value" id="totalBrands">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Fashion Categories</div>
+                            <div class="detail-value" id="totalCategories">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Sources</div>
+                            <div class="detail-value" id="sourcesAnalyzed">6</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">URL</div>
+                            <div class="detail-value" id="pageUrl">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">Analysis by Source</div>
+                    </div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Text</div>
+                            <div class="detail-value" id="textResults">0 fashion brands</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Links</div>
+                            <div class="detail-value" id="linksResults">0 fashion brands</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Images</div>
+                            <div class="detail-value" id="imagesResults">0 fashion brands</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Attributes</div>
+                            <div class="detail-value" id="attributesResults">0 fashion brands</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Metadata</div>
+                            <div class="detail-value" id="metadataResults">0 fashion brands</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">CSS Classes</div>
+                            <div class="detail-value" id="classesResults">0 fashion brands</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-learning" id="aiLearning">
+                    <h3>Fashion Brands by Category</h3>
+                    <p id="categoryAnalysis">Click on a fashion brand to see its ethical score.</p>
+                    
+                    <div id="categoriesContainer">
+                        <!-- Categories will be generated dynamically -->
+                    </div>
+                </div>
+
+                <div class="result-card" id="ethicsCard" style="display: none;">
+                    <div class="result-header">
+                        <div class="result-title">Ethical Score</div>
+                    </div>
+                    
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="ethicsScoreFill"></div>
+                    </div>
+                    <div class="confidence-text" id="ethicsScoreText">Score: 0/100</div>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Brand</div>
+                            <div class="detail-value" id="selectedBrand">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Level</div>
+                            <div class="detail-value" id="ethicsLevel">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Website</div>
+                            <div class="detail-value" id="brandWebsite">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Updated</div>
+                            <div class="detail-value" id="lastUpdate">-</div>
+                        </div>
+                    </div>
+
+                    <div class="details-grid" style="margin-top: 10px;">
+                        <div class="detail-item">
+                            <div class="detail-label">Sustainability</div>
+                            <div class="detail-value" id="sustainabilityScore">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Social</div>
+                            <div class="detail-value" id="socialScore">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Transparency</div>
+                            <div class="detail-value" id="transparencyScore">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Business Ethics</div>
+                            <div class="detail-value" id="businessEthicsScore">-</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; padding: 5px; background: #c0c0c0; border: 2px inset #c0c0c0;">
+                        <h4 style="margin-bottom: 5px; color: #000; font-size: 0.9em;">Analysis</h4>
+                        <p id="ethicsAnalysis" style="color: #000; line-height: 1.4; font-size: 0.8em;">Ethical analysis will be displayed here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="brand_detection_engine.js"></script>
+    <script>
+        // Interface de visualisation du moteur de détection
+        class BrandDetectionVisualizer {
+            constructor() {
+                this.engine = new BrandDetectionEngine();
+                this.currentResults = null;
+                this.analysisCount = 0;
+                this.currentUrl = null;
+            }
+            
+            async analyzeUrl(url) {
+                this.analysisCount++;
+                this.currentUrl = url;
+                
+                // Simuler les étapes d'analyse avec délais
+                const steps = [
+                    'Connecting to fashion website...',
+                    'Downloading content...',
+                    'Scanning for fashion brands...',
+                    'Analyzing product links...',
+                    'Checking brand logos...',
+                    'Reading brand attributes...',
+                    'Extracting metadata...',
+                    'Analyzing CSS classes...',
+                    'Compiling fashion results...'
+                ];
+                
+                let currentStep = 0;
+                const stepInterval = setInterval(() => {
+                    if (currentStep < steps.length) {
+                        document.getElementById('loadingText').textContent = steps[currentStep];
+                        currentStep++;
+                    } else {
+                        clearInterval(stepInterval);
+                        
+                        // Simuler l'analyse (en réalité, il faudrait un proxy CORS)
+                        this.simulateUrlAnalysis(url);
+                        
+                        // Masquer le loading
+                        document.getElementById('loading').classList.remove('show');
+                        document.getElementById('resultsSection').classList.add('show');
+                        document.getElementById('analyzeBtn').disabled = false;
+                    }
+                }, 400);
+            }
+            
+            simulateUrlAnalysis(url) {
+                // Simulation d'analyse basée sur l'URL - Focus Mode/Fashion
+                const urlLower = url.toLowerCase();
+                let simulatedBrands = [];
+                
+                // Détection basée sur l'URL - Marques de mode uniquement
+                if (urlLower.includes('nike')) {
+                    simulatedBrands = ['nike', 'air jordan', 'jordan'];
+                } else if (urlLower.includes('adidas')) {
+                    simulatedBrands = ['adidas', 'adidas originals', 'adidas performance'];
+                } else if (urlLower.includes('zara')) {
+                    simulatedBrands = ['zara', 'zara home'];
+                } else if (urlLower.includes('hm') || urlLower.includes('h&m')) {
+                    simulatedBrands = ['h&m', 'h&m home'];
+                } else if (urlLower.includes('uniqlo')) {
+                    simulatedBrands = ['uniqlo', 'uniqlo japan'];
+                } else if (urlLower.includes('gap')) {
+                    simulatedBrands = ['gap', 'gap kids'];
+                } else if (urlLower.includes('puma')) {
+                    simulatedBrands = ['puma', 'puma sport'];
+                } else if (urlLower.includes('converse')) {
+                    simulatedBrands = ['converse', 'converse all star'];
+                } else if (urlLower.includes('vans')) {
+                    simulatedBrands = ['vans', 'vans old skool'];
+                } else {
+                    // Marques de mode génériques pour les autres sites
+                    simulatedBrands = ['nike', 'adidas', 'zara', 'h&m'];
+                }
+                
+                // Créer des résultats simulés
+                this.currentResults = {
+                    statistics: {
+                        totalFound: simulatedBrands.length,
+                        categoriesFound: 2,
+                        sourcesAnalyzed: 6
+                    },
+                    bySource: {
+                        text: simulatedBrands,
+                        links: simulatedBrands.slice(0, Math.ceil(simulatedBrands.length / 2)),
+                        images: simulatedBrands.slice(0, Math.ceil(simulatedBrands.length / 3)),
+                        attributes: [],
+                        metadata: simulatedBrands.slice(0, 1),
+                        classes: []
+                    },
+                    byCategory: {
+                        'Sportswear': simulatedBrands.filter(b => ['nike', 'adidas', 'puma', 'converse', 'vans'].includes(b)),
+                        'Fast Fashion': simulatedBrands.filter(b => ['zara', 'h&m', 'uniqlo', 'gap'].includes(b)),
+                        'Luxury': simulatedBrands.filter(b => ['gucci', 'chanel', 'louis vuitton', 'hermes'].includes(b))
+                    }
+                };
+                
+                this.displayResults();
+            }
+            
+            displayResults() {
+                if (!this.currentResults) return;
+                
+                // Afficher les statistiques principales
+                document.getElementById('totalBrands').textContent = this.currentResults.statistics.totalFound;
+                document.getElementById('totalCategories').textContent = this.currentResults.statistics.categoriesFound;
+                document.getElementById('pageUrl').textContent = this.currentUrl || 'URL analysée';
+                
+                // Afficher les résultats par source
+                document.getElementById('textResults').textContent = `${this.currentResults.bySource.text.length} fashion brands`;
+                document.getElementById('linksResults').textContent = `${this.currentResults.bySource.links.length} fashion brands`;
+                document.getElementById('imagesResults').textContent = `${this.currentResults.bySource.images.length} fashion brands`;
+                document.getElementById('attributesResults').textContent = `${this.currentResults.bySource.attributes.length} fashion brands`;
+                document.getElementById('metadataResults').textContent = `${this.currentResults.bySource.metadata.length} fashion brands`;
+                document.getElementById('classesResults').textContent = `${this.currentResults.bySource.classes.length} fashion brands`;
+                
+                // Afficher les catégories
+                this.displayCategories();
+            }
+            
+            displayCategories() {
+                const container = document.getElementById('categoriesContainer');
+                container.innerHTML = '';
+                
+                if (Object.keys(this.currentResults.byCategory).length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #000; padding: 10px;">No fashion brands detected on this page.</p>';
+                    return;
+                }
+                
+                for (const [category, brands] of Object.entries(this.currentResults.byCategory)) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'detail-item';
+                    categoryDiv.style.marginBottom = '10px';
+                    
+                    const categoryTitle = document.createElement('h4');
+                    categoryTitle.textContent = `${category} (${brands.length} fashion brands)`;
+                    categoryTitle.style.marginBottom = '5px';
+                    categoryTitle.style.color = '#000';
+                    categoryTitle.style.fontSize = '0.9em';
+                    
+                    const brandsList = document.createElement('div');
+                    brandsList.style.display = 'flex';
+                    brandsList.style.flexWrap = 'wrap';
+                    brandsList.style.gap = '5px';
+                    
+                    brands.forEach(brand => {
+                        const brandTag = document.createElement('span');
+                        brandTag.textContent = brand;
+                        brandTag.className = 'brand-tag';
+                        brandTag.title = `Click to see ethical score for fashion brand ${brand}`;
+                        
+                        // Clic pour afficher le score éthique
+                        brandTag.addEventListener('click', () => {
+                            this.showBrandEthics(brand);
+                        });
+                        
+                        brandsList.appendChild(brandTag);
+                    });
+                    
+                    categoryDiv.appendChild(categoryTitle);
+                    categoryDiv.appendChild(brandsList);
+                    container.appendChild(categoryDiv);
+                }
+            }
+            
+            showBrandEthics(brandName) {
+                // Simuler l'analyse éthique de la marque
+                const ethicsData = this.calculateBrandEthics(brandName);
+                
+                // Afficher la carte d'éthique
+                document.getElementById('ethicsCard').style.display = 'block';
+                
+                // Remplir les données
+                document.getElementById('selectedBrand').textContent = brandName;
+                document.getElementById('brandWebsite').textContent = this.getBrandWebsite(brandName);
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('fr-FR');
+                
+                // Score éthique global
+                const totalScore = ethicsData.total;
+                document.getElementById('ethicsScoreText').textContent = `Score: ${totalScore}/100`;
+                document.getElementById('ethicsScoreFill').style.width = `${totalScore}%`;
+                document.getElementById('ethicsLevel').textContent = this.getEthicsLevel(totalScore);
+                
+                // Scores détaillés
+                document.getElementById('sustainabilityScore').textContent = `${ethicsData.sustainability}/25`;
+                document.getElementById('socialScore').textContent = `${ethicsData.social}/25`;
+                document.getElementById('transparencyScore').textContent = `${ethicsData.transparency}/25`;
+                document.getElementById('businessEthicsScore').textContent = `${ethicsData.business}/25`;
+                
+                // Analyse détaillée
+                document.getElementById('ethicsAnalysis').textContent = this.getEthicsAnalysis(brandName, ethicsData);
+                
+                // Scroll vers la carte d'éthique
+                document.getElementById('ethicsCard').scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            calculateBrandEthics(brandName) {
+                // Simulation de calcul de score éthique basé sur la marque
+                const brandLower = brandName.toLowerCase();
+                
+                let sustainability = 15;
+                let social = 15;
+                let transparency = 15;
+                let business = 15;
+                
+                // Ajustements basés sur la marque
+                if (brandLower.includes('nike')) {
+                    sustainability = 18; // Bonne durabilité
+                    social = 12; // Controverses travail
+                    transparency = 20; // Bonne transparence
+                    business = 16; // Bonne éthique
+                } else if (brandLower.includes('apple')) {
+                    sustainability = 22; // Très bonne durabilité
+                    social = 20; // Bonne responsabilité sociale
+                    transparency = 18; // Bonne transparence
+                    business = 19; // Très bonne éthique
+                } else if (brandLower.includes('amazon')) {
+                    sustainability = 16; // Moyenne durabilité
+                    social = 10; // Controverses travail
+                    transparency = 14; // Transparence limitée
+                    business = 12; // Éthique discutée
+                } else if (brandLower.includes('samsung')) {
+                    sustainability = 19; // Bonne durabilité
+                    social = 17; // Bonne responsabilité sociale
+                    transparency = 16; // Transparence correcte
+                    business = 18; // Bonne éthique
+                } else if (brandLower.includes('zara')) {
+                    sustainability = 14; // Durabilité limitée
+                    social = 11; // Controverses fast fashion
+                    transparency = 13; // Transparence limitée
+                    business = 15; // Éthique moyenne
+                }
+                
+                return {
+                    sustainability: Math.min(sustainability, 25),
+                    social: Math.min(social, 25),
+                    transparency: Math.min(transparency, 25),
+                    business: Math.min(business, 25),
+                    total: Math.min(sustainability + social + transparency + business, 100)
+                };
+            }
+            
+            getBrandWebsite(brandName) {
+                const brandLower = brandName.toLowerCase();
+                if (brandLower.includes('nike')) return 'nike.com';
+                if (brandLower.includes('apple')) return 'apple.com';
+                if (brandLower.includes('amazon')) return 'amazon.com';
+                if (brandLower.includes('samsung')) return 'samsung.com';
+                if (brandLower.includes('zara')) return 'zara.com';
+                return 'Site officiel';
+            }
+            
+            getEthicsLevel(score) {
+                if (score >= 80) return 'Excellent';
+                if (score >= 60) return 'Bon';
+                if (score >= 40) return 'Moyen';
+                if (score >= 20) return 'Faible';
+                return 'Très faible';
+            }
+            
+            getEthicsAnalysis(brandName, ethicsData) {
+                const brandLower = brandName.toLowerCase();
+                let analysis = `Analyse éthique de ${brandName} : `;
+                
+                if (ethicsData.total >= 80) {
+                    analysis += "Cette marque démontre un engagement éthique exemplaire avec des pratiques durables, une transparence élevée et une responsabilité sociale forte.";
+                } else if (ethicsData.total >= 60) {
+                    analysis += "Cette marque présente de bonnes pratiques éthiques avec des efforts notables en matière de durabilité et de responsabilité sociale.";
+                } else if (ethicsData.total >= 40) {
+                    analysis += "Cette marque montre des efforts modérés en matière d'éthique, avec des améliorations possibles dans plusieurs domaines.";
+                } else {
+                    analysis += "Cette marque présente des défis éthiques significatifs nécessitant des améliorations importantes dans ses pratiques.";
+                }
+                
+                return analysis;
+            }
+            
+            clearResults() {
+                this.currentResults = null;
+                this.currentUrl = null;
+                document.getElementById('resultsSection').classList.remove('show');
+                document.getElementById('ethicsCard').style.display = 'none';
+                
+                // Reset des valeurs
+                document.getElementById('totalBrands').textContent = '0';
+                document.getElementById('totalCategories').textContent = '0';
+                document.getElementById('textResults').textContent = '0 fashion brands';
+                document.getElementById('linksResults').textContent = '0 fashion brands';
+                document.getElementById('imagesResults').textContent = '0 fashion brands';
+                document.getElementById('attributesResults').textContent = '0 fashion brands';
+                document.getElementById('metadataResults').textContent = '0 fashion brands';
+                document.getElementById('classesResults').textContent = '0 fashion brands';
+                document.getElementById('categoriesContainer').innerHTML = '';
+            }
+        }
+        
+        // Initialiser le visualiseur
+        const visualizer = new BrandDetectionVisualizer();
+        
+        // Éléments DOM
+        const urlInput = document.getElementById('urlInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loading = document.getElementById('loading');
+        const resultsSection = document.getElementById('resultsSection');
+        
+        // Fonction d'analyse
+        function analyzeUrl() {
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a fashion website URL to analyze');
+                return;
+            }
+            
+            // Validation basique de l'URL
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('URL must start with http:// or https://');
+                return;
+            }
+            
+            // Afficher le loading
+            loading.classList.add('show');
+            resultsSection.classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            // Lancer l'analyse
+            visualizer.analyzeUrl(url);
+        }
+        
+        function clearResults() {
+            visualizer.clearResults();
+            urlInput.value = '';
+        }
+        
+        function testUrl(url) {
+            urlInput.value = url;
+            analyzeUrl();
+        }
+        
+        // Event listeners
+        analyzeBtn.addEventListener('click', analyzeUrl);
+        clearBtn.addEventListener('click', clearResults);
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeUrl();
+            }
+        });
+        
+        // Auto-analyse au chargement de la page
+        window.addEventListener('load', () => {
+            console.log('Fashion Brand Detection Engine loaded');
+            console.log('Database:', visualizer.engine.brands.length, 'fashion brands');
+        });
+    </script>
+</body>
+</html>
