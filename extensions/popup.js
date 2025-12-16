@@ -12,9 +12,15 @@
     const brandsListEl = document.getElementById('brands-list');
     
     if (!loadingEl || !noBrandsEl || !brandsListEl) {
-      console.error('[GreenStyle Popup] Éléments DOM non trouvés');
+      console.error('[GreenStyle Popup] Éléments DOM non trouvés', {
+        loadingEl: !!loadingEl,
+        noBrandsEl: !!noBrandsEl,
+        brandsListEl: !!brandsListEl
+      });
       return;
     }
+    
+    console.log('[GreenStyle Popup] Initialisation réussie');
 
   /**
    * Récupère le score et retourne la classe CSS correspondante
@@ -39,7 +45,27 @@
    */
   function displayBrand(brand) {
     const brandData = brand.data;
-    if (!brandData) return;
+    const brandName = brand.name || 'Marque inconnue';
+    
+    // Afficher même si pas de données (marque détectée mais pas dans la base)
+    if (!brandData) {
+      const brandItem = document.createElement('div');
+      brandItem.className = 'brand-item';
+      brandItem.innerHTML = `
+        <div class="brand-header">
+          <span class="brand-name">${brandName}</span>
+          <span class="brand-score" style="background: #808080">
+            N/A
+          </span>
+        </div>
+        <div class="brand-label">Non évalué</div>
+        <div class="brand-details">
+          <p style="font-size: 11px; color: #888; margin: 0;">Marque détectée mais non trouvée dans la base de données</p>
+        </div>
+      `;
+      brandsListEl.appendChild(brandItem);
+      return;
+    }
 
     const score = brandData.final_score;
     const scoreClass = getScoreClass(score);
@@ -101,13 +127,16 @@
       if (brandsData.length > 0) {
         brandsData.forEach(brand => displayBrand(brand));
       } else {
-        // Sinon, récupérer les données via le background
+        // Sinon, récupérer les données via le background ou afficher sans données
         brands.forEach(brandName => {
           chrome.runtime.sendMessage(
             { type: 'BG_GET_BRAND_DATA', brandName },
             (response) => {
               if (response?.success && response.data) {
                 displayBrand({ name: brandName, data: response.data });
+              } else {
+                // Afficher quand même la marque détectée même sans données
+                displayBrand({ name: brandName, data: null });
               }
             }
           );
