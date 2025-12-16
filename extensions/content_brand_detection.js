@@ -6,42 +6,169 @@
 // Configuration de l'API backend
 const API_BASE_URL = 'http://localhost:8000'; // À adapter selon votre configuration
 
-// Base de données simple des marques (pour la détection initiale)
-const KNOWN_BRANDS = [
-    'nike', 'adidas', 'puma', 'reebok', 'converse', 'vans', 'timberland',
-    'levis', 'zara', 'h&m', 'uniqlo', 'gap', 'tommy hilfiger', 'calvin klein',
-    'ralph lauren', 'lacoste', 'patagonia', 'veja', 'reformation', 'everlane',
-    'the north face', 'columbia', 'salomon', 'arc\'teryx', 'supreme', 'stussy',
-    'off-white', 'a bathing ape', 'palace', 'kith', 'fear of god'
-];
+// Base de données des marques avec alias pour une meilleure détection
+const BRANDS_WITH_ALIASES = {
+    'nike': ['nike air', 'air jordan', 'jordan', 'nike.com'],
+    'adidas': ['adidas originals', 'adidas performance', 'adidas.com'],
+    'puma': ['puma sport', 'puma.com'],
+    'reebok': ['reebok classic', 'reebok.com'],
+    'converse': ['converse all star', 'converse.com'],
+    'vans': ['vans old skool', 'vans.com'],
+    'timberland': ['timberland boots', 'timberland.com'],
+    'levis': ['levi\'s', 'levis', 'levis.com'],
+    'zara': ['zara home', 'zara.com'],
+    'h&m': ['h&m home', 'h&m', 'hm.com'],
+    'uniqlo': ['uniqlo japan', 'uniqlo.com'],
+    'gap': ['gap kids', 'gap.com'],
+    'tommy hilfiger': ['tommy', 'tommyhilfiger.com'],
+    'calvin klein': ['ck', 'calvin klein underwear', 'calvinklein.com'],
+    'ralph lauren': ['polo ralph lauren', 'ralphlauren.com'],
+    'lacoste': ['lacoste sport', 'lacoste.com'],
+    'patagonia': ['patagonia.com'],
+    'veja': ['veja.com'],
+    'reformation': ['reformation.com'],
+    'everlane': ['everlane.com'],
+    'the north face': ['north face', 'thenorthface.com'],
+    'columbia': ['columbia.com'],
+    'salomon': ['salomon.com'],
+    'arc\'teryx': ['arcteryx', 'arcteryx.com'],
+    'supreme': ['supremenewyork.com'],
+    'stussy': ['stussy.com'],
+    'off-white': ['offwhite.com'],
+    'a bathing ape': ['bape', 'bape.com'],
+    'palace': ['palaceskateboards.com'],
+    'kith': ['kith.com'],
+    'fear of god': ['fearofgod.com']
+};
+
+// Liste simple pour la recherche rapide
+const KNOWN_BRANDS = Object.keys(BRANDS_WITH_ALIASES);
 
 /**
  * Détecte les marques présentes sur la page
+ * Recherche dans plusieurs sources pour une meilleure détection sur les sites e-commerce
  */
 function detectBrandsOnPage() {
     const detectedBrands = new Set();
     const pageText = document.body.innerText.toLowerCase();
+    const pageHTML = document.body.innerHTML.toLowerCase();
     
-    // Chercher les marques dans le texte
+    // 1. Chercher dans le texte visible
     KNOWN_BRANDS.forEach(brand => {
         const brandLower = brand.toLowerCase();
-        // Recherche simple dans le texte
+        const aliases = BRANDS_WITH_ALIASES[brand] || [];
+        
+        // Recherche du nom principal
         if (pageText.includes(brandLower)) {
             detectedBrands.add(brand);
         }
-    });
-    
-    // Chercher aussi dans les liens
-    document.querySelectorAll('a[href]').forEach(link => {
-        const href = link.href.toLowerCase();
-        const text = link.textContent.toLowerCase();
-        KNOWN_BRANDS.forEach(brand => {
-            const brandLower = brand.toLowerCase();
-            if (href.includes(brandLower) || text.includes(brandLower)) {
+        
+        // Recherche des alias
+        aliases.forEach(alias => {
+            if (pageText.includes(alias.toLowerCase())) {
                 detectedBrands.add(brand);
             }
         });
     });
+    
+    // 2. Chercher dans les liens (href et texte)
+    document.querySelectorAll('a[href]').forEach(link => {
+        const href = link.href.toLowerCase();
+        const text = link.textContent.toLowerCase();
+        
+        KNOWN_BRANDS.forEach(brand => {
+            const brandLower = brand.toLowerCase();
+            const aliases = BRANDS_WITH_ALIASES[brand] || [];
+            
+            if (href.includes(brandLower) || text.includes(brandLower)) {
+                detectedBrands.add(brand);
+            }
+            
+            aliases.forEach(alias => {
+                if (href.includes(alias.toLowerCase()) || text.includes(alias.toLowerCase())) {
+                    detectedBrands.add(brand);
+                }
+            });
+        });
+    });
+    
+    // 3. Chercher dans les attributs data-* (très utilisé sur les sites e-commerce)
+    const dataSelectors = [
+        '[data-brand]', '[data-vendor]', '[data-manufacturer]', 
+        '[data-company]', '[data-maker]', '[data-product-brand]'
+    ];
+    
+    dataSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            const value = (el.dataset.brand || el.dataset.vendor || 
+                          el.dataset.manufacturer || el.dataset.company || 
+                          el.dataset.maker || el.dataset.productBrand || '').toLowerCase();
+            
+            if (value) {
+                KNOWN_BRANDS.forEach(brand => {
+                    const brandLower = brand.toLowerCase();
+                    const aliases = BRANDS_WITH_ALIASES[brand] || [];
+                    
+                    if (value.includes(brandLower)) {
+                        detectedBrands.add(brand);
+                    }
+                    
+                    aliases.forEach(alias => {
+                        if (value.includes(alias.toLowerCase())) {
+                            detectedBrands.add(brand);
+                        }
+                    });
+                });
+            }
+        });
+    });
+    
+    // 4. Chercher dans les images (attributs alt et title)
+    document.querySelectorAll('img').forEach(img => {
+        const alt = (img.alt || '').toLowerCase();
+        const title = (img.title || '').toLowerCase();
+        const src = (img.src || '').toLowerCase();
+        
+        KNOWN_BRANDS.forEach(brand => {
+            const brandLower = brand.toLowerCase();
+            const aliases = BRANDS_WITH_ALIASES[brand] || [];
+            
+            if (alt.includes(brandLower) || title.includes(brandLower) || src.includes(brandLower)) {
+                detectedBrands.add(brand);
+            }
+            
+            aliases.forEach(alias => {
+                if (alt.includes(alias.toLowerCase()) || title.includes(alias.toLowerCase()) || 
+                    src.includes(alias.toLowerCase())) {
+                    detectedBrands.add(brand);
+                }
+            });
+        });
+    });
+    
+    // 5. Chercher dans les classes CSS (souvent utilisées pour les marques)
+    document.querySelectorAll('[class*="brand"], [class*="vendor"], [class*="manufacturer"]').forEach(el => {
+        const classes = el.className.toLowerCase();
+        
+        KNOWN_BRANDS.forEach(brand => {
+            const brandLower = brand.toLowerCase();
+            if (classes.includes(brandLower)) {
+                detectedBrands.add(brand);
+            }
+        });
+    });
+    
+    // 6. Chercher dans les métadonnées (meta tags)
+    const metaBrand = document.querySelector('meta[property="product:brand"]') || 
+                     document.querySelector('meta[name="brand"]');
+    if (metaBrand) {
+        const metaValue = (metaBrand.content || metaBrand.getAttribute('content') || '').toLowerCase();
+        KNOWN_BRANDS.forEach(brand => {
+            if (metaValue.includes(brand.toLowerCase())) {
+                detectedBrands.add(brand);
+            }
+        });
+    }
     
     return Array.from(detectedBrands);
 }
