@@ -175,26 +175,34 @@ function detectBrandsOnPage() {
 
 /**
  * Récupère les informations de durabilité depuis l'API
- * Utilise le background script pour les appels API (meilleure gestion CORS)
+ * Utilise UNIQUEMENT le background script pour éviter les problèmes CORS
  */
 async function getBrandSustainability(brandName) {
     try {
-        // Utiliser le background script pour les appels API
+        // Utiliser le background script pour les appels API (obligatoire pour éviter CORS)
         return new Promise((resolve) => {
             chrome.runtime.sendMessage(
                 { type: 'BG_GET_BRAND_DATA', brandName },
                 (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.error(`[GreenStyle] Erreur communication background:`, chrome.runtime.lastError);
+                        resolve(null);
+                        return;
+                    }
+                    
                     if (response?.success && response.data) {
                         resolve(response.data);
                     } else {
-                        // Fallback: appel direct si le background ne répond pas
-                        fetch(`${API_BASE_URL}/brands/name/${encodeURIComponent(brandName)}`)
-                            .then(res => res.ok ? res.json() : null)
-                            .then(data => resolve(data))
-                            .catch(() => resolve(null));
+                        // Marque non trouvée ou erreur API
+                        resolve(null);
                     }
                 }
             );
+            
+            // Timeout de sécurité (5 secondes)
+            setTimeout(() => {
+                resolve(null);
+            }, 5000);
         });
     } catch (error) {
         console.error(`[GreenStyle] Erreur lors de la récupération pour ${brandName}:`, error);
