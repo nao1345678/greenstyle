@@ -11,11 +11,15 @@ async function fetchBrandData(brandName) {
       if (response.status === 404) {
         return null; // Marque non trouvée
       }
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Pour les autres erreurs (500, etc.), on retourne null sans lever d'exception
+      const errorText = await response.text().catch(() => 'Unknown error');
+      console.warn(`[GreenStyle Background] API erreur ${response.status} pour ${brandName}: ${errorText}`);
+      return null;
     }
     return await response.json();
   } catch (error) {
-    console.error(`[GreenStyle Background] Erreur API pour ${brandName}:`, error);
+    // Erreur réseau ou autre
+    console.warn(`[GreenStyle Background] Erreur réseau pour ${brandName}:`, error.message);
     return null;
   }
 }

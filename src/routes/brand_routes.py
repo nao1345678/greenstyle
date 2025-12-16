@@ -80,15 +80,21 @@ async def get_brand_by_name(brand_name: str) -> BrandOut:
     Recherche une marque par son nom (insensible à la casse)
     Utilisé par l'extension Chrome pour obtenir les infos de durabilité
     """
-    # Recherche insensible à la casse
-    brand = await Brand.find_one(
-        Brand.brand_name == {"$regex": f"^{brand_name}$", "$options": "i"}
-    )
-    
-    if not brand:
-        raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
-    
-    return to_out(brand)
+    try:
+        # Recherche insensible à la casse
+        brand = await Brand.find_one(
+            Brand.brand_name == {"$regex": f"^{brand_name}$", "$options": "i"}
+        )
+        
+        if not brand:
+            raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
+        
+        return to_out(brand)
+    except Exception as e:
+        # Si MongoDB n'est pas disponible, retourner 404 au lieu d'une erreur 500
+        if "MongoDB" in str(e) or "connection" in str(e).lower():
+            raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found (database unavailable)")
+        raise
 
 
 @router.get("/search/{query}", response_model=List[BrandOut])
