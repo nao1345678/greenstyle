@@ -48,17 +48,27 @@ function detectBrandsOnPage() {
 
 /**
  * Récupère les informations de durabilité depuis l'API
+ * Utilise le background script pour les appels API (meilleure gestion CORS)
  */
 async function getBrandSustainability(brandName) {
     try {
-        const response = await fetch(`${API_BASE_URL}/brands/name/${encodeURIComponent(brandName)}`);
-        if (!response.ok) {
-            if (response.status === 404) {
-                return null; // Marque non trouvée dans la base
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
+        // Utiliser le background script pour les appels API
+        return new Promise((resolve) => {
+            chrome.runtime.sendMessage(
+                { type: 'BG_GET_BRAND_DATA', brandName },
+                (response) => {
+                    if (response?.success && response.data) {
+                        resolve(response.data);
+                    } else {
+                        // Fallback: appel direct si le background ne répond pas
+                        fetch(`${API_BASE_URL}/brands/name/${encodeURIComponent(brandName)}`)
+                            .then(res => res.ok ? res.json() : null)
+                            .then(data => resolve(data))
+                            .catch(() => resolve(null));
+                    }
+                }
+            );
+        });
     } catch (error) {
         console.error(`[GreenStyle] Erreur lors de la récupération pour ${brandName}:`, error);
         return null;
@@ -116,12 +126,25 @@ async function processDetectedBrands() {
     console.log(`[GreenStyle] Marques détectées: ${brands.join(', ')}`);
     
     if (brands.length === 0) {
+        // Sauvegarder une liste vide
+        chrome.runtime.sendMessage({ type: 'BG_SAVE_DETECTED_BRANDS', brands: [] });
         return;
     }
+    
+    // Sauvegarder les marques détectées pour le popup
+    chrome.runtime.sendMessage({ type: 'BG_SAVE_DETECTED_BRANDS', brands });
     
     // Récupérer les données pour chaque marque
     const brandPromises = brands.map(brand => getBrandSustainability(brand));
     const brandDataList = await Promise.all(brandPromises);
+    
+    // Stocker les données complètes pour le popup
+    const brandsWithData = brands.map((brandName, index) => ({
+        name: brandName,
+        data: brandDataList[index]
+    })).filter(b => b.data !== null); // Filtrer les marques non trouvées
+    
+    chrome.storage.local.set({ detectedBrandsData: brandsWithData });
     
     // Afficher les badges sur les éléments contenant les marques
     brandDataList.forEach((brandData, index) => {
