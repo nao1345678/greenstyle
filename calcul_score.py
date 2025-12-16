@@ -19,8 +19,12 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
         env_score_base += 5
         
     # 2. Responsible Materials (max 20 points)
-    # Champ MongoDB: responsible_materials (int)
-    responsible_materials_percent = int(brand_data.get('responsible_materials', 0)) 
+    # Champ MongoDB: sustainable_materials (int ou float)
+    sustainable_materials = brand_data.get('sustainable_materials')
+    if sustainable_materials is None:
+        responsible_materials_percent = 0
+    else:
+        responsible_materials_percent = int(float(sustainable_materials)) 
     if responsible_materials_percent >= 50:
         env_score_base += 20
     elif responsible_materials_percent > 0:
@@ -29,8 +33,14 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
         env_score_base += 5
         
     # 3. Certifications (max 40 points)
-    # Champ MongoDB: certifications (array)
-    certifications_list = brand_data.get('certifications', [])
+    # Champ MongoDB: certifications (string séparé par virgules ou array)
+    certifications = brand_data.get('certifications', '')
+    if isinstance(certifications, str) and certifications:
+        certifications_list = [c.strip() for c in certifications.split(',') if c.strip()]
+    elif isinstance(certifications, list):
+        certifications_list = certifications
+    else:
+        certifications_list = []
     env_score_base += min(len(certifications_list) * 10, 40)
 
     # 4. Unsold Management (Gestion des invendus) (max 10 points)
