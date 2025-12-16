@@ -1,7 +1,20 @@
 (function () {
-  const loadingEl = document.getElementById('loading');
-  const noBrandsEl = document.getElementById('no-brands');
-  const brandsListEl = document.getElementById('brands-list');
+  // Attendre que le DOM soit chargé
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  
+  function init() {
+    const loadingEl = document.getElementById('loading');
+    const noBrandsEl = document.getElementById('no-brands');
+    const brandsListEl = document.getElementById('brands-list');
+    
+    if (!loadingEl || !noBrandsEl || !brandsListEl) {
+      console.error('[GreenStyle Popup] Éléments DOM non trouvés');
+      return;
+    }
 
   /**
    * Récupère le score et retourne la classe CSS correspondante
@@ -159,6 +172,7 @@
     }
   });
   
-  // Charger au démarrage
-  loadDetectedBrands();
+    // Charger au démarrage
+    loadDetectedBrands();
+  }
 })();
