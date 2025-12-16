@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test GreenStyle - Page avec Marques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .info-box p {
+            margin: 5px 0;
+            color: #1565c0;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .product-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        .product-brand {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .product-name {
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .product-price {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .brand-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .brand-tag {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            color: #856404;
+        }
+        .instructions li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Boutique de Mode - Test GreenStyle</h1>
+        <p class="subtitle">Page de test pour l'extension Chrome GreenStyle</p>
+        
+        <div class="info-box">
+            <p><strong>✅ Cette page contient plusieurs marques connues</strong></p>
+            <p>L'extension devrait détecter automatiquement : Nike, Adidas, Zara, H&M, Patagonia, Veja, et plus...</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Instructions de test :</h3>
+            <ol>
+                <li>Assurez-vous que l'extension GreenStyle est installée et active</li>
+                <li>Ouvrez la console développeur (F12) pour voir les logs de détection</li>
+                <li>Attendez quelques secondes que l'extension analyse la page</li>
+                <li>Cliquez sur l'icône de l'extension dans la barre d'outils</li>
+                <li>Le popup devrait afficher toutes les marques détectées avec leurs scores</li>
+            </ol>
+        </div>
+
+        <h2 class="section-title">👟 Chaussures de Sport</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-brand">Nike</div>
+                <div class="product-name">Nike Air Max 270</div>
+                <div class="product-price">129,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Adidas</div>
+                <div class="product-name">Adidas Ultraboost 22</div>
+                <div class="product-price">179,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Puma</div>
+                <div class="product-name">Puma RS-X</div>
+                <div class="product-price">89,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Reebok</div>
+                <div class="product-name">Reebok Classic Leather</div>
+                <div class="product-price">79,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Converse</div>
+                <div class="product-name">Converse Chuck Taylor All Star</div>
+                <div class="product-price">65,00 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Vans</div>
+                <div class="product-name">Vans Old Skool</div>
+                <div class="product-price">70,00 €</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">👕 Mode & Prêt-à-Porter</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-brand">Zara</div>
+                <div class="product-name">T-shirt Zara Basic</div>
+                <div class="product-price">15,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">H&M</div>
+                <div class="product-name">Jeans H&M Regular Fit</div>
+                <div class="product-price">29,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Uniqlo</div>
+                <div class="product-name">Sweat-shirt Uniqlo</div>
+                <div class="product-price">24,90 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Gap</div>
+                <div class="product-name">Polo Gap Classic</div>
+                <div class="product-price">39,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Tommy Hilfiger</div>
+                <div class="product-name">Polo Tommy Hilfiger</div>
+                <div class="product-price">79,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Calvin Klein</div>
+                <div class="product-name">T-shirt Calvin Klein</div>
+                <div class="product-price">49,99 €</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🌱 Marques Durables</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-brand">Patagonia</div>
+                <div class="product-name">Veste Patagonia Better Sweater</div>
+                <div class="product-price">149,00 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Veja</div>
+                <div class="product-name">Sneakers Veja V-10</div>
+                <div class="product-price">120,00 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Reformation</div>
+                <div class="product-name">Robe Reformation</div>
+                <div class="product-price">198,00 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Everlane</div>
+                <div class="product-name">Sweat Everlane</div>
+                <div class="product-price">78,00 €</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🏔️ Outdoor & Sportswear</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-brand">The North Face</div>
+                <div class="product-name">Veste The North Face</div>
+                <div class="product-price">199,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Columbia</div>
+                <div class="product-name">Veste Columbia</div>
+                <div class="product-price">149,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Salomon</div>
+                <div class="product-name">Chaussures Salomon</div>
+                <div class="product-price">129,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Arc'teryx</div>
+                <div class="product-name">Veste Arc'teryx</div>
+                <div class="product-price">299,99 €</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🔥 Streetwear</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-brand">Supreme</div>
+                <div class="product-name">T-shirt Supreme Box Logo</div>
+                <div class="product-price">299,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Stussy</div>
+                <div class="product-name">Sweat Stussy</div>
+                <div class="product-price">89,99 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Off-White</div>
+                <div class="product-name">T-shirt Off-White</div>
+                <div class="product-price">450,00 €</div>
+            </div>
+            <div class="product-card">
+                <div class="product-brand">Palace</div>
+                <div class="product-name">Sweat Palace</div>
+                <div class="product-price">149,99 €</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">📝 Marques mentionnées dans le texte</h2>
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 10px; margin-top: 20px;">
+            <p>Cette page contient également des mentions de marques dans le texte : <strong>Ralph Lauren</strong>, <strong>Lacoste</strong>, et d'autres marques de mode.</p>
+            <p>Vous pouvez aussi trouver des liens vers des sites comme <a href="https://www.nike.com">Nike.com</a>, <a href="https://www.adidas.com">Adidas.com</a>, et <a href="https://www.zara.com">Zara.com</a>.</p>
+        </div>
+
+        <div style="margin-top: 40px; padding: 20px; background: #e8f5e9; border-radius: 10px; text-align: center;">
+            <h3 style="color: #2e7d32; margin-bottom: 10px;">✅ Page prête pour le test</h3>
+            <p style="color: #388e3c;">Ouvrez l'extension GreenStyle pour voir les marques détectées !</p>
+        </div>
+    </div>
+</body>
+</html>
+
