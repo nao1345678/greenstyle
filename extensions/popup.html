@@ -3,17 +3,121 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GreenStyle Popup</title>
+  <title>GreenStyle - Durabilité</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 12px; min-width: 260px; }
-    #mirror { white-space: pre-wrap; border: 1px solid #e5e7eb; padding: .5rem; border-radius: .5rem; }
-    small { color:#6b7280; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      margin: 0; 
+      min-width: 320px; 
+      max-width: 400px;
+      background: #f9fafb;
+    }
+    .header {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 12px;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .no-brands {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .brand-item {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid #e5e7eb;
+    }
+    .brand-item.excellent { border-left-color: #22c55e; }
+    .brand-item.good { border-left-color: #f59e0b; }
+    .brand-item.poor { border-left-color: #ef4444; }
+    .brand-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .brand-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #111827;
+    }
+    .brand-score {
+      font-size: 16px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: white;
+    }
+    .brand-score.excellent { background: #22c55e; }
+    .brand-score.good { background: #f59e0b; }
+    .brand-score.poor { background: #ef4444; }
+    .brand-label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .brand-details {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .badge.planet { background: #d1fae5; color: #065f46; }
+    .badge.labor { background: #dbeafe; color: #1e40af; }
   </style>
 </head>
 <body>
-  <h3 style="margin:0 0 .5rem;">Popup</h3>
-  <small>Contrôlé depuis le site</small>
-  <p id="mirror">(aucun texte)</p>
+  <div class="header">
+    <h1>🌱 GreenStyle</h1>
+    <p>Score de durabilité des marques</p>
+  </div>
+  <div class="content">
+    <div id="loading" class="loading">Chargement...</div>
+    <div id="no-brands" class="no-brands" style="display: none;">
+      Aucune marque détectée sur cette page
+    </div>
+    <div id="brands-list"></div>
+  </div>
 
   <script src="popup.js"></script>
 </body>
