@@ -113,6 +113,52 @@
     }
   });
 
+  /**
+   * Affiche l'URL de la page actuelle
+   */
+  function displayCurrentPage() {
+    const currentUrlEl = document.getElementById('current-url');
+    
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) {
+        const url = tabs[0].url;
+        // Afficher le nom de domaine principal
+        try {
+          const urlObj = new URL(url);
+          const domain = urlObj.hostname.replace('www.', '');
+          currentUrlEl.textContent = domain;
+          currentUrlEl.title = url;
+        } catch (e) {
+          currentUrlEl.textContent = url.length > 40 ? url.substring(0, 40) + '...' : url;
+          currentUrlEl.title = url;
+        }
+      }
+    });
+  }
+  
+  // Afficher la page actuelle
+  displayCurrentPage();
+  
+  // Recharger quand on change d'onglet
+  chrome.tabs.onActivated.addListener(() => {
+    displayCurrentPage();
+    brandsListEl.innerHTML = '';
+    loadingEl.style.display = 'block';
+    noBrandsEl.style.display = 'none';
+    setTimeout(loadDetectedBrands, 500);
+  });
+  
+  // Recharger quand l'URL change dans l'onglet actif
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.active) {
+      displayCurrentPage();
+      brandsListEl.innerHTML = '';
+      loadingEl.style.display = 'block';
+      noBrandsEl.style.display = 'none';
+      setTimeout(loadDetectedBrands, 1000);
+    }
+  });
+  
   // Charger au démarrage
   loadDetectedBrands();
 })();

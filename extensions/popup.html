@@ -112,9 +112,17 @@
     <p>Score de durabilité des marques</p>
   </div>
   <div class="content">
-    <div id="loading" class="loading">Chargement...</div>
+    <div id="current-page-info" style="margin-bottom: 15px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 11px; color: #1565c0;">
+      <strong>📄 Page analysée :</strong><br/>
+      <span id="current-url" style="word-break: break-all;">Chargement...</span>
+    </div>
+    
+    <div id="loading" class="loading">Analyse de la page en cours...</div>
     <div id="no-brands" class="no-brands" style="display: none;">
-      Aucune marque détectée sur cette page
+      <p style="margin-bottom: 10px;">Aucune marque détectée sur cette page</p>
+      <p style="font-size: 11px; color: #888;">
+        Visitez un site e-commerce (Zalando, ASOS, etc.) pour voir les marques détectées
+      </p>
     </div>
     <div id="brands-list"></div>
   </div>
