@@ -1,0 +1,22 @@
+Compte rendu 
+
+Fait : 
+
+- lien API et extension 
+- page de connexion 
+- page d'inscription 
+- script de calcul des scores 
+- page à propos 
+
+A faire pour le 19/12 : 
+
+Page détails
+- Arranger la page à propos : 
+Margin droit et gauche à 15%
+Aligner correctement textes et images 
+Police d’écriture des titres en Jersey 10
+- MLD / MCD
+- Liens entre les pages du front-end
+- Corriger la police d’écriture des titres sur les pages connexion et inscription
+- Page favoris
+- Finir le CSS de l’extension
