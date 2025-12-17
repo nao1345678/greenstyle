@@ -32,7 +32,6 @@
   height: 218.2318572998047;
   top: 179px;
   left: 185px;
-  angle: 0 deg;
   opacity: 1;
 }
 
@@ -41,14 +40,8 @@
   font-weight: 400;
   font-style: Regular;
   font-size: 48px;
-  leading-trim: NONE;
   line-height: 100%;
   letter-spacing: 0%;
-  width: 342;
-  height: 46;
-  top: 210px;
-  left: 478px;
-  angle: 0 deg;
   opacity: 1;
   color: #b70064;
   margin-bottom: 1rem;
@@ -59,7 +52,6 @@
   height: 86;
   top: 256px;
   left: 476px;
-  angle: 0 deg;
   opacity: 1;
 }
 </style>

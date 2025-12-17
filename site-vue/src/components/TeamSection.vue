@@ -50,7 +50,9 @@ const team = [
     <h2>Notre équipe</h2>
 
     <article v-for="member in team" :key="member.name" class="team-member">
-      <img :src="member.image" :alt="member.name" />
+      <div class="avatar-wrapper">
+        <img :src="member.image" :alt="member.name" class="team-avatar" />
+      </div>
 
       <div class="team-text">
         <h3>{{ member.name }} – {{ member.role }}</h3>
@@ -62,68 +64,60 @@ const team = [
 
 <style scoped>
 .team-section {
-  padding: 4rem;
+  padding: 4rem 0;
   background-color: #fff5e6;
 }
 
 .team-section h2 {
-  color: #b70064;
+  margin-left: 15%;
   margin-bottom: 3rem;
-  width: 342;
-  height: 46;
-  top: 442px;
-  left: 266px;
-  opacity: 1;
-  font-family: Jersey 10;
-  font-weight: 400;
   font-style: Regular;
+  color: #b70064;
+  font-family: "Jersey 10";
   font-size: 48px;
-  line-height: 100%;
-  letter-spacing: 0%;
+  font-weight: 400;
 }
 
 .team-member {
+  margin: 0 15% 3rem;
   display: flex;
+  align-items: center;
   gap: 2rem;
-  margin-bottom: 3rem;
 }
 
-.team-member img {
-  width: 123;
-  height: 123;
-  top: 506px;
-  left: 256px;
-  opacity: 1;
+.avatar-wrapper {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.team-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.35);
 }
 
 .team-text h3 {
-  width: 699;
-  height: 21;
-  top: 518px;
-  left: 399px;
-  opacity: 1;
-  font-family: Jersey 10;
-  font-weight: 400;
-  font-style: Regular;
+  margin-bottom: 0.5rem;
+
+  font-family: "Jersey 10";
   font-size: 20px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  text-align: justify;
-  color: #000000;
+  font-weight: 400;
+  color: #000;
 }
 
 .team-text p {
+  max-width: 630px;
+
   font-family: Inter;
-  font-weight: 300;
-  font-style: Light;
   font-size: 13px;
-  line-height: 100%;
-  letter-spacing: 0%;
+  font-weight: 300;
+  line-height: 1.5;
   text-align: justify;
-  width: 632;
-  height: 47;
-  top: 544px;
-  left: 399px;
-  opacity: 1;
 }
 </style>
