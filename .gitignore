@@ -1,41 +1,13 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+group-1057515/
 
-node_modules
-dist
-dist-ssr
-*.local
-.env
-__pycache__
-*.pyc
+# Données utilisateur du système d'IA
+user_data/
+user_accounts/
+*.json
 
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-data/
-scrapping/scrapping_v4/data/
-
-# Env files
-.env
-.venv
-
-# caache file
-
-__pycache__
-
-node_modules/
-data/
-logs/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
