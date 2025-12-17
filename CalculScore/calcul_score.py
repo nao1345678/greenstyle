@@ -1,8 +1,8 @@
 import math
 from typing import Dict, Any
 from decimal import Decimal, ROUND_HALF_UP
-
-# Barèmes des certifications pour le calcul ENVIRONNEMENTAL (max 20 points) [cite: 92]
+from pymongo import MongoClient
+# Barèmes des certifications 
 CERTIFICATION_SCORES = {
     "gots": 15,
     "fair trade certified": 10,
@@ -13,144 +13,153 @@ CERTIFICATION_SCORES = {
     "rcs": 3,
 }
 
+# Liste étendue pour la détection européenne 
+EUROPEAN_COUNTRIES = [
+    "europe", "france", "germany", "netherlands", "italy", "spain", 
+    "portugal", "belgium", "sweden", "denmark", "uk", "united kingdom"
+]
+
 def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
     env_score_base = 0
-    labor_score_base = 0
-
+    
     # --- PRÉPARATION DES DONNÉES ---
-    # Normalisation des chaînes pour la comparaison
-    country_origin = str(brand_data.get('country_origin', '') or '').lower()
-    
-    # Pourcentage ou niveau de matières responsables (pour l'étape 2)
-    responsible_materials_data = brand_data.get('sustainable_materials', 0)
+    # On regarde la production en priorité, sinon l'origine 
+    production = str(brand_data.get('country_production', '') or '').lower()
+    origin = str(brand_data.get('country_origin', '') or '').lower()
+    location_info = f"{production} {origin}"
+
+    # Matériaux durables
     try:
-        responsible_materials_percent = float(responsible_materials_data)
-    except (ValueError, TypeError):
-        # Si ce n'est pas un nombre, on le traite comme une chaîne pour la logique
-        responsible_materials_percent = 0.0
+        materials_percent = float(brand_data.get('sustainable_materials', 0) or 0)
+    except:
+        materials_percent = 0.0
 
-    certifications_data = brand_data.get('certifications')
-    if isinstance(certifications_data, list):
-        certifications_list = [c.strip().lower() for c in certifications_data if c and c.strip()]
+    # Certifications (peuvent être une liste ou une chaîne séparée par des virgules) 
+    certs_raw = brand_data.get('certifications')
+    if isinstance(certs_raw, list):
+        certs_list = [c.strip().lower() for c in certs_raw if c]
     else:
-        certifications_str = str(certifications_data or '').lower()
-        # Supprime les caractères non alphabétiques pour la recherche simple
-        certifications_list = [c.strip() for c in certifications_str.split(',') if c.strip()]
+        certs_list = [c.strip() for c in str(certs_raw or '').lower().split(',') if c.strip()]
 
-    unsold_management_info = str(brand_data.get('unsold_management', '') or '').lower()
+    unsold_info = str(brand_data.get('unsold_management', '') or '').lower()
     transparency_info = str(brand_data.get('supply_chain_transparency', '') or '').lower()
-    
+    labor_info = str(brand_data.get('labor_ethics', '') or '').lower()
+
     # ----------------------------------------------------
-    # CALCUL DU SCORE D'IMPACT ENVIRONNEMENTAL
+    # CALCUL DU SCORE ENVIRONNEMENTAL 
     # ----------------------------------------------------
 
-    # 1. Pays d'origine (max 20 points) 
-    # 'country_origin' comme source d'info principale pour la production
-    if "local" in country_origin or "france" in country_origin:
-        env_score_base += 20  # Production locale = 20 points
-    elif "europe" in country_origin:
-        env_score_base += 10  # Production européenne = 10 points
+    # 1. Pays de Production (max 20 pts) 
+    if "france" in location_info or "local" in location_info:
+        env_score_base += 20
+    elif any(country in location_info for country in EUROPEAN_COUNTRIES):
+        env_score_base += 10
     else:
-        env_score_base += 5   # Production Asie ou autre = 5 points
+        env_score_base += 5
 
-    # 2. Materiels Responsables (max 20 points) 
-    # On utilise le pourcentage stocké dans 'sustainable_materials' pour déduire le niveau.
-    if responsible_materials_percent >= 50:
-        env_score_base += 20  # Majorité > 50% = 20 points
-    elif responsible_materials_percent > 0:
-        env_score_base += 10  # Partiel (une seule ligne, ou > 0%) = 10 points
+    # 2. Matières Responsables (max 20 pts) 
+    if materials_percent >= 50:
+        env_score_base += 20
+    elif materials_percent > 0:
+        env_score_base += 10
     else:
-        env_score_base += 5   # Faible / aucune info = 5 points
+        env_score_base += 5
 
-    # 3. Certifications (max 20 points) 
-    certif_total_points = 0
-    for cert in certifications_list:
-        found_score = CERTIFICATION_SCORES.get(cert)
-        if found_score is not None:
-            certif_total_points += found_score
-        elif cert:
-            # Autres certif inconnues = 3 points
-            certif_total_points += 3
-    
-    # Le score est plafonné à 20 points même si la somme est supérieure 
-    env_score_base += min(certif_total_points, 20)
-    
-    # 4. Gestion des Invendus (max 20 points) 
-    if "circularité" in unsold_management_info or "recyclage" in unsold_management_info or "upcycling" in unsold_management_info:
-        env_score_base += 20  # Politique claire (circularité, recyclage, etc.) = 20 points
-    elif "dons" in unsold_management_info or "caritatifs" in unsold_management_info:
-        env_score_base += 10  # Dons à des associations = 10 points
+    # 3. Certifications (max 20 pts) 
+    cert_points = 0
+    for cert in certs_list:
+        score = CERTIFICATION_SCORES.get(cert, 3) # 3 pts par défaut si inconnue 
+        cert_points += score
+    env_score_base += min(cert_points, 20)
+
+    # 4. Gestion des Invendus (max 20 pts)
+    # Ajout de "recycling", "donation", "program"
+    if any(k in unsold_info for k in ["recyclage", "recycling", "circular", "upcycling"]):
+        env_score_base += 20
+    elif any(k in unsold_info for k in ["don", "charity", "caritatif"]):
+        env_score_base += 10
     else:
-        env_score_base += 5   # Aucune politique claire = 5 points
-        
-    # 5. Transparence de la chaîne (max 20 points) 
-    if "totale" in transparency_info or "publie publiquement" in transparency_info:
-        env_score_base += 20  # Transparence Totale (rang 1, 2, sources) = 20 points
-    elif "partielle" in transparency_info or ("rang 1" in transparency_info and "rang 2" in transparency_info):
-        env_score_base += 15  # Transparence Partielle (rang 1 et 2) = 15 points
-    elif "médiocre" in transparency_info or "rang 1" in transparency_info:
-        env_score_base += 7   # Transparence Médiocre (rang 1) = 7 points
+        env_score_base += 5
+
+    # 5. Transparence (max 20 pts) 
+    # Ajout de "good" et "moderate" 
+    if any(k in transparency_info for k in ["totale", "total", "full"]):
+        env_score_base += 20
+    elif any(k in transparency_info for k in ["partielle", "partial", "moderate", "good"]):
+        env_score_base += 15
+    elif any(k in transparency_info for k in ["médiocre", "mediocre", "poor", "limited"]):
+        env_score_base += 7
     else:
-        env_score_base += 3   # Aucune transparence / infos vagues = 3 points
-        
-    # S'assurer que le score ENVIRONNEMENTAL ne dépasse pas 100
+        env_score_base += 3
+
     env_score_base = min(env_score_base, 100)
 
-    # ------------------------------------------------------------
-    # --- CALCUL DU SCORE D'ÉTHIQUE DU TRAVAIL ---
-    # -----------------------------------------------------------
-    
-    labor_ethics_data = brand_data.get('labor_ethics', 0)
-    float_score = None
-
+    # ----------------------------------------------------
+    # CALCUL ÉTHIQUE DU TRAVAIL (max 100)
+    # ----------------------------------------------------
     try:
-        # Tente de lire directement un score sur 100 ou sur 1.0 (ex: 0.8)
-        float_score = float(labor_ethics_data)
-    except (ValueError, TypeError):
-        pass
-
-    if float_score is not None:
-        if 0.0 <= float_score <= 1.0:
-            labor_score_base = round(float_score * 100)
-        elif 1.0 < float_score <= 100:
-            labor_score_base = round(float_score)
-        else:
-            labor_score_base = 0
-    else:
-        # Utilise les catégories documentées si aucune note n'est fournie
-        ethique_travail_info = str(labor_ethics_data or '').lower().strip()
-        
-        if ethique_travail_info == "excellent" or ethique_travail_info == "a" or "excellentes pratiques" in ethique_travail_info:
-            labor_score_base = 100
-        elif ethique_travail_info == "bonnes pratiques" or ethique_travail_info == "b":
-            labor_score_base = 80
-        elif ethique_travail_info == "pratiques moyennes" or ethique_travail_info == "c":
-            labor_score_base = 60
-        elif ethique_travail_info == "pratiques médiocres" or ethique_travail_info == "d" or "mauvaises" in ethique_travail_info:
-            labor_score_base = 40
-        elif "aucune" in ethique_travail_info:
-            labor_score_base = 20
-            
-    labor_score_base = min(labor_score_base, 100)
+        labor_val = float(brand_data.get('labor_ethics', 0))
+        labor_score = round(labor_val * 20) if labor_val <= 5 else round(labor_val)
+    except:
+        if any(k in labor_info for k in ["excellent", "a"]): labor_score = 100
+        elif any(k in labor_info for k in ["bon", "good", "b"]): labor_score = 80
+        elif any(k in labor_info for k in ["moyen", "average", "moderate", "c"]): labor_score = 60
+        elif any(k in labor_info for k in ["mauvais", "poor", "bad", "d"]): labor_score = 40
+        else: labor_score = 20
     
-    # --- CONVERSION ET CALCUL DU SCORE FINAL (sur 5) 
-    
-    # 1. Calcul de l'Impact Environnemental sur 5 (env_score_base / 20)
-    intermediate_env = Decimal(env_score_base) / Decimal('20')
-    global_env_impact_decimal = intermediate_env.quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
-    global_env_impact = float(global_env_impact_decimal)
+    labor_score = min(labor_score, 100)
 
-    # 2. Calcul de l'Éthique du Travail sur 5 (labor_score_base / 20)
-    intermediate_labor = Decimal(labor_score_base) / Decimal('20')
-    labor_ethics_decimal = intermediate_labor.quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
-    labor_ethics = float(labor_ethics_decimal)
+    # --- CALCUL FINAL SUR 5 ---
+    def to_5(val):
+        return float((Decimal(val) / Decimal('20')).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP))
 
-    # 3. Calcul de la Moyenne Finale
-    final_score_decimal = (global_env_impact_decimal + labor_ethics_decimal) / Decimal('2')
-    final_score = float(final_score_decimal.quantize(Decimal('0.1'), rounding=ROUND_HALF_UP))
+    env_final = to_5(env_score_base)
+    labor_final = to_5(labor_score)
+    score_final = float((Decimal(env_final + labor_final) / Decimal('2')).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP))
 
     return {
-        "global_env_impact": global_env_impact,
-        "labor_ethics": labor_ethics,
-        "final_score": final_score,
+        "global_env_impact": env_final,
+        "labor_ethics": labor_final,
+        "final_score": score_final
     }
+
+def test_brand_from_db(brand):
+    # 1. Connexion à MongoDB
+    # Remplace par ta chaîne de connexion (ex: mongodb://localhost:27017/)
+    client = MongoClient("mongodb://localhost:27017/") 
+    db = client["greenstyle_"]
+    collection = db["brands"]
+
+    # 2. Récupération des données
+    brand_data = collection.find_one({"brand": brand})
+
+    if brand_data:
+        print(f"--- Données récupérées pour {brand} ---")
+        # 3. Calcul du score
+        results = calculate_scores(brand_data)
+        
+        print("\n--- RÉSULTATS DU CALCUL ---")
+        print(f"Impact Environnemental : {results['global_env_impact']}/5")
+        print(f"Éthique du Travail     : {results['labor_ethics']}/5")
+        print(f"SCORE FINAL            : {results['final_score']}/5")
+    else:
+        print(f"Erreur : La marque '{brand}' est introuvable dans la base.")
+
+# Lancer le test
+if __name__ == "__main__":
+    # TEST MANUEL RAPIDE
+    test_data = {
+        "brand": "TestBrand",
+        "country_production": "France",
+        "sustainable_materials": 60,
+        "certifications": "gots, b corp",
+        "unsold_management": "recycling",
+        "supply_chain_transparency": "total",
+        "labor_ethics": "4"
+    }
+    print("--- Test Manuel ---")
+    print(calculate_scores(test_data))
+    
+    # ENSUITE LANCER LE TEST DB
+    print("\n--- Test Database ---")
+    test_brand_from_db("EcoWave")

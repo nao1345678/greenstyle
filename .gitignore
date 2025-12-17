@@ -5,9 +5,12 @@ user_data/
 user_accounts/
 *.json
 
+node_modules/
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+src/venv/
