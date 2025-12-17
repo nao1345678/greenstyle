@@ -1,4 +1,4 @@
-from CalculScore import calculate_scores
+from CalculScore import calcul_score
 
 fake_brand = {
     "brand_name": "Test Brand",
@@ -10,6 +10,6 @@ fake_brand = {
     "labor_ethics": 0.85
 }
 
-scores = calculate_scores(fake_brand)
+scores = calcul_score.calculate_scores(fake_brand)
 
 print(scores)
