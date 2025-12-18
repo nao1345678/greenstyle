@@ -115,3 +115,5 @@ curl http://localhost:8000/brands/name/nike
 # (dans le terminal où uvicorn est lancé)
 ```
 
+
+

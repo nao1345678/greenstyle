@@ -122,3 +122,5 @@ L'extension détecte ces marques par défaut :
 
 Pour ajouter des marques, modifiez le tableau `KNOWN_BRANDS` dans `extensions/content_brand_detection.js`
 
+
+
