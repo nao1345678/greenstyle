@@ -36,7 +36,7 @@
 }
 
 .intro-text h1 {
-  font-family: Jersey 10;
+  font-family: "Jersey 10";
   font-weight: 400;
   font-style: Regular;
   font-size: 48px;
@@ -48,10 +48,8 @@
 }
 
 .intro-text p {
+  font-family: "Inter";
   width: 699;
   height: 86;
-  top: 256px;
-  left: 476px;
-  opacity: 1;
 }
 </style>

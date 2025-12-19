@@ -40,7 +40,7 @@ const team = [
     role: "Développeur back-end",
     image: "/src/assets/Mael.png",
     description:
-      "Passionné par le côté serveur, j’ai travaillé sur l’architecture back-end et les algorithmes de détection.",
+      "Intéressé par ce qui se passe côté serveur, j'ai participé à l'architecture back-end et l'algorithme de détection. J'aime quand c'est propre et efficace, je passe mon temps à optimiser les processus pour garantir une fluidité technique maximale.",
   },
 ];
 </script>
@@ -114,7 +114,7 @@ const team = [
 .team-text p {
   max-width: 630px;
 
-  font-family: Inter;
+  font-family: "Inter";
   font-size: 13px;
   font-weight: 300;
   line-height: 1.5;
