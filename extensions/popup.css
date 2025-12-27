@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+
+:root {
+    --green-main: #F4E8D7; 
+    --green-dark: #028E00; 
+    --white: #ffffff;
+    --black: #000000;
+}
+
+body {
+    width: 420px;
+    margin: 0;
+    padding-top: 10px; 
+    padding: 4px;
+    background-color: var(--green-dark);
+    font-family: 'Jersey 10', 'Courier New', monospace;
+    color: var(--black);
+}
+
+.main-card {
+    border: 1px solid var(--black);
+    background-color: var(--green-main);
+    padding: 15px;
+    box-shadow: 4px 4px 3px rgba(0,0,0,0.2);
+    margin-bottom: 10px;
+    animation: slideIn 0.3s ease-out;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.main-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 5px rgba(0,0,0,0.3);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- HEADER --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.brand-identity {
+    flex: 1;
+}
+
+#brand-logo {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--black);
+    background: white;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+#brand-name {
+    margin: 5px 0;
+    font-size: 28px;
+    text-transform: lowercase;
+}
+
+.price-container {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* --- SCORE --- */
+.score-container {
+    text-align: right;
+}
+
+.score-value {
+    font-size: 40px;
+    font-weight: bold;
+    padding: 2px 8px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.loading {
+    padding-left: 5%;
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 14px;
+    animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.stars {
+    color: var(--black);
+    font-size: 24px;
+    margin-top: 5px;
+    transition: transform 0.2s;
+}
+
+.stars:hover {
+    transform: scale(1.1);
+}
+
+/* --- JAUGES (Work & Planet) --- */
+.stats-section {
+    margin: 20px 0;
+}
+
+.gauge-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 65%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.gauge-label {
+    width: 60px;
+    font-size: 20px;
+    text-transform: lowercase;
+}
+
+.gauge-bg {
+    flex-grow: 1;
+    height: 12px;
+    background-color: var(--white);
+    border: 3px solid var(--black);
+    position: relative;
+}
+
+.gauge-fill {
+    height: 100%;
+    width: 0%; 
+    transition: width 1s ease-out;
+    animation: fillGauge 1s ease-out forwards;
+}
+
+@keyframes fillGauge {
+    from {
+        width: 0%;
+    }
+}
+
+.work-color { background-color: #ffb800; } 
+.planet-color { background-color: #4CAF50; } 
+
+/* --- ALTERNATIVES (Zone Pointillée) --- */
+.alternatives-box {
+    margin-top: 20px;
+    background-color: #ECFED3;
+    border: 0.5px solid #5ad45f;
+    margin: -10px; 
+    padding: 15px;
+}
+
+.alt-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.alt-list {
+    margin-top: 10px;
+}
+
+.alt-row {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 8px;
+    transition: background-color 0.2s;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.alt-row:hover {
+    background-color: rgba(90, 212, 95, 0.2);
+}
+
+.alt-name {
+    white-space: nowrap;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.alt-dots {
+    flex-grow: 1;
+    border-bottom: 3px dotted var(--black);
+    margin: 0 8px;
+    height: 14px;
+}
+
+.alt-price {
+    font-weight: bold;
+}
+
+/* --- BOUTON --- */
+.footer-btn {
+    width: 40%;
+    background-color: var(--green-dark);
+    display: flex;
+    justify-self: flex-end;
+    justify-content: center;
+    color: var(--white);
+    border: none;
+    padding: 5px;
+    margin: 5px;
+    font-family: 'Jersey 10', monospace;
+    font-size: 19px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: transform 0.1s;
+    border: 0.5px solid var(--black);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+.footer-btn:hover {
+    transform: scale(1.02);
+    background-color: #333;
+}
+
+/* --- Liste de marques multiples --- */
+.brands-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.brand-item {
+    background: white;
+    border: 1px solid var(--black);
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+}
+
+.brand-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.brand-item-name {
+    font-size: 24px;
+    text-transform: lowercase;
+    font-weight: bold;
+}
+
+.brand-item-score {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.no-brands {
+    text-align: center;
+    padding: 20px;
+    color: var(--black);
+    font-size: 16px;
+}
+
+.current-page-info {
+    background-color: #ECFED3;
+    border: 1px solid var(--black);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+
+

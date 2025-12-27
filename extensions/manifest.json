@@ -1,7 +1,7 @@
 {
-  "name": "PLI - GreenStyle",
-  "description": "Base Level Extension",
-  "version": "1.0.1",
+  "name": "GreenStyle - Détection de durabilité",
+  "description": "Extension pour afficher les scores de durabilité des marques de mode",
+  "version": "2.0.0",
   "manifest_version": 3,
 
   "action": {
@@ -10,11 +10,15 @@
   },
   "icons": { "128": "icon_extension.png" },
 
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs", "activeTab"],
 
   "host_permissions": [
+    "http://localhost:8000/*",
+    "http://127.0.0.1:8000/*",
     "http://localhost:5173/*",
-    "http://127.0.0.1:5173/*"
+    "http://127.0.0.1:5173/*",
+    "https://*/*",
+    "http://*/*"
   ],
 
   "background": { "service_worker": "background.js" },
@@ -24,6 +28,11 @@
       "matches": ["http://localhost:5173/*", "http://127.0.0.1:5173/*"],
       "js": ["content.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_brand_detection.js"],
+      "run_at": "document_idle"
     }
   ],
 
@@ -36,6 +45,5 @@
 
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
-    }
-
+  }
 }
