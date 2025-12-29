@@ -205,8 +205,8 @@ async def get_brand_by_name(brand_name: str, auto_scrape: bool = True) -> BrandO
             try:
                 # Recherche insensible à la casse avec Beanie
                 existing_brand = await Brand.find_one(
-                    Brand.brand_name == {"$regex": f"^{brand_name}$", "$options": "i"}
-                )
+        Brand.brand_name == {"$regex": f"^{brand_name}$", "$options": "i"}
+    )
             except Exception as e:
                 print(f"⚠️  Erreur lors de la recherche MongoDB: {e}")
                 mongo_available = False
@@ -288,8 +288,8 @@ async def get_brand_by_name(brand_name: str, auto_scrape: bool = True) -> BrandO
         
         # Si on n'a pas trouvé la marque et qu'on ne scrappe pas, retourner 404
         if not raw_doc and not auto_scrape:
-            raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
-        
+        raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
+    
     except HTTPException:
         raise
     except Exception as e:

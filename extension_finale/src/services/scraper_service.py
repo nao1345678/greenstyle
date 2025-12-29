@@ -38,6 +38,13 @@ except ImportError as e:
 async def scrape_brand_data(brand_name: str, website: Optional[str] = None) -> Dict:
     """
     Scrape les données de durabilité pour une marque
+    Utilise plusieurs sources pour obtenir des données complètes
+    
+    Sources de scraping:
+    1. Base de données de fallback (marques connues)
+    2. Scrapers spécialisés (matières, certifications, etc.)
+    3. APIs externes (si disponibles)
+    4. Analyse du site web de la marque
     
     Args:
         brand_name: Nom de la marque
@@ -52,57 +59,78 @@ async def scrape_brand_data(brand_name: str, website: Optional[str] = None) -> D
     fallback_data = get_fallback_brand_data(brand_name)
     if fallback_data:
         print(f"  ✅ Données de fallback trouvées pour {brand_name} (marque engagée connue)")
-        return fallback_data.copy()
+        data = fallback_data.copy()
+        # Enrichir avec le scraping si possible (sans écraser les données de fallback)
+        # On continue le scraping pour potentiellement enrichir les données
+    else:
+        data = {
+            'brand_name': brand_name,
+            'sustainable_materials': None,
+            'certifications': None,
+            'unsold_management': None,
+            'country_production': None,
+            'country_origin': None,
+            'supply_chain_transparency': None,
+        }
     
-    data = {
-        'brand_name': brand_name,
-        'sustainable_materials': None,
-        'certifications': None,
-        'unsold_management': None,
-        'country_production': None,
-    }
-    
-    # 1. Matières recyclées/durables
+    # 1. Matières recyclées/durables (Source: scraper spécialisé)
     try:
         recycled_result = analyze_brand_for_recycled_materials(brand_name, website or '')
         if recycled_result and recycled_result.get('percentage'):
-            data['sustainable_materials'] = float(recycled_result['percentage'])
-            print(f"  ✅ Matières durables: {data['sustainable_materials']}%")
+            # Ne pas écraser si on a déjà une valeur de fallback
+            if data.get('sustainable_materials') is None:
+                data['sustainable_materials'] = float(recycled_result['percentage'])
+                print(f"  ✅ Matières durables (scraper): {data['sustainable_materials']}%")
+            else:
+                print(f"  ℹ️  Matières durables déjà définies (fallback): {data.get('sustainable_materials')}%")
     except Exception as e:
         print(f"  ⚠️  Erreur scraping matières: {e}")
     
-    # 2. Certifications
+    # 1b. Recherche alternative: analyser le site web pour des mentions de matières durables
+    if data.get('sustainable_materials') is None and website:
+        try:
+            # Cette fonction pourrait être implémentée pour scraper directement le site
+            # Pour l'instant, on laisse les scrapers spécialisés gérer
+            pass
+        except Exception as e:
+            print(f"  ⚠️  Erreur analyse site web: {e}")
+    
+    # 2. Certifications (Source: scraper spécialisé + base de données)
     try:
         cert_result = find_certifications_for_brand(brand_name, website or '')
         if cert_result and cert_result.get('certifications'):
             certs = cert_result['certifications']
-            # S'assurer que c'est toujours une string
+            
+            # Fusionner avec les certifications existantes (fallback)
+            existing_certs = data.get('certifications', '')
+            if isinstance(existing_certs, str) and existing_certs:
+                existing_list = [c.strip() for c in existing_certs.split(',') if c.strip()]
+            else:
+                existing_list = []
+            
+            # Traiter les nouvelles certifications
             if isinstance(certs, list):
-                # Filtrer les valeurs vides et convertir en string
-                # Si ce sont des URLs, on les ignore et on retourne None
-                # Sinon, on les joint avec des virgules
                 certs_list = []
                 for c in certs:
                     c_str = str(c).strip()
-                    # Ignorer les URLs (commencent par http:// ou https://)
+                    # Ignorer les URLs
                     if c_str and not c_str.startswith('http://') and not c_str.startswith('https://'):
                         certs_list.append(c_str)
-                data['certifications'] = ', '.join(certs_list) if certs_list else None
             elif isinstance(certs, str):
-                # Si c'est une string qui contient une URL, on la retourne telle quelle
-                # (peut-être que c'est un nom de certification avec une URL dans le texte)
-                data['certifications'] = certs.strip() if certs.strip() else None
+                certs_list = [c.strip() for c in certs.split(',') if c.strip()]
             else:
-                data['certifications'] = str(certs).strip() if certs else None
+                certs_list = []
             
-            # Protection finale : s'assurer que c'est bien une string ou None
-            if data['certifications'] is not None and not isinstance(data['certifications'], str):
-                data['certifications'] = str(data['certifications']).strip() or None
+            # Fusionner et dédupliquer
+            all_certs = list(set(existing_list + certs_list))
+            data['certifications'] = ', '.join(all_certs) if all_certs else None
             
-            print(f"  ✅ Certifications: {data['certifications']}")
+            if data['certifications']:
+                print(f"  ✅ Certifications (scraper): {data['certifications']}")
     except Exception as e:
         print(f"  ⚠️  Erreur scraping certifications: {e}")
-        data['certifications'] = None
+        if data.get('certifications') is None:
+            data['certifications'] = None
     
     # 3. Gestion des invendus
     try:
@@ -158,7 +186,30 @@ async def scrape_brand_data(brand_name: str, website: Optional[str] = None) -> D
         except:
             pass
     
+    # 8. Enrichissement avec des données supplémentaires si disponibles
+    # (Peut être étendu avec des APIs externes comme Good On You, Fashion Revolution, etc.)
+    
+    # 9. Calcul de la transparence si non défini
+    if data.get('supply_chain_transparency') is None:
+        # Déduire de la présence de données
+        data_filled = sum(1 for k in ['sustainable_materials', 'certifications', 'unsold_management', 'country_production'] 
+                         if data.get(k) is not None)
+        if data_filled >= 3:
+            data['supply_chain_transparency'] = 'Modérée'
+        elif data_filled >= 1:
+            data['supply_chain_transparency'] = 'Faible'
+        else:
+            data['supply_chain_transparency'] = 'Très faible'
+    
     print(f"✅ Scraping terminé pour: {brand_name}")
-    print(f"📊 Données collectées: {sum(1 for v in data.values() if v is not None)}/{len(data)} champs remplis")
+    data_filled_count = sum(1 for v in data.values() if v is not None)
+    print(f"📊 Données collectées: {data_filled_count}/{len(data)} champs remplis")
+    
+    # Log des sources utilisées
+    if fallback_data:
+        print(f"📚 Source principale: Base de données de fallback (marque connue)")
+    else:
+        print(f"📚 Source principale: Scrapers automatiques")
+    
     return data
 

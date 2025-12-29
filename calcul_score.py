@@ -68,7 +68,7 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
         env_score_base += 10
     else:
         env_score_base += 5
-
+        
     # 3. Certifications (max 20 pts) 
     cert_points = 0
     for cert in certs_list:
@@ -84,7 +84,7 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
         env_score_base += 10
     else:
         env_score_base += 5
-
+        
     # 5. Transparence (max 20 pts) 
     # Ajout de "good" et "moderate" 
     if any(k in transparency_info for k in ["totale", "total", "full"]):
@@ -119,7 +119,7 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
                 elif labor_val <= 100:
                     labor_score = round(labor_val)
                 # Sinon (valeur > 100), c'est probablement sur 5, multiplier par 20
-                else:
+    else:
                     labor_score = round(labor_val * 20)
         except (ValueError, TypeError):
             pass
