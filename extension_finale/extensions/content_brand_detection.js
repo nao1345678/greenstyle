@@ -105,8 +105,40 @@ const EXCLUDED_WORDS = new Set([
     'maison', 'beauté', 'beauty', 'nouveauté', 'nouveautés', 'promotion', 'soldes',
     'accueil', 'home', 'retour', 'back', 'voir', 'see', 'plus', 'more', 'de', 'des',
     'du', 'la', 'le', 'les', 'un', 'une', 'et', 'ou', 'par', 'pour', 'avec', 'sans',
-    'dans', 'sur', 'sous', 'entre', 'depuis', 'jusqu', 'pendant', 'avant', 'après'
+    'dans', 'sur', 'sous', 'entre', 'depuis', 'jusqu', 'pendant', 'avant', 'après',
+    'tous', 'toutes', 'tout', 'autre', 'autres', 'comme', 'tel', 'telle', 'tels',
+    'telles', 'chez', 'chez', 'cette', 'ce', 'ces', 'cet', 'son', 'sa', 'ses',
+    'leur', 'leurs', 'notre', 'nos', 'votre', 'vos', 'mon', 'ma', 'mes'
 ]);
+
+// Sélecteurs pour identifier les zones à exclure (filtres, navigation, UI)
+const EXCLUDED_SELECTORS = [
+    'nav', 'header', 'footer', 'aside', '.sidebar',
+    '.filter', '.filtre', '.filters', '.filtres', '.facets',
+    '[class*="filter"]', '[class*="filtre"]', '[class*="facet"]',
+    '[id*="filter"]', '[id*="filtre"]', '[id*="facet"]',
+    '.navigation', '.menu', '.dropdown', '.dropdown-menu',
+    '.breadcrumb', '.pagination', '.sort', '.trier',
+    'button[class*="filter"]', 'button[class*="facet"]', 'button[class*="dropdown"]',
+    'label[for*="filter"]', 'label[for*="facet"]',
+    'select', 'option', '.select', '.option',
+    '.toolbar', '.toolbar-top', '.toolbar-bottom',
+    '.search', '.search-bar', '.search-box',
+    '.header', '.header-top', '.header-bottom',
+    '.topbar', '.top-bar', '.nav-bar'
+];
+
+// Sélecteurs pour identifier les éléments de produit valides
+const PRODUCT_SELECTORS = [
+    '.productCard', '.product-card', '.product-card-item',
+    '.product', '.product-item', '.product-tile', '.product-tile-item',
+    '[class*="product-card"]', '[class*="product-tile"]',
+    '[data-product-id]', '[data-product-code]', '[data-product-sku]',
+    'article.product', 'article[class*="product"]',
+    '.item', '.item-card', '[class*="item-card"]',
+    '.listing-item', '[class*="listing-item"]',
+    '.grid-item', '[class*="grid-item"]'
+];
 
 /**
  * Vérifie si un mot est une marque valide (pas un mot commun)
@@ -127,7 +159,103 @@ function isValidBrandName(brandName) {
     // Exclure les mots qui contiennent seulement des caractères spéciaux
     if (!/[a-z]/.test(normalized)) return false;
     
+    // Exclure les mots qui sont des phrases complètes (trop longs ou contiennent plusieurs mots)
+    const words = normalized.split(/\s+/);
+    if (words.length > 4) return false; // Max 4 mots pour une marque
+    
+    // Exclure les mots qui contiennent des prépositions/articles communs au début/fin
+    if (/^(de|du|des|le|la|les|un|une|et|ou|par|pour|avec|sans)\s/.test(normalized)) return false;
+    if (/\s(de|du|des|le|la|les|un|une|et|ou|par|pour|avec|sans)$/.test(normalized)) return false;
+    
+    // Exclure les mots qui sont des verbes communs
+    const commonVerbs = ['acheter', 'vendre', 'voir', 'trouver', 'chercher', 'choisir', 'ajouter', 'panier'];
+    if (commonVerbs.includes(normalized)) return false;
+    
     return true;
+}
+
+/**
+ * Vérifie si un élément est dans une zone exclue (filtres, navigation, UI)
+ */
+function isInExcludedZone(el) {
+    if (!el) return true;
+    
+    // Vérifier les classes/id de l'élément lui-même
+    const classList = el.className?.toLowerCase() || '';
+    const id = el.id?.toLowerCase() || '';
+    const tagName = el.tagName?.toLowerCase() || '';
+    
+    // Exclure les boutons de filtre/navigation
+    if (tagName === 'button' && (
+        classList.includes('facet') || 
+        classList.includes('filter') || 
+        classList.includes('filtre') ||
+        classList.includes('dropdown') ||
+        classList.includes('toggle') ||
+        classList.includes('sort') ||
+        classList.includes('trier') ||
+        id.includes('facet') ||
+        id.includes('filter') ||
+        id.includes('filtre') ||
+        id.includes('dropdown') ||
+        id.includes('sort')
+    )) {
+        return true;
+    }
+    
+    // Exclure les labels, selects, options
+    if (['label', 'select', 'option', 'optgroup'].includes(tagName)) {
+        if (id.includes('filter') || id.includes('facet') || id.includes('sort') ||
+            classList.includes('filter') || classList.includes('facet') || classList.includes('sort')) {
+            return true;
+        }
+    }
+    
+    // Vérifier si l'élément est dans une zone exclue (chercher dans les parents)
+    for (const selector of EXCLUDED_SELECTORS) {
+        try {
+            const parent = el.closest(selector);
+            if (parent) {
+                return true;
+            }
+        } catch (e) {
+            // Ignorer les erreurs de sélecteur invalide
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * Vérifie si un élément est dans un contexte de produit valide
+ */
+function isInProductContext(el) {
+    if (!el) return false;
+    
+    // Vérifier si l'élément lui-même est un produit
+    for (const selector of PRODUCT_SELECTORS) {
+        try {
+            if (el.matches && el.matches(selector)) {
+                return true;
+            }
+        } catch (e) {
+            // Ignorer les erreurs
+        }
+    }
+    
+    // Vérifier si l'élément est dans un élément de produit
+    for (const selector of PRODUCT_SELECTORS) {
+        try {
+            const parent = el.closest(selector);
+            if (parent) {
+                return true;
+            }
+        } catch (e) {
+            // Ignorer les erreurs
+        }
+    }
+    
+    return false;
 }
 
 /**
@@ -148,26 +276,42 @@ function detectBrandsOnPage() {
     console.log('[GreenStyle] 📄 Texte de la page analysé:', pageText.length, 'caractères');
     console.log('[GreenStyle] 📄 Extrait du texte:', pageText.substring(0, 200));
     
-    // 1. Chercher dans le texte visible (avec word boundaries pour éviter les faux positifs)
-    KNOWN_BRANDS.forEach(brand => {
-        const brandLower = brand.toLowerCase();
-        const aliases = BRANDS_WITH_ALIASES[brand] || [];
-        
-        // Utiliser des word boundaries pour éviter les faux positifs (ex: "marque" dans "marque")
-        const brandRegex = new RegExp(`\\b${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        
-        // Recherche du nom principal avec word boundaries
-        if (brandRegex.test(pageText)) {
-            detectedBrands.add(brand);
+    // 1. Chercher dans les éléments de produit seulement (plus précis, évite les faux positifs)
+    // Ne pas chercher dans tout le texte de la page, mais seulement dans les contextes de produits
+    PRODUCT_SELECTORS.forEach(selector => {
+        try {
+            document.querySelectorAll(selector).forEach(productEl => {
+                // EXCLURE les produits dans les zones exclues (filtres, etc.)
+                if (isInExcludedZone(productEl)) {
+                    return;
+                }
+                
+                const productText = productEl.textContent?.toLowerCase() || '';
+                
+                KNOWN_BRANDS.forEach(brand => {
+                    const brandLower = brand.toLowerCase();
+                    const aliases = BRANDS_WITH_ALIASES[brand] || [];
+                    
+                    // Utiliser des word boundaries pour éviter les faux positifs
+                    const brandRegex = new RegExp(`\\b${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                    
+                    // Recherche du nom principal avec word boundaries
+                    if (brandRegex.test(productText)) {
+                        detectedBrands.add(brand);
+                    }
+                    
+                    // Recherche des alias avec word boundaries
+                    aliases.forEach(alias => {
+                        const aliasRegex = new RegExp(`\\b${alias.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                        if (aliasRegex.test(productText)) {
+                            detectedBrands.add(brand);
+                        }
+                    });
+                });
+            });
+        } catch (e) {
+            // Ignorer les erreurs de sélecteur
         }
-        
-        // Recherche des alias avec word boundaries
-        aliases.forEach(alias => {
-            const aliasRegex = new RegExp(`\\b${alias.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-            if (aliasRegex.test(pageText)) {
-                detectedBrands.add(brand);
-            }
-        });
     });
     
     // 2. Chercher dans les liens (href et texte) - IMPORTANT pour détecter les marques dans les URLs
@@ -273,22 +417,36 @@ function detectBrandsOnPage() {
         });
     });
     
-    // 5. Chercher dans les classes CSS (souvent utilisées pour les marques)
-    // EXCLURE [class*="brand"] car trop générique et peut matcher les filtres
-    // Utiliser seulement les classes spécifiques comme .productCard-brand
-    document.querySelectorAll('[class*="vendor"], [class*="manufacturer"]').forEach(el => {
-        // Exclure les éléments de filtre/navigation
-        const isFilter = el.closest('nav, header, .filter, .filtre, .facet, [class*="filter"], [class*="filtre"], [class*="facet"], button[class*="facet"], button[class*="filter"], button[class*="dropdown"]');
-        if (isFilter) return;
-        
-        const classes = el.className.toLowerCase();
-        
-        KNOWN_BRANDS.forEach(brand => {
-            const brandLower = brand.toLowerCase();
-            if (classes.includes(brandLower)) {
-                detectedBrands.add(brand);
-            }
-        });
+    // 5. Chercher dans les classes CSS spécifiques de marque (seulement dans les contextes de produits)
+    const brandClassSelectors = [
+        '.productCard-brand', '.product-card-brand',
+        '[class*="vendor"]', '[class*="manufacturer"]',
+        '[class*="product-brand"]', '[class*="item-brand"]'
+    ];
+    
+    brandClassSelectors.forEach(selector => {
+        try {
+            document.querySelectorAll(selector).forEach(el => {
+                // EXCLURE les éléments dans les zones exclues
+                if (isInExcludedZone(el)) return;
+                
+                // Vérifier que l'élément est dans un contexte de produit
+                if (!isInProductContext(el)) return;
+                
+                const classes = el.className.toLowerCase();
+                const text = el.textContent?.toLowerCase() || '';
+                
+                KNOWN_BRANDS.forEach(brand => {
+                    const brandLower = brand.toLowerCase();
+                    // Chercher dans les classes ET dans le texte (plus sûr)
+                    if (classes.includes(brandLower) || text.includes(brandLower)) {
+                        detectedBrands.add(brand);
+                    }
+                });
+            });
+        } catch (e) {
+            // Ignorer les erreurs
+        }
     });
     
     // 6. Chercher dans les métadonnées (meta tags)
@@ -368,50 +526,33 @@ function detectBrandsOnPage() {
         // Ignorer les erreurs
     }
     
-    // 8. Chercher dans les microdata (itemprop="brand")
+    // 8. Chercher dans les microdata (itemprop="brand") - seulement dans les contextes de produits
     document.querySelectorAll('[itemprop="brand"]').forEach(el => {
-        const brandValue = (el.textContent || el.getAttribute('content') || '').toLowerCase();
+        // EXCLURE les éléments dans les zones exclues
+        if (isInExcludedZone(el)) return;
+        
+        // Vérifier que l'élément est dans un contexte de produit
+        if (!isInProductContext(el)) return;
+        
+        const brandValue = (el.textContent || el.getAttribute('content') || '').trim().toLowerCase();
+        if (!brandValue || brandValue.length < 2) return;
+        
         KNOWN_BRANDS.forEach(brand => {
             const brandLower = brand.toLowerCase();
             const aliases = BRANDS_WITH_ALIASES[brand] || [];
-            if (brandValue.includes(brandLower)) {
+            if (brandValue === brandLower || brandValue.includes(brandLower)) {
                 detectedBrands.add(brand);
             }
             aliases.forEach(alias => {
-                if (brandValue.includes(alias.toLowerCase())) {
+                const aliasLower = alias.toLowerCase();
+                if (brandValue === aliasLower || brandValue.includes(aliasLower)) {
                     detectedBrands.add(brand);
                 }
             });
         });
     });
     
-    // 9. Chercher dans les titres et descriptions de produits
-    const productSelectors = [
-        '[class*="product"]',
-        '[class*="item"]',
-        '[id*="product"]',
-        '[id*="item"]'
-    ];
-    productSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            const text = (el.textContent || '').toLowerCase();
-            const title = (el.getAttribute('title') || '').toLowerCase();
-            const combined = text + ' ' + title;
-            
-            KNOWN_BRANDS.forEach(brand => {
-                const brandLower = brand.toLowerCase();
-                const aliases = BRANDS_WITH_ALIASES[brand] || [];
-                if (combined.includes(brandLower)) {
-                    detectedBrands.add(brand);
-                }
-                aliases.forEach(alias => {
-                    if (combined.includes(alias.toLowerCase())) {
-                        detectedBrands.add(brand);
-                    }
-                });
-            });
-        });
-    });
+    // 9. Chercher dans les titres et descriptions de produits (déjà fait dans la section 1, donc on skip)
     
     // 10. Détection générique de marques depuis les meta tags et attributs (pour marques non listées)
     // Chercher dans les meta tags de marque
@@ -438,14 +579,14 @@ function detectBrandsOnPage() {
     });
     
     // Chercher dans les attributs data-brand, data-vendor, etc. (mais exclure les filtres)
-    const brandDataAttributes = ['data-brand', 'data-vendor', 'data-manufacturer', 'data-company'];
+    const brandDataAttributes = ['data-brand', 'data-vendor', 'data-manufacturer', 'data-company', 'data-product-brand'];
     brandDataAttributes.forEach(attr => {
         document.querySelectorAll(`[${attr}]`).forEach(el => {
-            // Ignorer les éléments dans les filtres, navigation, ou labels
-            const parent = el.closest('label, .filter, .filtre, [class*="filter"], [class*="filtre"], nav, header, .navigation, select, option');
-            if (parent) {
-                return; // Ignorer cet élément
-            }
+            // EXCLURE les éléments dans les zones exclues
+            if (isInExcludedZone(el)) return;
+            
+            // Vérifier que l'élément est dans un contexte de produit
+            if (!isInProductContext(el)) return;
             
             const brandValue = (el.getAttribute(attr) || '').trim();
             if (brandValue && brandValue.length > 1 && brandValue.length < 50) {
@@ -459,24 +600,7 @@ function detectBrandsOnPage() {
         });
     });
     
-    // Chercher dans itemprop="brand" (mais exclure les éléments de filtre/navigation)
-    document.querySelectorAll('[itemprop="brand"]').forEach(el => {
-        // Ignorer les éléments dans les filtres, navigation, ou labels
-        const parent = el.closest('label, .filter, .filtre, [class*="filter"], [class*="filtre"], nav, header, .navigation');
-        if (parent) {
-            return; // Ignorer cet élément
-        }
-        
-        const brandValue = (el.textContent || el.getAttribute('content') || '').trim();
-        if (brandValue && brandValue.length > 1 && brandValue.length < 50) {
-            const normalizedBrand = brandValue.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').toLowerCase();
-            // Vérifier que c'est une marque valide (pas un mot commun)
-            if (normalizedBrand && isValidBrandName(normalizedBrand)) {
-                detectedBrands.add(normalizedBrand);
-                console.log(`[GreenStyle] 🔍 Marque détectée depuis itemprop="brand": ${normalizedBrand}`);
-            }
-        }
-    });
+    // Chercher dans itemprop="brand" est déjà fait dans la section 8, donc on skip ici pour éviter les doublons
     
     // Chercher dans les JSON-LD (structured data) - recherche récursive
     try {
@@ -573,20 +697,36 @@ async function getBrandSustainability(brandName, retries = 3) {
                                 setTimeout(() => attemptRequest(attempt + 1), 1000 * attempt);
                                 return;
                             }
+                            console.log(`[GreenStyle] ❌ Impossible de récupérer les données pour "${brandName}" (erreur communication)`);
                             resolve(null);
                             return;
                         }
                         
                         if (response?.success && response.data) {
-                            resolve(response.data);
+                            // Vérifier que les données sont valides (au moins un score défini)
+                            const hasValidScore = response.data.final_score !== null && 
+                                                  response.data.final_score !== undefined;
+                            if (hasValidScore) {
+                                console.log(`[GreenStyle] ✅ Marque "${brandName}" validée (score: ${response.data.final_score.toFixed(1)}/10)`);
+                                resolve(response.data);
+                            } else {
+                                console.log(`[GreenStyle] ⚠️ Marque "${brandName}" retournée par l'API mais sans score valide (ignorée)`);
+                                resolve(null);
+                            }
                         } else {
-                            // Marque non trouvée ou erreur API
-                            if (attempt < retries && response?.error) {
-                                // Retry si erreur réseau
+                            // Marque non trouvée (404) ou erreur API
+                            if (response?.error === '404' || response?.error?.includes('not found')) {
+                                console.log(`[GreenStyle] ⚠️ Marque "${brandName}" non trouvée dans la base de données et scraping échoué`);
+                                resolve(null);
+                            } else if (attempt < retries && response?.error) {
+                                // Retry si erreur réseau (500, timeout, etc.)
+                                console.log(`[GreenStyle] ⚠️ Erreur API pour "${brandName}" (tentative ${attempt}/${retries}): ${response.error}`);
                                 setTimeout(() => attemptRequest(attempt + 1), 1000 * attempt);
                                 return;
+                            } else {
+                                console.log(`[GreenStyle] ❌ Impossible de récupérer les données pour "${brandName}" (erreur: ${response?.error || 'unknown'})`);
+                                resolve(null);
                             }
-                            resolve(null);
                         }
                     }
                 );
@@ -596,11 +736,12 @@ async function getBrandSustainability(brandName, retries = 3) {
             
             // Timeout de sécurité (10 secondes avec retries)
             setTimeout(() => {
+                console.log(`[GreenStyle] ⏱️ Timeout lors de la récupération pour "${brandName}"`);
                 resolve(null);
             }, 10000);
         });
     } catch (error) {
-        console.error(`[GreenStyle] Erreur lors de la récupération pour ${brandName}:`, error);
+        console.error(`[GreenStyle] ❌ Erreur lors de la récupération pour ${brandName}:`, error);
         return null;
     }
 }
@@ -670,55 +811,59 @@ async function processDetectedBrands() {
     // Sauvegarder les marques détectées pour le popup
     chrome.runtime.sendMessage({ type: 'BG_SAVE_DETECTED_BRANDS', brands });
     
-    // Récupérer les données pour chaque marque
+    // Récupérer les données pour chaque marque (vérification dans la DB + scraping si nécessaire)
+    console.log(`[GreenStyle] 🔍 Vérification des ${brands.length} marques détectées dans la base de données...`);
     const brandPromises = brands.map(brand => getBrandSustainability(brand));
     const brandDataList = await Promise.all(brandPromises);
     
-    // Stocker les données complètes pour le popup
+    // Filtrer pour ne garder QUE les marques qui ont des données valides (présentes dans la DB ou scrapées avec succès)
+    // Une marque sans données = pas une vraie marque ou scraping échoué = on ne l'affiche pas
+    const validatedBrandsWithData = brands
+        .map((brandName, index) => ({
+            name: brandName,
+            data: brandDataList[index]
+        }))
+        .filter(brandItem => {
+            // Garder seulement les marques avec des données valides (non-null et avec au moins un score)
+            const hasValidData = brandItem.data && (
+                brandItem.data.final_score !== null && 
+                brandItem.data.final_score !== undefined
+            );
+            if (!hasValidData) {
+                console.log(`[GreenStyle] ⚠️ Marque "${brandItem.name}" non validée (pas dans la DB et scraping échoué), ignorée pour l'affichage`);
+            }
+            return hasValidData;
+        });
+    
+    // Stocker TOUTES les marques pour le popup (même sans données, pour afficher "non trouvé")
     const brandsWithData = brands.map((brandName, index) => ({
         name: brandName,
         data: brandDataList[index]
-    })); // Ne pas filtrer les null ici, le popup gérera l'affichage "non trouvé"
-    
+    }));
     chrome.storage.local.set({ detectedBrandsData: brandsWithData });
-    console.log('[GreenStyle] Marques sauvegardées:', brands.length, 'marques');
     
-    // Créer une map des marques détectées vers les éléments de produit
+    console.log(`[GreenStyle] ✅ Marques validées: ${validatedBrandsWithData.length}/${brands.length} (${brands.length - validatedBrandsWithData.length} ignorées car non trouvées dans la DB)`);
+    
+    if (validatedBrandsWithData.length === 0) {
+        console.log('[GreenStyle] ⚠️ Aucune marque validée trouvée, aucun badge ne sera affiché');
+        return;
+    }
+    
+    // Créer une map des marques VALIDÉES vers les éléments de produit
+    // Ne chercher dans le DOM QUE pour les marques qui ont été validées
     const brandToElementsMap = new Map();
     
-    brandsWithData.forEach((brandItem) => {
-        if (!brandItem.data) return;
+    validatedBrandsWithData.forEach((brandItem) => {
+        // Double vérification (normalement déjà filtré, mais sécurité)
+        if (!brandItem.data || brandItem.data.final_score === null || brandItem.data.final_score === undefined) {
+            return;
+        }
         
         const brandName = brandItem.name;
         const brandLower = brandName.toLowerCase();
         const brandRegex = new RegExp(`^${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
         
-        // Fonction pour vérifier si un élément est dans une zone de filtre/navigation
-        const isInFilterOrNavigation = (el) => {
-            // Vérifier les classes/id de l'élément
-            const classList = el.className?.toLowerCase() || '';
-            const id = el.id?.toLowerCase() || '';
-            const tagName = el.tagName?.toLowerCase() || '';
-            
-            // Exclure les boutons de filtre
-            if (tagName === 'button' && (
-                classList.includes('facet') || 
-                classList.includes('filter') || 
-                classList.includes('filtre') ||
-                classList.includes('dropdown') ||
-                classList.includes('toggle') ||
-                id.includes('facet') ||
-                id.includes('filter') ||
-                id.includes('filtre') ||
-                id.includes('dropdown')
-            )) {
-                return true;
-            }
-            
-            // Vérifier si l'élément est dans une zone de filtre/navigation
-            const parent = el.closest('nav, header, .filter, .filtre, .facet, [class*="filter"], [class*="filtre"], [class*="facet"], [id*="filter"], [id*="filtre"], [id*="facet"], .navigation, .sidebar, .filters, .facets');
-            return parent !== null;
-        };
+        // Utiliser les fonctions globales isInExcludedZone et isInProductContext
         
         // 1. PRIORITÉ: Chercher dans les éléments spécifiques de marque (ex: .productCard-brand)
         // EXCLURE [class*="brand"] car cela peut matcher des éléments de filtre comme "facet-brand" ou "filter-brand"
@@ -734,20 +879,35 @@ async function processDetectedBrands() {
         
         brandSelectors.forEach(selector => {
             document.querySelectorAll(selector).forEach(brandEl => {
-                // EXCLURE les éléments de filtre/navigation
-                if (isInFilterOrNavigation(brandEl)) {
+                // EXCLURE les éléments dans les zones exclues
+                if (isInExcludedZone(brandEl)) {
                     return; // Ignorer cet élément
+                }
+                
+                // Vérifier que l'élément est dans un contexte de produit
+                if (!isInProductContext(brandEl)) {
+                    return; // Ignorer si pas dans un contexte de produit
                 }
                 
                 const brandText = (brandEl.textContent || '').trim().toLowerCase();
                 
-                // Vérifier si le texte correspond exactement à la marque
-                if (brandRegex.test(brandText)) {
+                // Vérifier si le texte correspond exactement à la marque (word boundary pour éviter les faux positifs)
+                const exactBrandRegex = new RegExp(`^${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$|\\b${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                if (exactBrandRegex.test(brandText)) {
                     // Trouver le productCard parent
-                    const productCard = brandEl.closest('.productCard, .product-card, [class*="product"], [class*="item"], article, [data-product-id]');
+                    let productCard = null;
+                    for (const productSelector of PRODUCT_SELECTORS) {
+                        try {
+                            productCard = brandEl.closest(productSelector);
+                            if (productCard) break;
+                        } catch (e) {
+                            // Ignorer les erreurs
+                        }
+                    }
+                    
                     if (productCard) {
-                        // Vérifier aussi que le productCard n'est pas dans une zone de filtre
-                        if (!isInFilterOrNavigation(productCard)) {
+                        // Vérifier aussi que le productCard n'est pas dans une zone exclue
+                        if (!isInExcludedZone(productCard)) {
                             if (!brandToElementsMap.has(brandName)) {
                                 brandToElementsMap.set(brandName, []);
                             }
@@ -757,10 +917,10 @@ async function processDetectedBrands() {
                             }
                         }
                     } else {
-                        // Si pas de productCard, utiliser l'élément brand lui-même ou son parent proche
-                        // MAIS seulement si ce n'est pas dans une zone de filtre
-                        const parent = brandEl.closest('div, article, section') || brandEl.parentElement;
-                        if (parent && !isInFilterOrNavigation(parent)) {
+                        // Si pas de productCard trouvé avec les sélecteurs, utiliser le parent proche
+                        // MAIS seulement si c'est un contexte de produit valide
+                        const parent = brandEl.closest('div, article, section, li') || brandEl.parentElement;
+                        if (parent && !isInExcludedZone(parent) && isInProductContext(parent)) {
                             if (!brandToElementsMap.has(brandName)) {
                                 brandToElementsMap.set(brandName, []);
                             }
@@ -773,86 +933,95 @@ async function processDetectedBrands() {
             });
         });
         
-        // Fonction pour vérifier si un élément est dans une zone de filtre/navigation
-        const isInFilterOrNavigation = (el) => {
-            const classList = el.className?.toLowerCase() || '';
-            const id = el.id?.toLowerCase() || '';
-            const tagName = el.tagName?.toLowerCase() || '';
-            
-            if (tagName === 'button' && (
-                classList.includes('facet') || 
-                classList.includes('filter') || 
-                classList.includes('filtre') ||
-                classList.includes('dropdown') ||
-                classList.includes('toggle') ||
-                id.includes('facet') ||
-                id.includes('filter') ||
-                id.includes('filtre') ||
-                id.includes('dropdown')
-            )) {
-                return true;
+        // 2. Chercher les marques dans les URLs des liens (seulement dans les contextes de produits)
+        document.querySelectorAll('a[href]').forEach(link => {
+            // EXCLURE les liens dans les zones exclues
+            if (isInExcludedZone(link)) {
+                return;
             }
             
-            const parent = el.closest('nav, header, .filter, .filtre, .facet, [class*="filter"], [class*="filtre"], [class*="facet"], [id*="filter"], [id*="filtre"], [id*="facet"], .navigation, .sidebar, .filters, .facets');
-            return parent !== null;
-        };
-        
-        // 2. Chercher les marques dans les URLs des liens
-        document.querySelectorAll('a[href]').forEach(link => {
-            // EXCLURE les liens dans les filtres
-            if (isInFilterOrNavigation(link)) {
+            // Vérifier que le lien est dans un contexte de produit
+            if (!isInProductContext(link)) {
                 return;
             }
             
             const href = link.href.toLowerCase();
             
             // Vérifier si l'URL contient la marque (ex: /p/vestes-diesel/...)
+            // Utiliser des word boundaries pour éviter les faux positifs
             const urlPatterns = [
                 `/${brandLower}/`,
-                `-${brandLower}/`,
                 `/${brandLower}-`,
-                `/${brandLower}?`
+                `-${brandLower}/`,
+                `-${brandLower}-`,
+                `/${brandLower}?`,
+                `?brand=${brandLower}`,
+                `&brand=${brandLower}`
             ];
             
-            if (urlPatterns.some(pattern => href.includes(pattern))) {
+            // Vérifier avec regex plus strict pour éviter les faux positifs
+            const urlBrandRegex = new RegExp(`[/-]${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[/-]|[/-]${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[?&]`, 'i');
+            
+            if (urlBrandRegex.test(href)) {
                 // Trouver l'élément productCard parent
-                const productCard = link.closest('.productCard, .product-card, [class*="product"], [class*="item"], article, [data-product-id]');
-                if (productCard && !isInFilterOrNavigation(productCard)) {
+                let productCard = null;
+                for (const productSelector of PRODUCT_SELECTORS) {
+                    try {
+                        productCard = link.closest(productSelector);
+                        if (productCard) break;
+                    } catch (e) {
+                        // Ignorer les erreurs
+                    }
+                }
+                
+                if (productCard && !isInExcludedZone(productCard)) {
                     if (!brandToElementsMap.has(brandName)) {
                         brandToElementsMap.set(brandName, []);
                     }
                     if (!brandToElementsMap.get(brandName).includes(productCard)) {
                         brandToElementsMap.get(brandName).push(productCard);
+                        console.log(`[GreenStyle] ✅ Marque "${brandName}" trouvée dans URL: ${href.substring(0, 80)}`);
                     }
                 }
             }
         });
         
-        // 3. Chercher les marques dans le texte visible des productCard (fallback)
-        document.querySelectorAll('.productCard, .product-card, [class*="product"], [class*="item"], article').forEach(card => {
-            // EXCLURE les productCard dans les filtres
-            if (isInFilterOrNavigation(card)) {
-                return;
-            }
-            
-            // Ignorer si déjà trouvé
-            if (brandToElementsMap.get(brandName)?.includes(card)) return;
-            
-            const text = card.textContent?.toLowerCase() || '';
-            if (brandRegex.test(text)) {
-                if (!brandToElementsMap.has(brandName)) {
-                    brandToElementsMap.set(brandName, []);
-                }
-                if (!brandToElementsMap.get(brandName).includes(card)) {
-                    brandToElementsMap.get(brandName).push(card);
-                }
+        // 3. Chercher les marques dans le texte visible des productCard (fallback avec word boundaries stricts)
+        PRODUCT_SELECTORS.forEach(selector => {
+            try {
+                document.querySelectorAll(selector).forEach(card => {
+                    // EXCLURE les productCard dans les zones exclues
+                    if (isInExcludedZone(card)) {
+                        return;
+                    }
+                    
+                    // Ignorer si déjà trouvé
+                    if (brandToElementsMap.get(brandName)?.includes(card)) return;
+                    
+                    const text = card.textContent?.toLowerCase() || '';
+                    // Utiliser word boundaries pour éviter les faux positifs (ex: "marque" dans "marque")
+                    const strictBrandRegex = new RegExp(`\\b${brandLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                    if (strictBrandRegex.test(text)) {
+                        if (!brandToElementsMap.has(brandName)) {
+                            brandToElementsMap.set(brandName, []);
+                        }
+                        if (!brandToElementsMap.get(brandName).includes(card)) {
+                            brandToElementsMap.get(brandName).push(card);
+                        }
+                    }
+                });
+            } catch (e) {
+                // Ignorer les erreurs de sélecteur
             }
         });
     });
     
-    // 3. Afficher les badges sur les éléments trouvés
-    brandsWithData.forEach((brandItem) => {
-        if (!brandItem.data) return;
+    // Afficher les badges UNIQUEMENT pour les marques validées (qui ont des données)
+    validatedBrandsWithData.forEach((brandItem) => {
+        // Double vérification (normalement déjà filtré, mais sécurité)
+        if (!brandItem.data || brandItem.data.final_score === null || brandItem.data.final_score === undefined) {
+            return;
+        }
         
         const brandName = brandItem.name;
         const elements = brandToElementsMap.get(brandName) || [];
@@ -863,7 +1032,9 @@ async function processDetectedBrands() {
         });
         
         if (elements.length > 0) {
-            console.log(`[GreenStyle] ✅ Badge affiché pour ${brandName} sur ${elements.length} élément(s)`);
+            console.log(`[GreenStyle] ✅ Badge affiché pour ${brandName} (${brandItem.data.final_score.toFixed(1)}/10) sur ${elements.length} élément(s)`);
+        } else {
+            console.log(`[GreenStyle] ⚠️ Marque "${brandName}" validée mais aucun élément de produit trouvé dans le DOM pour afficher le badge`);
         }
     });
 }

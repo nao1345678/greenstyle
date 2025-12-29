@@ -286,8 +286,8 @@ async def get_brand_by_name(brand_name: str, auto_scrape: bool = True) -> BrandO
                 labor_badge=scraped_data.get('labor_badge', False),
             )
         
-        # Si on n'a pas trouvé la marque et qu'on ne scrappe pas, retourner 404
-        if not raw_doc and not auto_scrape:
+        # Si on n'a pas trouvé la marque dans MongoDB et qu'on ne scrappe pas, retourner 404
+        if not existing_brand and not auto_scrape:
             raise HTTPException(status_code=404, detail=f"Brand '{brand_name}' not found")
         
     except HTTPException:

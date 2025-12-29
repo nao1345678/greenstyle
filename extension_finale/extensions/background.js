@@ -23,6 +23,7 @@ async function fetchBrandData(brandName, retries = 3) {
       
       if (!response.ok) {
         if (response.status === 404) {
+          console.log(`[GreenStyle Background] ⚠️ Marque "${brandName}" non trouvée (404)`);
           return null; // Marque non trouvée
         }
         
@@ -124,7 +125,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   // Récupération des données d'une marque depuis l'API
   if (msg?.type === 'BG_GET_BRAND_DATA') {
     fetchBrandData(msg.brandName, 3).then(data => {
-      sendResponse({ success: true, data });
+      if (data === null) {
+        // Marque non trouvée (404) ou scraping échoué
+        sendResponse({ success: false, error: '404', data: null });
+      } else {
+        sendResponse({ success: true, data });
+      }
     }).catch(error => {
       console.error(`[GreenStyle Background] Erreur fatale pour ${msg.brandName}:`, error);
       sendResponse({ success: false, error: error.message, data: null });
