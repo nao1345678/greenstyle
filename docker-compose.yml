@@ -1,54 +1,28 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:6.0
-    container_name: mongodb_db
-    environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-    volumes:
-      - mongo-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: always
-
   backend:
     container_name: backend_api
     build:
       context: ./backend
       dockerfile: Dockerfile
     env_file:
-      - .env
-    depends_on:
-      mongodb:
-        condition: service_healthy
+      - .env 
     volumes:
       - ./backend:/app
       - /app/node_modules
-      - /app/__pycache__
     ports:
       - "8080:3000"
     restart: always
 
   frontend:
-    container_name: frontend_vue
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    depends_on:
-      - backend
     volumes:
-      - ./frontend:/app
+      # On synchronise le sous-dossier local avec la racine du container
+      - ./frontend/site-vue:/app
       - /app/node_modules
     ports:
-      - "3001:3001"
+      - "3001:80"
     restart: always
-
-volumes:
-  mongo-data:
-    driver: local

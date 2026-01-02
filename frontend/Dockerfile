@@ -1,24 +1,24 @@
-# --- ÉTAPE 1 : BUILD (Construction et compilation de l'application Vue) ---
-FROM node:18-alpine AS build
+# --- ÉTAPE 1 : BUILD ---
+FROM node:22-alpine AS build
 
-# Le répertoire de travail
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copier les fichiers de dépendances et installer
-COPY package*.json ./
+# On force Docker à ignorer le cache pour cette étape de copie
+# Utilise bien le point devant le slash
+COPY ./site-vue/package*.json ./
+
+# On vérifie physiquement si le fichier est là avant de lancer npm install
+RUN ls -l /app/package.json
+
 RUN npm install
-COPY . .
 
-# Lancer la commande de compilation de l'application Vue
+# Copie du reste
+COPY ./site-vue/ .
+
 RUN npm run build
 
-
-# --- ÉTAPE 2 : PRODUCTION (Service des fichiers avec Nginx) ---
+# --- ÉTAPE 2 : PRODUCTION ---
 FROM nginx:stable-alpine
-
-# 1. Copie du fichier de configuration Nginx
-
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
-
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
