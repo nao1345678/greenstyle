@@ -50,7 +50,7 @@ def calculate_scores(brand_data: Dict[str, Any]) -> Dict[str, float]:
     # ----------------------------------------------------
 
     # 1. Pays de Production (max 20 pts) 
-    if "france" in location_info or "local" in location_info:
+    if production == origin:
         env_score_base += 20
     elif any(country in location_info for country in EUROPEAN_COUNTRIES):
         env_score_base += 10
