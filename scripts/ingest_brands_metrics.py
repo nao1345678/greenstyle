@@ -97,7 +97,8 @@ async def init_db():
         try:
             db = client.get_default_database()
         except Exception:
-            db = client.get_database("greenstyle")
+            # Utiliser greenstyle_DB par défaut (cohérent avec setup_database.js)
+            db = client.get_database("greenstyle_DB")
 
     await init_beanie(database=db, document_models=[Brand, Category])
     print("Connexion MongoDB réussie !")

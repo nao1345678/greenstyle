@@ -4,7 +4,7 @@
 
 - ✅ Backend API actif sur http://localhost:8000
 - ✅ Extension dans `extension_finale/extensions/`
-
+- 
 ---
 
 ## 📋 Étapes pour Tester
