@@ -5,13 +5,12 @@ import NavBar from '@/components/navbar.vue'
 import { getBrand } from '@/api/brand'
 import { listFavorites, addFavorite, removeFavorite } from '@/api/favorite'
 import { useAuthStore } from '@/stores/auth'
-import type { BrandOut } from '@/api/brand'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
-const brand = ref<BrandOut | null>(null)
+const brand = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const isFavorite = ref(false)
