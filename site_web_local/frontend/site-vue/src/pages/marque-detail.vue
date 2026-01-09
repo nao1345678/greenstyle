@@ -17,7 +17,7 @@ const isFavorite = ref(false)
 const favoriteId = ref(null)
 const loadingFavorite = ref(false)
 
-const brandId = computed(() => route.params.id as string)
+const brandId = computed(() => String(route.params.id || ''))
 
 const getScoreColor = (score) => {
   if (score >= 8) return '#009C22' // green
