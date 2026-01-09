@@ -27,13 +27,38 @@ const getScoreLabel = (score) => {
 const displayScore = props.final_score !== null ? props.final_score : null
 const displayLabel = props.score_label || (displayScore ? getScoreLabel(displayScore) : '')
 const displayColor = props.score_color || (displayScore ? getScoreColor(displayScore) : '#999')
-const imageSrc = props.logo || '/src/assets/product1.png'
+
+// Utiliser le logo de la marque, avec fallback seulement si vraiment pas de logo
+const imageSrc = props.logo && props.logo.trim() !== '' ? props.logo : null
+
+// Fonction pour gérer les erreurs de chargement d'image
+const handleImageError = (event) => {
+  // Si l'image ne charge pas, afficher un placeholder avec la première lettre
+  const img = event.target
+  img.style.display = 'none'
+  // Créer un placeholder si nécessaire
+  if (!img.nextElementSibling || !img.nextElementSibling.classList.contains('logo-placeholder')) {
+    const placeholder = document.createElement('div')
+    placeholder.className = 'logo-placeholder'
+    placeholder.textContent = props.brand_name?.charAt(0)?.toUpperCase() || '?'
+    img.parentElement.appendChild(placeholder)
+  }
+}
 </script>
 
 <template>
   <RouterLink class="brand-card" :to="{ name: 'marque-detail', params: { id: id } }">
     <div class="image-container">
-      <img :src="imageSrc" :alt="brand_name || 'Marque'" loading="lazy" @error="$event.target.src='/src/assets/product1.png'" />
+      <img 
+        v-if="imageSrc" 
+        :src="imageSrc" 
+        :alt="brand_name || 'Marque'" 
+        loading="lazy" 
+        @error="handleImageError"
+      />
+      <div v-else class="logo-placeholder">
+        {{ brand_name?.charAt(0)?.toUpperCase() || '?' }}
+      </div>
       <div v-if="displayScore !== null" class="score-badge" :style="{ backgroundColor: displayColor }">
         {{ displayScore.toFixed(1) }}
       </div>
@@ -79,6 +104,20 @@ const imageSrc = props.logo || '/src/assets/product1.png'
   object-fit: contain;
   padding: 12px;
   display: block;
+  background: white;
+}
+
+.logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green, #009C22);
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  font-family: "Jersey 10", system-ui, sans-serif;
 }
 
 .score-badge {
@@ -135,5 +174,6 @@ const imageSrc = props.logo || '/src/assets/product1.png'
   }
 }
 </style>
+
 
 

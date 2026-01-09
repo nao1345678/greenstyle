@@ -29,17 +29,26 @@ onMounted(async () => {
     }
     
     // Transformer les marques pour ProductGrid avec toutes les infos
-    items.value = brands.slice(0, 12).map(brand => ({
-      id: brand.id || brand._id,
-      src: brand.logo || null,
-      logo: brand.logo || null,
-      alt: brand.brand_name || 'Marque',
-      brand_name: brand.brand_name || 'Marque inconnue',
-      final_score: brand.final_score !== undefined ? brand.final_score : null,
-      score: brand.final_score,
-      score_label: brand.score_label || '',
-      score_color: brand.score_color || 'yellow'
-    }))
+    items.value = brands.slice(0, 12).map(brand => {
+      const item = {
+        id: brand.id || brand._id,
+        src: brand.logo || null,
+        logo: brand.logo || null,
+        alt: brand.brand_name || 'Marque',
+        brand_name: brand.brand_name || 'Marque inconnue',
+        final_score: brand.final_score !== undefined ? brand.final_score : null,
+        score: brand.final_score,
+        score_label: brand.score_label || '',
+        score_color: brand.score_color || 'yellow'
+      }
+      // Debug : afficher les logos
+      if (item.logo) {
+        console.log(`📸 Logo pour ${item.brand_name}: ${item.logo}`)
+      } else {
+        console.log(`⚠️ Pas de logo pour ${item.brand_name}`)
+      }
+      return item
+    })
     
     console.log(`✅ ${items.value.length} marques chargées depuis la DB`)
   } catch (err) {
