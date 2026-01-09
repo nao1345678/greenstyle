@@ -1,9 +1,107 @@
 (function () {
+  // Configuration de l'API backend
+  const API_BASE_URL = 'http://localhost:8000';
+  
   // Attendre que le DOM soit chargé
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
+  }
+  
+  // Fonctions d'authentification
+  async function getCurrentUser() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get('currentUser', (res) => {
+        resolve(res.currentUser || null);
+      });
+    });
+  }
+  
+  async function setCurrentUser(user) {
+    return new Promise((resolve) => {
+      chrome.storage.local.set({ currentUser: user }, () => {
+        resolve();
+      });
+    });
+  }
+  
+  async function logout() {
+    return new Promise((resolve) => {
+      chrome.storage.local.remove('currentUser', () => {
+        resolve();
+      });
+    });
+  }
+  
+  // Fonctions pour les favoris
+  async function addToFavorites(brandId, brandName) {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Vous devez être connecté pour ajouter aux favoris' };
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/favorites/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          brand_id: brandId
+        })
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 400 && error.detail === 'Favorite already exists') {
+          return { success: false, error: 'Cette marque est déjà dans vos favoris' };
+        }
+        throw new Error(error.detail || 'Erreur lors de l\'ajout aux favoris');
+      }
+      
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+  
+  async function removeFromFavorites(favoriteId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/favorites/${favoriteId}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erreur lors de la suppression des favoris');
+      }
+      
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+  
+  async function checkIfFavorite(brandId) {
+    const user = await getCurrentUser();
+    if (!user) {
+      return null;
+    }
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/favorites/?user_id=${user.id}`);
+      if (!response.ok) {
+        return null;
+      }
+      
+      const favorites = await response.json();
+      const favorite = favorites.find(f => f.brand_id === brandId);
+      return favorite ? favorite.id : null;
+    } catch (error) {
+      console.error('Erreur lors de la vérification des favoris:', error);
+      return null;
+    }
   }
   
   function init() {
@@ -63,9 +161,10 @@
     /**
      * Affiche une marque dans une carte principale
      */
-    function displayBrand(brand) {
+    async function displayBrand(brand) {
       const brandData = brand.data;
       const brandName = brand.name || 'Marque inconnue';
+      const brandId = brandData?.id || null;
       
       // Créer la carte principale
       const mainCard = document.createElement('div');
@@ -95,6 +194,11 @@
       const score = brandData.final_score || 0;
       const laborScore = brandData.labor_ethics || 0;
       const planetScore = brandData.global_env_impact || 0;
+      
+      // Vérifier si l'utilisateur est connecté et si la marque est en favoris
+      const user = await getCurrentUser();
+      const favoriteId = brandId ? await checkIfFavorite(brandId) : null;
+      const isFavorite = favoriteId !== null;
       
       // Construire le HTML de la carte
       mainCard.innerHTML = `
@@ -148,9 +252,67 @@
           </div>
         </div>
         ` : ''}
+        
+        ${brandId ? `
+        <div class="favorite-section">
+          <button id="favorite-btn-${brandId}" class="favorite-btn ${isFavorite ? 'active' : ''}" data-brand-id="${brandId}" data-brand-name="${brandName}" data-favorite-id="${favoriteId || ''}">
+            ${isFavorite ? '★ Retirer des favoris' : (user ? '☆ Ajouter aux favoris' : '🔒 Se connecter pour ajouter aux favoris')}
+          </button>
+        </div>
+        ` : ''}
       `;
       
       brandsListEl.appendChild(mainCard);
+      
+      // Ajouter l'événement click sur le bouton favoris
+      if (brandId) {
+        const favoriteBtn = document.getElementById(`favorite-btn-${brandId}`);
+        if (favoriteBtn) {
+          favoriteBtn.addEventListener('click', async () => {
+            const user = await getCurrentUser();
+            if (!user) {
+              alert('Vous devez être connecté pour ajouter des marques aux favoris.\n\nVeuillez vous connecter sur le site web GreenStyle.');
+              return;
+            }
+            
+            const isCurrentlyFavorite = favoriteBtn.classList.contains('active');
+            const favoriteId = favoriteBtn.dataset.favoriteId;
+            
+            favoriteBtn.disabled = true;
+            favoriteBtn.textContent = 'Chargement...';
+            
+            if (isCurrentlyFavorite && favoriteId) {
+              // Retirer des favoris
+              const result = await removeFromFavorites(favoriteId);
+              if (result.success) {
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.textContent = '☆ Ajouter aux favoris';
+                favoriteBtn.dataset.favoriteId = '';
+              } else {
+                alert('Erreur: ' + result.error);
+                favoriteBtn.textContent = '★ Retirer des favoris';
+              }
+            } else {
+              // Ajouter aux favoris
+              const result = await addToFavorites(brandId, brandName);
+              if (result.success) {
+                favoriteBtn.classList.add('active');
+                favoriteBtn.textContent = '★ Retirer des favoris';
+                // Recharger pour obtenir l'ID du favori
+                const newFavoriteId = await checkIfFavorite(brandId);
+                if (newFavoriteId) {
+                  favoriteBtn.dataset.favoriteId = newFavoriteId;
+                }
+              } else {
+                alert('Erreur: ' + result.error);
+                favoriteBtn.textContent = '☆ Ajouter aux favoris';
+              }
+            }
+            
+            favoriteBtn.disabled = false;
+          });
+        }
+      }
       
       // Mettre à jour les jauges après l'insertion
       setTimeout(() => {
@@ -185,10 +347,13 @@
         // Créer un dictionnaire pour un accès rapide aux données
         const dataMap = new Map(brandsData.map(b => [b.name.toLowerCase(), b.data]));
 
-        brands.forEach(brandName => {
-          const brandData = dataMap.get(brandName.toLowerCase());
-          displayBrand({ name: brandName, data: brandData });
-        });
+        // Afficher les marques de manière asynchrone
+        (async () => {
+          for (const brandName of brands) {
+            const brandData = dataMap.get(brandName.toLowerCase());
+            await displayBrand({ name: brandName, data: brandData });
+          }
+        })();
         console.log('[GreenStyle Popup] Marques affichées.');
       });
     }

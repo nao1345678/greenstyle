@@ -10,8 +10,13 @@ from beanie import init_beanie
 from dotenv import load_dotenv
 
 from models.brand import Brand
+from models.user import User
+from models.favorite import Favorite
 from routes.brand_routes import router as brand_router
+from routes.user_routes import router as user_router
+from routes.favorite_routes import router as favorite_router
 from routes.demo_routes import router as demo_router
+from routes.auth_routes import router as auth_router
 
 load_dotenv()
 
@@ -38,7 +43,7 @@ async def lifespan(app: FastAPI):
         
         # Initialiser Beanie
         db = client.get_database(db_name)
-        await init_beanie(database=db, document_models=[Brand])
+        await init_beanie(database=db, document_models=[Brand, User, Favorite])
         print("✅ Beanie initialisé")
     except Exception as e:
         print(f"⚠️  Erreur de connexion MongoDB: {e}")
@@ -75,6 +80,9 @@ app.add_middleware(
 
 # Enregistrer les routes
 app.include_router(brand_router)
+app.include_router(user_router)
+app.include_router(favorite_router)
+app.include_router(auth_router)
 app.include_router(demo_router)  # Routes de démonstration
 
 

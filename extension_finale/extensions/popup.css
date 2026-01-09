@@ -290,6 +290,87 @@ body {
     margin-bottom: 15px;
     border-radius: 4px;
     font-size: 12px;
+    word-break: break-all;
+}
+
+/* Section favoris */
+.favorite-section {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.favorite-btn {
+    width: 100%;
+    background-color: var(--green-dark);
+    color: var(--white);
+    border: 2px solid var(--black);
+    padding: 8px 12px;
+    font-family: 'Jersey 10', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    border-radius: 4px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.favorite-btn:hover:not(:disabled) {
+    background-color: #333;
+    transform: scale(1.02);
+}
+
+.favorite-btn.active {
+    background-color: #B70064;
+    border-color: #B70064;
+}
+
+.favorite-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Améliorations de la responsivité et finitions */
+.main-card {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.brand-item {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.brand-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.15);
+}
+
+/* Amélioration de l'accessibilité */
+.footer-btn:focus-visible {
+    outline: 3px solid var(--white);
+    outline-offset: 2px;
+}
+
+.alt-name:focus-visible {
+    outline: 2px solid var(--green-dark);
+    outline-offset: 2px;
+}
+
+/* Amélioration de l'affichage des scores */
+.score-value {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Amélioration de l'espacement */
+.stats-section {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* Amélioration de la lisibilité */
+#brand-name {
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 
