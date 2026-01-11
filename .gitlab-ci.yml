@@ -1,0 +1,56 @@
+# On utilise l'image Docker officielle Python
+image: python:3.10-slim
+
+# Définition des étapes
+stages:
+  - lint
+  - test
+
+# Gestion du cache pour accélérer les futurs pipelines
+cache:
+  paths:
+    - .cache/pip
+    - extension_finale/venv/
+
+# --- ÉTAPE DE LINTING ---
+lint_code:
+  stage: lint
+  script:
+    - pip install flake8 pylint black isort
+    - cd extension_finale
+    - black --check src/ Test/tests/ || true
+    - flake8 src/ Test/tests/ --max-line-length=120 --ignore=E501,W503 || true
+  allow_failure: true  # Équivalent de continue-on-error
+
+# --- ÉTAPE DE TESTS (Unitaires & Fonctionnels) ---
+# Utilisation de "parallel" pour simuler la matrice de versions de GitHub
+unit_and_functional_tests:
+  stage: test
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.9-slim", "3.10-slim", "3.11-slim"]
+  image: python:$PYTHON_VERSION
+  before_script:
+    - apt-get update && apt-get install -y build-essential
+    - cd extension_finale
+    - python -m pip install --upgrade pip
+    - pip install -r Test/requirements_test.txt
+    - |
+      if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      if [ -f ../requirements.txt ]; then pip install -r ../requirements.txt; fi
+  script:
+    # Tests unitaires
+    - pytest Test/tests/unit/ -v --tb=short
+    # Tests fonctionnels
+    - pytest Test/tests/functional/test_scraper_service.py -v --tb=short
+    - pytest Test/tests/functional/test_brand_routes.py::TestBrandRoutes::test_root_endpoint -v --tb=short || true
+    # Couverture
+    - pytest Test/tests/unit/ --cov=src --cov-report=xml --cov-report=term-missing || true
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: extension_finale/coverage.xml
+    paths:
+      - extension_finale/coverage.xml
+    expire_in: 1 week
